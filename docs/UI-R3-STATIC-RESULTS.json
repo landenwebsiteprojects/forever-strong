@@ -1,0 +1,20 @@
+[
+  {
+    "check": "Shell syntax",
+    "result": "PASS",
+    "scripts": 42
+  },
+  {
+    "check": "Native, DEX and OSS daemon bytes unchanged from integration-r2",
+    "result": "PASS",
+    "files": 20
+  },
+  {
+    "check": "External JavaScript syntax",
+    "result": "PASS"
+  },
+  {
+    "check": "All tool pages share spacing/theme assets and no stray html prefix",
+    "result": "PASS"
+  }
+]

@@ -110,3 +110,7 @@ GPL-3.0-or-later for new integration code; upstream license terms remain applica
 ## Planned updates
 
 Future updates are planned to incorporate applicable upstream security patches, bug fixes and compatibility improvements. This v1.0 release retains Integrity Box v44.
+
+## Module card banner
+
+KernelSU Next can show the bundled dashboard artwork behind the module card through its local banner property. KernelSU Next applies its own downward gradient to blend the artwork into the card behind the description. The description is shared unchanged with Kitsune through module.prop. Display depends on the manager and its banner settings; stock Magisk does not show these card banners.

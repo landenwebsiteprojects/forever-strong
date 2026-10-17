@@ -1,0 +1,34 @@
+[
+  {
+    "test": "Target modes persist; duplicate and injection syntax rejected without mutation",
+    "result": "PASS"
+  },
+  {
+    "test": "Per-package patch sections, placeholders and date validation",
+    "result": "PASS"
+  },
+  {
+    "test": "Keybox XML/key/chain validation, entity rejection, no display and private permissions",
+    "result": "PASS"
+  },
+  {
+    "test": "Boot digest length, hex and empty configuration",
+    "result": "PASS"
+  },
+  {
+    "test": "Secure backup, atomic restore, flag restoration and traversal rejection",
+    "result": "PASS"
+  },
+  {
+    "test": "Symlink writes and simultaneous transactions refused",
+    "result": "PASS"
+  },
+  {
+    "test": "Diagnostic output excludes private keys and makes no measured verdict claim",
+    "result": "PASS"
+  },
+  {
+    "test": "Uninstall preserves shared configuration and backups",
+    "result": "PASS"
+  }
+]

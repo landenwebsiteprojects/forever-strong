@@ -1,0 +1,88 @@
+name: Publish Changelog
+
+on:
+  release:
+    types: [edited]
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+
+concurrency:
+  group: publish-changelog
+  cancel-in-progress: false
+
+jobs:
+  generate-files:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Resolve release metadata
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_TAG: ${{ github.event.release.tag_name }}
+          CALL_TAG: ${{ inputs.tag }}
+        run: |
+          TAG="${EVENT_TAG:-$CALL_TAG}"
+          RELEASE=$(gh api "repos/$REPO/releases/tags/$TAG")
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+          echo "$RELEASE" | jq -r .body > body.md
+
+          URL=$(echo "$RELEASE" | jq -r '.assets[] | select(.name | endswith("Release.zip")) | .browser_download_url' | head -n1)
+          if [ -z "$URL" ]; then
+            echo "::error::Missing Release.zip asset in release $TAG"
+            exit 1
+          fi
+          echo "zip_url=$URL" >> "$GITHUB_OUTPUT"
+
+          # Read versionCode from the shipped module.prop
+          curl -fsSL "$URL" -o release.zip
+          VERSION_CODE=$(unzip -p release.zip module.prop | sed -n 's/^versionCode=//p')
+          if [ -z "$VERSION_CODE" ]; then
+            echo "::error::Could not read versionCode from release zip module.prop"
+            exit 1
+          fi
+          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+
+      - name: Write metadata and push to main and changelog
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+          VERSION_CODE: ${{ steps.release.outputs.version_code }}
+          ZIP_URL: ${{ steps.release.outputs.zip_url }}
+          REPO: ${{ github.repository }}
+        run: |
+          CHANGELOG_URL="https://raw.githubusercontent.com/$REPO/main/changelog.md"
+          cp body.md changelog.md
+          jq -n \
+            --arg v "$TAG" \
+            --argjson vc "$VERSION_CODE" \
+            --arg z "$ZIP_URL" \
+            --arg c "$CHANGELOG_URL" \
+            '{version:$v, versionCode:$vc, zipUrl:$z, changelog:$c}' > update.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          for BRANCH in main changelog; do
+            git worktree add --detach "wt-$BRANCH" "origin/$BRANCH"
+            cp changelog.md update.json "wt-$BRANCH/"
+            git -C "wt-$BRANCH" add changelog.md update.json
+            if git -C "wt-$BRANCH" diff --cached --quiet; then
+              echo "No metadata changes for $BRANCH, skipping"
+            else
+              git -C "wt-$BRANCH" commit -m "docs: update changelog metadata for $TAG"
+              git -C "wt-$BRANCH" push origin "HEAD:$BRANCH"
+            fi
+            git worktree remove "wt-$BRANCH"
+          done

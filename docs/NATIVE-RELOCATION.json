@@ -1,0 +1,44 @@
+[
+  {
+    "path": "zygisk/x86_64.so",
+    "occurrences": 8,
+    "original_sha256": "3c157a41659d21d1ad6e74f8ecb38df00cd77610fb7e8b0b164c1603f918b9b1",
+    "relocated_sha256": "1df3fc98a6196533da79b229e76a5ae13d3011bb553cbf77a8bacc1e2a38a308"
+  },
+  {
+    "path": "zygisk/armeabi-v7a.so",
+    "occurrences": 8,
+    "original_sha256": "64b3e44fbf2d71db4bca71f83a33b27880fedb3ccf91cff1073616491441f528",
+    "relocated_sha256": "d99da755cf0f3b129acb10ac6b5d413c9afe5907e7a80d6be93e5668c8581542"
+  },
+  {
+    "path": "zygisk/arm64-v8a.so",
+    "occurrences": 8,
+    "original_sha256": "4856b31010b25c61b29b532744aed7de15b0de2f816c2827a817c94b4cc0ce50",
+    "relocated_sha256": "52971978409e5f76dd971567a9ea82bc849f5ee98f0c3c7f069093605a0f0bee"
+  },
+  {
+    "path": "legacy/zygisk/x86_64.so",
+    "occurrences": 6,
+    "original_sha256": "6f6fe5d7200104f004d99a7e0e698aa936fbde3739b784b9e1add3c3dc847026",
+    "relocated_sha256": "d373c27ee2d07b40d0c19eee202b9199d5f1c62562fe60b9cdb5498ef57f3bc9"
+  },
+  {
+    "path": "legacy/zygisk/armeabi-v7a.so",
+    "occurrences": 6,
+    "original_sha256": "bd9a2b89626f06899187b45989169ccad4ec0b336b2280f2b08941655e4f1cb3",
+    "relocated_sha256": "2282bf69cb9851eaa150734a85bbf5aee0cacbe3bc4fb889382bb5b4c0e766b5"
+  },
+  {
+    "path": "legacy/zygisk/arm64-v8a.so",
+    "occurrences": 6,
+    "original_sha256": "f7e563e34b55194152d32c6c75bc7a10415a504d3ba86a49cad802886f792559",
+    "relocated_sha256": "5d954c039fc47cc912e12ce29b8765f4231aa393ad2e75a743e41e32e75fb296"
+  },
+  {
+    "path": "legacy/zygisk/x86.so",
+    "occurrences": 6,
+    "original_sha256": "119d5f1d4d7a6f81dd17a488dcb366a2790504e69c6b832d848a2e1d1eb1790a",
+    "relocated_sha256": "8d584b1019dd0bdbb83a8a6cef67fa64f63b649be32cf8f6c4385fa4228bfce8"
+  }
+]

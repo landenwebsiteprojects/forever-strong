@@ -1,0 +1,1938 @@
+[
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "extract-all-button",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "reset-ui-button",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "integrity-toggle",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "subtab-status",
+    "handler": null,
+    "action": null,
+    "text": "Dashboard"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "subtab-announcements",
+    "handler": null,
+    "action": null,
+    "text": "Announcements"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "subtab-interface",
+    "handler": null,
+    "action": null,
+    "text": "Interface"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "subtab-support",
+    "handler": null,
+    "action": null,
+    "text": "Support"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "subtab-logs",
+    "handler": null,
+    "action": null,
+    "text": "Logs"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Prop Spoofing Global system property spoof"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Repair Mode Fix common issues without reboot"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Bootloader Spoofers Control which app will use keybox"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Set Profile Customize pixel prop injection"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Module Settings Customize module behaviour"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Developer Mode Module core settings"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": "downloader",
+    "text": "Integrity Downloader Useful tools and files"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "refresh-announcements",
+    "handler": null,
+    "action": null,
+    "text": "Refresh"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "ui-scale-slider",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "ui-scale-reset",
+    "handler": null,
+    "action": null,
+    "text": "Reset"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-ui-style",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-edge-swipe",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-fullscreen",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-animated-background",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-skip-intro",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-ui-cache",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-opening-toasts",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-edge-tap",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-back-button",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "input",
+    "id": "toggle-tab-swipe",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "gesture-left",
+    "handler": null,
+    "action": null,
+    "text": "L"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "gesture-right",
+    "handler": null,
+    "action": null,
+    "text": "R"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "refresh-logs",
+    "handler": null,
+    "action": null,
+    "text": "Refresh"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "logs-file-toggle",
+    "handler": null,
+    "action": null,
+    "text": "Available files \u2304"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "log-copy",
+    "handler": null,
+    "action": null,
+    "text": "Copy"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Auto Pilot Auto-update keybox and fingerprint"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Import Keybox Set keybox from internal storage"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Keybox Downloader Download and modify Keybox source"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Play Integrity PIF fingerprint configuration"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": "spoofing",
+    "text": "ROM Spoofing Custom ROM property overrides"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Per App Spoofing App-specific property injection"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Fix Boot Hash Repair abnormal boot hash"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Hide Sus Files Obfuscate basic suspicious paths"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "select",
+    "id": "lang-dropdown-community",
+    "handler": null,
+    "action": null,
+    "text": "English \u7b80\u4f53\u4e2d\u6587 \u0627\u0644\u0639\u0631\u0628\u064a\u0629 Spanish Bahasa Indonesia \u0420\u0443\u0441\u0441\u043a\u0438\u0439 Deutsch Rom\u00e2n\u0103 Turkish Magyar Italiano Nederlands Portugu\u00eas (Brasil)"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Conflict Resolver Fix Multiple ROOT implementation"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": "report",
+    "text": "Report a Problem Send feedback to the developer"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": "assistant",
+    "text": "Ask Assistant Get help and guidance"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": "support",
+    "text": "WebUI Translation Team Thanks to these people"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "extract-back",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "extract-refresh",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Home"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "Tools"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "More"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "reset-ui-cancel",
+    "handler": null,
+    "action": null,
+    "text": "Cancel"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "reset-ui-confirm-button",
+    "handler": null,
+    "action": null,
+    "text": "Confirm"
+  },
+  {
+    "page": "webroot/index.html",
+    "tag": "button",
+    "id": "modal-close",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "div",
+    "id": "spoofAppsRow",
+    "handler": "toggleSpoofApps()",
+    "action": null,
+    "text": "dynamic_form Spoof Apps info About Spoof Apps Enable per-app pixel spoofing for selected apps. Apps in your list will receive spoofed build properties (model, f"
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "showInfo(event)",
+    "action": null,
+    "text": "info About Spoof Apps Enable per-app pixel spoofing for selected apps. Apps in your list will receive spoofed build properties (model, fingerprint, device info)"
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "input",
+    "id": "spoofAppsInput",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "button",
+    "id": "sysBtn",
+    "handler": "toggleSystemApps()",
+    "action": null,
+    "text": "apps System Apps"
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openBackupModal()",
+    "action": null,
+    "text": "save Backup"
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openRestoreModal()",
+    "action": null,
+    "text": "restore Restore"
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "selectAllVisible()",
+    "action": null,
+    "text": "done_all Select All"
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "deselectAllVisible()",
+    "action": null,
+    "text": "remove_done Deselect All"
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "input",
+    "id": "search",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "div",
+    "id": "modalOverlay",
+    "handler": "if(event.target===this)closeModal()",
+    "action": null,
+    "text": "save Backups Close"
+  },
+  {
+    "page": "webroot/Pixel/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeModal()",
+    "action": null,
+    "text": "Close"
+  },
+  {
+    "page": "webroot/Profile/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "clearData()",
+    "action": null,
+    "text": "delete_outline Reset GMS"
+  },
+  {
+    "page": "webroot/Profile/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "openAPKMirror()",
+    "action": null,
+    "text": "download Get Play Store"
+  },
+  {
+    "page": "webroot/Profile/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "showProfileInfo()",
+    "action": null,
+    "text": "info Which profile should i use?"
+  },
+  {
+    "page": "webroot/Profile/index.html",
+    "tag": "div",
+    "id": "infoModal",
+    "handler": "hideProfileInfo(event)",
+    "action": null,
+    "text": "info About close Profiles phone_android Pixelify - Build, device, fingerprint, and system properties will be spoofed to match a certified device profile recogni"
+  },
+  {
+    "page": "webroot/Profile/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": "info About close Profiles phone_android Pixelify - Build, device, fingerprint, and system properties will be spoofed to match a certified device profile recogni"
+  },
+  {
+    "page": "webroot/Profile/index.html",
+    "tag": "span",
+    "id": null,
+    "handler": "hideProfileInfo()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/Report/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": null,
+    "action": "link",
+    "text": "Report Bug Submit issues to Telegram"
+  },
+  {
+    "page": "webroot/Report/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": null,
+    "action": "link",
+    "text": "Support Group Join Telegram community"
+  },
+  {
+    "page": "webroot/Report/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": null,
+    "action": "link",
+    "text": "Updates Channel Latest news & releases"
+  },
+  {
+    "page": "webroot/Report/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": null,
+    "action": "link",
+    "text": "Source Code View on GitHub"
+  },
+  {
+    "page": "webroot/Report/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": null,
+    "action": "script",
+    "text": "Export Report Generate diagnostic logs"
+  },
+  {
+    "page": "webroot/RepairMode/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "showInfo()",
+    "action": null,
+    "text": "info"
+  },
+  {
+    "page": "webroot/RepairMode/index.html",
+    "tag": "button",
+    "id": "picsBtn",
+    "handler": "runPics()",
+    "action": null,
+    "text": "power_settings_new"
+  },
+  {
+    "page": "webroot/RepairMode/index.html",
+    "tag": "div",
+    "id": "infoModal",
+    "handler": "closeInfo(event)",
+    "action": null,
+    "text": "info About Repair Mode Use me if your Play Integrity verdict suddenly starts failing after working correctly for some time , or if the Key Attestation app repor"
+  },
+  {
+    "page": "webroot/RepairMode/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": "info About Repair Mode Use me if your Play Integrity verdict suddenly starts failing after working correctly for some time , or if the Key Attestation app repor"
+  },
+  {
+    "page": "webroot/RepairMode/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeInfo()",
+    "action": null,
+    "text": "Got it"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openHelp()",
+    "action": null,
+    "text": "help_outline"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": "zygisk",
+    "handler": "toggle('zygisk')",
+    "action": null,
+    "text": "tune Zygiskless Mode"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "input",
+    "id": "zygiskInput",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": "verbose",
+    "handler": "toggleProp('verboseLogs')",
+    "action": null,
+    "text": "developer_mode Zygote Debugging"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "input",
+    "id": "verboseInput",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": "safemode",
+    "handler": "toggleSafeMode()",
+    "action": null,
+    "text": "health_and_safety Safe Mode"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "input",
+    "id": "safemodeInput",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": "aggressive",
+    "handler": "toggleAggressive()",
+    "action": null,
+    "text": "bolt Agressive Mode"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "input",
+    "id": "aggressiveInput",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": "updateTrans",
+    "handler": "updateCanary()",
+    "action": null,
+    "text": "update Sync with Canary chevron_right"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": "zygisknext",
+    "handler": "toggleZygiskNext()",
+    "action": null,
+    "text": "memory Customize ZN"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "input",
+    "id": "zygisknextInput",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": "extractBoot",
+    "handler": "extractBoot()",
+    "action": null,
+    "text": "developer_board Extract boot.img chevron_right"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": "injectHma",
+    "handler": "injectHma()",
+    "action": null,
+    "text": "adb Inject HMA-OOS config chevron_right"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": "helpModal",
+    "handler": "closeHelpOnBackdrop(event)",
+    "action": null,
+    "text": "help_outline What does this do? close Core Settings tune Zygiskless Mode Enable this if you are on a Pixel stock ROM or a ROM with built-in Play Integrity spoof"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": "help_outline What does this do? close Core Settings tune Zygiskless Mode Enable this if you are on a Pixel stock ROM or a ROM with built-in Play Integrity spoof"
+  },
+  {
+    "page": "webroot/Control/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeHelp()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "infoModal",
+    "handler": "closeInfoModal(event)",
+    "action": null,
+    "text": "info What do these do? close"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": "info What do these do? close"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "closeInfoModal()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openInfoModal()",
+    "action": null,
+    "text": "info"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "zygiskCard",
+    "handler": "toggleZygiskPause()",
+    "action": null,
+    "text": "play_arrow Resume Zygisk Tap to pause zygisk injection"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-advanced",
+    "handler": "toggleBehaviour('advanced')",
+    "action": null,
+    "text": "tune Advanced Mode"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "advanced",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-verbose",
+    "handler": "toggleBehaviour('verbose')",
+    "action": null,
+    "text": "build_circle Verbose Mode"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "verbose",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-skip_json",
+    "handler": "toggleBehaviour('skip_json')",
+    "action": null,
+    "text": "code_off Skip JSON"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "skip_json",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-skip_key",
+    "handler": "toggleBehaviour('skip_key')",
+    "action": null,
+    "text": "vpn_key_off Skip Key"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "skip_key",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-spoofPixel",
+    "handler": "toggle('spoofPixel')",
+    "action": null,
+    "text": "shop Pixelify Playstore"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "spoofPixel",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-spoofVendingFinger",
+    "handler": "toggle('spoofVendingFinger')",
+    "action": null,
+    "text": "android Pixel Fingerprint"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "spoofVendingFinger",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-spoofBuild",
+    "handler": "toggle('spoofBuild')",
+    "action": null,
+    "text": "phone_iphone Build Spoof"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "spoofBuild",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-spoofProps",
+    "handler": "toggle('spoofProps')",
+    "action": null,
+    "text": "android GMS Spoof"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "spoofProps",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-spoofProvider",
+    "handler": "toggle('spoofProvider')",
+    "action": null,
+    "text": "dynamic_form Attestation API"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "spoofProvider",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-spoofSignature",
+    "handler": "toggle('spoofSignature')",
+    "action": null,
+    "text": "verified_user ROM Signature"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "spoofSignature",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": "row-spoofVendingSdk",
+    "handler": "toggle('spoofVendingSdk')",
+    "action": null,
+    "text": "engineering A10 Downgrade SDK"
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "input",
+    "id": "spoofVendingSdk",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PlayIntegrityFork/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "restartServices()",
+    "action": null,
+    "text": "refresh Restart Services"
+  },
+  {
+    "page": "webroot/Assistant/index.html",
+    "tag": "button",
+    "id": "toggleBtn",
+    "handler": null,
+    "action": null,
+    "text": "Minimize FAQ"
+  },
+  {
+    "page": "webroot/Assistant/index.html",
+    "tag": "input",
+    "id": "search",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Assistant/index.html",
+    "tag": "input",
+    "id": "userInput",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Assistant/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "sendMessage()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Assistant/index.html",
+    "tag": "a",
+    "id": null,
+    "handler": "openLink('https://t.me/TempMeow');return false;",
+    "action": null,
+    "text": "Contact Developer"
+  },
+  {
+    "page": "webroot/PropSpoofer/index.html",
+    "tag": "button",
+    "id": "infoBtn",
+    "handler": null,
+    "action": null,
+    "text": "info"
+  },
+  {
+    "page": "webroot/PropSpoofer/index.html",
+    "tag": "input",
+    "id": "universalSearchInput",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PropSpoofer/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "clearUniversalSearch()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/PropSpoofer/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "selectAll()",
+    "action": null,
+    "text": "check_circle Select All"
+  },
+  {
+    "page": "webroot/PropSpoofer/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "clearAll()",
+    "action": null,
+    "text": "remove_circle Clear All"
+  },
+  {
+    "page": "webroot/PropSpoofer/index.html",
+    "tag": "div",
+    "id": "hookToggle",
+    "handler": "toggleHook()",
+    "action": null,
+    "text": "bug_report Hook Prop"
+  },
+  {
+    "page": "webroot/PropSpoofer/index.html",
+    "tag": "div",
+    "id": "execBtn",
+    "handler": "execute()",
+    "action": null,
+    "text": "play_arrow Apply Changes"
+  },
+  {
+    "page": "webroot/PropSpoofer/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "closeInfoModal()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/PropSpoofer/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeInfoModal()",
+    "action": null,
+    "text": "Got it"
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "button",
+    "id": "rebootCancel",
+    "handler": null,
+    "action": null,
+    "text": "Cancel"
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "button",
+    "id": "rebootConfirm",
+    "handler": null,
+    "action": null,
+    "text": "Reboot"
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": "info Fix Boot Hash close Reboot is required to apply changes Only A-Z and 0-9 are allowed. Do not include labels or spaces. if you are unsure please leave it al"
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "button",
+    "id": "infoClose",
+    "handler": null,
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "button",
+    "id": "infoBtn",
+    "handler": null,
+    "action": null,
+    "text": "info"
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "input",
+    "id": "new-hash",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "button",
+    "id": "apply",
+    "handler": null,
+    "action": null,
+    "text": "check Apply"
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "button",
+    "id": "reset",
+    "handler": null,
+    "action": null,
+    "text": "restart_alt Reset"
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "button",
+    "id": "teehash",
+    "handler": null,
+    "action": null,
+    "text": "auto_fix_high Auto Get Hash from TEEsim"
+  },
+  {
+    "page": "webroot/BootHash/index.html",
+    "tag": "button",
+    "id": "reboot",
+    "handler": null,
+    "action": null,
+    "text": "restart_alt Reboot"
+  },
+  {
+    "page": "webroot/Support/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openExternal('https://github.com/MeowDump/TRANSLATIONS')",
+    "action": null,
+    "text": "Become a translator"
+  },
+  {
+    "page": "webroot/RootImplementation/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openHelp()",
+    "action": null,
+    "text": "help_outline"
+  },
+  {
+    "page": "webroot/RootImplementation/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "denySelection()",
+    "action": null,
+    "text": "Deny"
+  },
+  {
+    "page": "webroot/RootImplementation/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "agreeSelection()",
+    "action": null,
+    "text": "Agree & Continue"
+  },
+  {
+    "page": "webroot/RootImplementation/index.html",
+    "tag": "div",
+    "id": "helpModal",
+    "handler": "closeHelpOnBackdrop(event)",
+    "action": null,
+    "text": "help_outline What does this do? close Usage priority_high Choose your primary root Select the root solution you actually intend to use on your device. This is u"
+  },
+  {
+    "page": "webroot/RootImplementation/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": "help_outline What does this do? close Usage priority_high Choose your primary root Select the root solution you actually intend to use on your device. This is u"
+  },
+  {
+    "page": "webroot/RootImplementation/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeHelp()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/Spoofing/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeRebootModal()",
+    "action": null,
+    "text": "Cancel"
+  },
+  {
+    "page": "webroot/Spoofing/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "confirmReboot()",
+    "action": null,
+    "text": "Reboot"
+  },
+  {
+    "page": "webroot/Spoofing/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "showRebootModal()",
+    "action": null,
+    "text": "restart_alt Reboot Device"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openHelp()",
+    "action": null,
+    "text": "help_outline"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "div",
+    "id": "default",
+    "handler": "toggleDefault()",
+    "action": null,
+    "text": "block Skip Integrity Box"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "input",
+    "id": "defaultInput",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": "download",
+    "handler": "runKey()",
+    "action": null,
+    "text": "download Download"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": "repoRefresh",
+    "handler": null,
+    "action": null,
+    "text": "refresh"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": "repoClose",
+    "handler": null,
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": "repoTryAgain",
+    "handler": null,
+    "action": null,
+    "text": "Try again"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "OH MY KEYMINT /data/misc/keystore/omk/keybox.xml"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "TRICKY STORE / TEE SIMULATOR RS /data/adb/tricky_store/keybox.xml"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "TEE SIM JingMatrix /data/adb/teesim/keybox.xml"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": "destCancel",
+    "handler": null,
+    "action": null,
+    "text": "Cancel"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "div",
+    "id": "helpModal",
+    "handler": "closeHelpOnBackdrop(event)",
+    "action": null,
+    "text": "help_outline What does this do? close Keybox Source vpn_key Source Selection Each download session allows you to choose only one keybox source. Using multiple s"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": "help_outline What does this do? close Keybox Source vpn_key Source Selection Each download session allows you to choose only one keybox source. Using multiple s"
+  },
+  {
+    "page": "webroot/KeyboxSource/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeHelp()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/HideMyFiles/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openInfo()",
+    "action": null,
+    "text": "info"
+  },
+  {
+    "page": "webroot/HideMyFiles/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "runCleaner()",
+    "action": null,
+    "text": "visibility_off HIDE"
+  },
+  {
+    "page": "webroot/HideMyFiles/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "unhide()",
+    "action": null,
+    "text": "visibility UNHIDE"
+  },
+  {
+    "page": "webroot/HideMyFiles/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "selectAll()",
+    "action": null,
+    "text": "select_all Select All"
+  },
+  {
+    "page": "webroot/HideMyFiles/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "deselectAll()",
+    "action": null,
+    "text": "deselect Deselect All"
+  },
+  {
+    "page": "webroot/HideMyFiles/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "selectAllMove()",
+    "action": null,
+    "text": "visibility_off All Move"
+  },
+  {
+    "page": "webroot/HideMyFiles/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "selectAllRename()",
+    "action": null,
+    "text": "deblur All Rename"
+  },
+  {
+    "page": "webroot/HideMyFiles/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "closeInfo()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/HideMyFiles/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeInfo()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/Pilot/index.html",
+    "tag": "input",
+    "id": "autopilotToggle",
+    "handler": "toggleAutopilot()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Pilot/index.html",
+    "tag": "div",
+    "id": "fullMode",
+    "handler": "setMode('full')",
+    "action": null,
+    "text": "auto_fix_high Xtreme Mode"
+  },
+  {
+    "page": "webroot/Pilot/index.html",
+    "tag": "div",
+    "id": "keyboxMode",
+    "handler": "setMode('keybox')",
+    "action": null,
+    "text": "vpn_key Keybox Only Mode"
+  },
+  {
+    "page": "webroot/Flags/index.html",
+    "tag": "div",
+    "id": "infoModal",
+    "handler": "closeInfoModal(event)",
+    "action": null,
+    "text": "info What do these do? close"
+  },
+  {
+    "page": "webroot/Flags/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": "info What do these do? close"
+  },
+  {
+    "page": "webroot/Flags/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "closeInfoModal()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/Flags/index.html",
+    "tag": "div",
+    "id": "row-action_exec",
+    "handler": "toggleExec()",
+    "action": null,
+    "text": "play_circle Auto Run"
+  },
+  {
+    "page": "webroot/Flags/index.html",
+    "tag": "label",
+    "id": null,
+    "handler": "event.stopPropagation()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Flags/index.html",
+    "tag": "input",
+    "id": "cb-action_exec",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Flags/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openInfoModal()",
+    "action": null,
+    "text": "help_outline What do these do?"
+  },
+  {
+    "page": "webroot/Flags/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "refreshAll()",
+    "action": null,
+    "text": "refresh Refresh States"
+  },
+  {
+    "page": "webroot/KeyboxLoader/index.html",
+    "tag": "button",
+    "id": "refreshBtn",
+    "handler": null,
+    "action": null,
+    "text": "refresh"
+  },
+  {
+    "page": "webroot/KeyboxLoader/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "key OH MY KEYMINT /data/misc/keystore/omk/keybox.xml chevron_right"
+  },
+  {
+    "page": "webroot/KeyboxLoader/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "security TRICKY STORE / OOS / TEE SIMULATOR RS /data/adb/tricky_store/keybox.xml chevron_right"
+  },
+  {
+    "page": "webroot/KeyboxLoader/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": null,
+    "action": null,
+    "text": "memory TEE SIMULATOR /data/adb/teesim/keybox.xml chevron_right"
+  },
+  {
+    "page": "webroot/KeyboxLoader/index.html",
+    "tag": "button",
+    "id": "cancelButton",
+    "handler": null,
+    "action": null,
+    "text": "Cancel"
+  },
+  {
+    "page": "webroot/KeyboxLoader/index.html",
+    "tag": "button",
+    "id": "closePreview",
+    "handler": null,
+    "action": null,
+    "text": "Close preview"
+  },
+  {
+    "page": "webroot/Downloader/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openInfoModal()",
+    "action": null,
+    "text": "info"
+  },
+  {
+    "page": "webroot/Downloader/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "selectAll()",
+    "action": null,
+    "text": "check_circle Select All"
+  },
+  {
+    "page": "webroot/Downloader/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "deselectAll()",
+    "action": null,
+    "text": "remove_circle Clear All"
+  },
+  {
+    "page": "webroot/Downloader/index.html",
+    "tag": "div",
+    "id": "dlBtn",
+    "handler": "startDownload()",
+    "action": null,
+    "text": "download Download Selected"
+  },
+  {
+    "page": "webroot/Downloader/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "closeInfoModal()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/Downloader/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeInfoModal()",
+    "action": null,
+    "text": "Got it"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "openInfo()",
+    "action": null,
+    "text": "info"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "input",
+    "id": "search",
+    "handler": null,
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": "searchClear",
+    "handler": "clearSearch()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "confirmBulk('target')",
+    "action": null,
+    "text": "check_circle Spoof All"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "confirmBulk('blacklist')",
+    "action": null,
+    "text": "block Block All"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "resetDefaults()",
+    "action": null,
+    "text": "restart_alt Reset All"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": "teeSimToggle",
+    "handler": "toggleTeeSim()",
+    "action": null,
+    "text": "sync TeeSim: \u2026"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "backupTargets()",
+    "action": null,
+    "text": "backup Backup"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "restoreTargets()",
+    "action": null,
+    "text": "restore Restore"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "closeInfo()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeInfo()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "div",
+    "id": null,
+    "handler": "closeConfirm()",
+    "action": null,
+    "text": ""
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeConfirm()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "closeConfirm()",
+    "action": null,
+    "text": "Cancel"
+  },
+  {
+    "page": "webroot/TrickyStore/index.html",
+    "tag": "button",
+    "id": "confirmAction",
+    "handler": null,
+    "action": null,
+    "text": "Confirm"
+  },
+  {
+    "page": "toolkit/BootConfiguration/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "dismissFreshCard()",
+    "action": null,
+    "text": "close"
+  },
+  {
+    "page": "toolkit/BootConfiguration/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "denySelection()",
+    "action": null,
+    "text": "Deny"
+  },
+  {
+    "page": "toolkit/BootConfiguration/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "agreeSelection()",
+    "action": null,
+    "text": "Agree & Continue"
+  },
+  {
+    "page": "toolkit/BootConfiguration/index.html",
+    "tag": "button",
+    "id": null,
+    "handler": "rebootDevice()",
+    "action": null,
+    "text": "restart_alt Reboot Device"
+  }
+]

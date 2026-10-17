@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>ForeverStrong · KeyboxSource</title><script src="../theme.js"></script>
+
+
+<link href="../halloween.css" rel="stylesheet"/><link href="../components.css" rel="stylesheet"/><script src="../integration.js"></script><script src="../component-bridge.js"></script><link href="../forever.css" rel="stylesheet"/></head>
+<body class="component"><header class="he-component-header"><div><p>FOREVER STRONG / CONTROL CENTER</p><h1>Keybox sources</h1></div></header>
+<div class="card">
+<button class="help-btn" onclick="openHelp()"><span class="material-icons">help_outline</span></button>
+<h1 class="fs-original-title"><span class="material-icons">security</span>Keybox Source</h1>
+<div class="section-label">Default Source</div>
+<div class="row" id="default" onclick="toggleDefault()">
+<div class="icon-wrap"><span class="material-icons">block</span></div>
+<div class="content"><div class="title">Skip Integrity Box</div></div>
+<div class="status-dot"></div>
+<label class="switch"><input id="defaultInput" type="checkbox"/><span class="slider"><span class="knob"></span></span></label>
+</div>
+<div class="section-label">Unofficial Keybox Sources</div>
+<div id="sourceList"></div>
+<button class="download" disabled="" id="download" onclick="runKey()">
+<span class="material-icons">download</span>Download
+ </button>
+<div class="status" id="status">Checking flags...</div>
+<div class="footer">IntegrityBox © 2026</div>
+</div>
+<div aria-hidden="true" id="repoOverlay">
+<div id="repoBar"><div id="repoActions"><button aria-label="Refresh repository" id="repoRefresh" title="Refresh" type="button"><span aria-hidden="true" class="material-icons">refresh</span></button><button aria-label="Close repository" id="repoClose" title="Close" type="button"><span aria-hidden="true" class="material-icons">close</span></button></div></div>
+<div id="repoViewport">
+<iframe allow="clipboard-read *; clipboard-write *" id="repoFrame" title="Keybox repository"></iframe>
+<div aria-label="Repository information" id="repoTopCover">
+<div class="cover-inner">
+<div class="cover-title">DISCLAIMER</div>
+<div class="cover-subtitle">An ad appears in the end of this page. DO NOT CLICK IT! It is a scam. Ignore it. Don't fall for it!</div>
+</div>
+</div>
+<div aria-label="Repository footer cover" id="repoBottomCover"><div class="cover-subtitle">Powered by Tricky Addon Keybox Repository</div></div>
+<div aria-live="polite" id="repoMessage" role="status">
+<div class="message-card">
+<div aria-hidden="true" class="message-icon" id="repoMessageIcon"><div class="connecting-spinner"></div></div>
+<h2 id="repoMessageTitle">Connecting to repository</h2>
+<p id="repoMessageText">Please wait while the keybox repository loads.</p>
+<button id="repoTryAgain" type="button">Try again</button>
+<div class="message-note" id="repoMessageNote">Check your internet connection if this takes too long.</div>
+</div>
+</div>
+</div>
+</div>
+<div aria-hidden="true" id="destinationModal">
+<div class="dest-card">
+<h2>Choose destination</h2><p id="pendingKeyboxName">Downloaded keybox</p>
+<button class="dest-choice" data-target="omk">OH MY KEYMINT<small>/data/misc/keystore/omk/keybox.xml</small></button>
+<button class="dest-choice" data-target="tricky">BUNDLED TRICKY STORE OSS<small>/data/adb/tricky_store/keybox.xml</small></button>
+<button class="dest-choice" data-target="teesim">TEE SIM JingMatrix<small>/data/adb/teesim/keybox.xml</small></button>
+<button class="dest-cancel" id="destCancel">Cancel</button>
+</div>
+</div>
+<div aria-hidden="true" aria-live="polite" id="busyOverlay" role="status"><div class="busy-card"><div class="busy-spinner"></div><div class="busy-title" id="busyTitle">Please wait</div><div class="busy-text" id="busyText">Working…</div></div></div>
+<div class="toast" id="toast"><span class="material-icons">check_circle</span><span id="toastText"></span></div>
+<div class="modal-overlay" id="helpModal" onclick="closeHelpOnBackdrop(event)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+<div class="modal-header">
+<h2><span class="material-icons">help_outline</span>What does this do?</h2>
+<button class="modal-close" onclick="closeHelp()"><span class="material-icons">close</span></button>
+</div>
+<div class="modal-body">
+<div class="help-section">
+<div class="help-section-title">Keybox Source</div>
+<div class="help-item"><div class="icon-wrap"><span class="material-icons">vpn_key</span></div><div class="help-content">
+<div class="help-title">Source Selection</div><div class="help-desc">Each download session allows you to choose only one keybox source. Using multiple sources at the same time isn’t supported because the files could conflict with one another</div>
+</div></div>
+<div class="help-item"><div class="icon-wrap"><span class="material-icons">block</span></div><div class="help-content">
+<div class="help-title">Skip Integrity Box toggle</div><div class="help-desc">When you click the ACTION button, the default IntegrityBox keybox source will be disabled, and the unofficial source you selected will be used instead</div>
+</div></div>
+<div class="help-item"><div class="icon-wrap"><span class="material-icons">download</span></div><div class="help-content">
+<div class="help-title">Download Button</div><div class="help-desc">You can download the keybox from any of the unofficial sources mentioned above by clicking the Download button. The downloaded keybox will automatically replace the existing keybox at its current path, so no manual changes or configuration are required</div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<script>
+var DIR="/data/adb/Box-Brain";
+var DEFAULT_FLAG=DIR+"/disable-default-source";
+var KEY_SCRIPT="/data/adb/modules/halloweenedition/webroot/common_scripts/spectre.sh";
+var SPECTER_KEYBOX="/data/adb/Box-Brain/catalog_test/keybox.xml";
+
+var SOURCES=[
+ {id:"specter",name:"Specter"},
+ {id:"tricky-addon",name:"Tricky Addon"}
+];
+
+var selectedId=null;
+var execBusy=false;
+var REPO_URL="https://keybox.kowx712.cc";
+var KEYBOX_DEST=heIntegration.config+"/keybox.xml";
+var repoHandshake=null;
+var pendingKeyboxText=null;
+var KEYBOX_DESTINATIONS={omk:"/data/misc/keystore/omk/keybox.xml",tricky:heIntegration.config+"/keybox.xml",teesim:"/data/adb/teesim/keybox.xml"};
+
+function sourcePath(id){return DIR+"/keybox-source-"+id}
+
+function shellQuote(value){
+ return "'"+String(value).replace(/'/g,"'\\''")+"'";
+}
+
+function popup(msg){
+ var toast=document.getElementById("toast");
+ document.getElementById("toastText").textContent=msg;
+ toast.classList.add("show");
+ clearTimeout(popup.timer);
+ popup.timer=setTimeout(function(){toast.classList.remove("show")},2400);
+}
+
+function run(cmd,cb){return window.heShell(cmd).then(out=>{if(cb)cb(out);return out;});}
+
+function render(){
+ var list=document.getElementById("sourceList");list.innerHTML="";
+ SOURCES.forEach(function(item){
+  var row=document.createElement("div");row.className="row";row.id="row-"+item.id;
+  row.onclick=function(){selectSource(item.id);};
+  row.innerHTML='<div class="icon-wrap"><span class="material-icons">vpn_key</span></div><div class="content"><div class="title">'+item.name+'</div></div><div class="status-dot"></div><label class="switch"><input id="'+item.id+'Input" type="checkbox"><span class="slider"><span class="knob"></span></span></label>';
+  list.appendChild(row);
+ });
+}
+
+function setOn(id,on){var row=document.getElementById(id);if(!row)return;row.classList.toggle("on",!!on);var input=row.querySelector("input");if(input)input.checked=!!on;}
+
+function showBusy(title,message){
+ document.getElementById("busyTitle").textContent=title||"Please wait";
+ document.getElementById("busyText").textContent=message||"Working…";
+ var overlay=document.getElementById("busyOverlay");overlay.classList.add("show");overlay.setAttribute("aria-hidden","false");
+}
+function hideBusy(){var overlay=document.getElementById("busyOverlay");overlay.classList.remove("show");overlay.setAttribute("aria-hidden","true");}
+
+function applyState(id){
+ selectedId=id||null;
+ SOURCES.forEach(function(item){setOn("row-"+item.id,item.id===selectedId);});
+ var defaultInput=document.getElementById("defaultInput");
+ var canSkip=selectedId==="specter";
+ defaultInput.disabled=!canSkip||execBusy;
+ if(!canSkip){defaultInput.checked=false;setOn("default",false);}
+ var download=document.getElementById("download");
+ download.style.display=selectedId?"flex":"none";download.disabled=!selectedId||execBusy;
+ download.innerHTML=selectedId==="tricky-addon"?'<span class="material-icons">open_in_browser</span>Open Keybox Repo':'<span class="material-icons">download</span>Download';
+ document.getElementById("status").textContent=selectedId?"Active: "+SOURCES.find(function(x){return x.id===selectedId;}).name:"No source selected";
+}
+
+function selectSource(id){
+ if(execBusy)return;
+ if(selectedId===id){if(id==="tricky-addon"){openRepo();return;} }
+ var next=selectedId===id?null:id;
+ if(next!=="specter")run("rm -f "+shellQuote(DEFAULT_FLAG),function(){});
+ applyState(next);
+ popup(next?"Source enabled":"Source disabled");
+}
+
+function toggleDefault(){
+ if(selectedId!=="specter"||execBusy)return;
+ var input=document.getElementById("defaultInput");
+ var on=!input.checked;
+ var command=on?"touch "+shellQuote(DEFAULT_FLAG):"rm -f "+shellQuote(DEFAULT_FLAG);
+ execBusy=true;input.disabled=true;
+ showBusy(on?"Updating preference":"Updating preference",on?"Enabling Skip Integrity Box…":"Disabling Skip Integrity Box…");
+ run(command+" && echo DEFAULT_OK",function(out){
+  execBusy=false;hideBusy();
+  var ok=String(out||"").indexOf("DEFAULT_OK")!==-1;
+  input.disabled=selectedId!=="specter";
+  if(ok){input.checked=on;setOn("default",on);popup(on?"Skip Integrity Box enabled":"Skip Integrity Box disabled");}
+  else{popup("Could not update preference");}
+  document.getElementById("download").disabled=!selectedId;
+ });
+}
+
+var repoLoadTimer=null;
+var repoLoadToken=0;
+var repoLoaded=false;
+var repoOpened=false;
+var repoUrl="";
+
+function setRepoMessage(title,message,icon,note){
+ var box=document.getElementById("repoMessage");
+ document.getElementById("repoMessageTitle").textContent=title;
+ document.getElementById("repoMessageText").textContent=message;
+ var iconEl=document.getElementById("repoMessageIcon");
+ iconEl.innerHTML=(title==="Connecting to repository")?"<div class=\"connecting-spinner\"></div>":(icon||"!");
+ document.getElementById("repoMessageNote").textContent=note||"";
+ box.classList.toggle("failed",title!=="Connecting to repository");
+ box.classList.add("show");
+}
+function hideRepoMessage(){document.getElementById("repoMessage").classList.remove("show");}
+function stopRepoLoadTimer(){if(repoLoadTimer){clearTimeout(repoLoadTimer);repoLoadTimer=null;}}
+function closeRepo(){
+  repoOpened=false;
+  stopRepoLoadTimer();
+  if(repoHandshake){clearInterval(repoHandshake);repoHandshake=null;}
+  var overlay=document.getElementById("repoOverlay");
+  var frame=document.getElementById("repoFrame");
+  frame.onload=null;
+  frame.src="about:blank";
+  overlay.classList.remove("show");
+  overlay.setAttribute("aria-hidden","true");
+  hideRepoMessage();
+}
+function refreshRepo(){
+  if(!repoOpened)return;
+  stopRepoLoadTimer();
+  if(repoHandshake){clearInterval(repoHandshake);repoHandshake=null;}
+  repoLoaded=false;
+  var token=++repoLoadToken;
+  var frame=document.getElementById("repoFrame");
+  var refresh=document.getElementById("repoRefresh");
+  refresh.disabled=true;
+  setRepoMessage(navigator.onLine===false?"You're offline":"Connecting to repository",navigator.onLine===false?"The internet connection appears to be unavailable. Reconnect and try again.":"Loading the latest repository page…","↻","The repository may take a few seconds to respond.");
+  if(navigator.onLine===false){refresh.disabled=false;return;}
+  repoLoadTimer=setTimeout(function(){
+    if(token!==repoLoadToken||repoLoaded||!repoOpened)return;
+    refresh.disabled=false;
+    setRepoMessage("Repository isn't responding","The page took too long to load. Check your connection, then try again.","!","A slow server or network interruption can cause this.");
+  },15000);
+  frame.onload=function(){
+    if(token!==repoLoadToken||!repoOpened)return;
+    if(!frame.src.startsWith(REPO_URL))return;
+    function handshake(){try{frame.contentWindow.postMessage({type:"handshake"},REPO_URL);}catch(e){}}
+    handshake();
+    if(repoHandshake)clearInterval(repoHandshake);
+    repoHandshake=setInterval(handshake,500);
+  };
+  frame.src=repoUrl+(repoUrl.indexOf("?")>=0?"&":"?")+"_refresh="+Date.now();
+}
+function openRepo(){
+  var overlay=document.getElementById("repoOverlay");
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+  repoOpened=true;
+  repoUrl=REPO_URL+"/"+((navigator.language||"en").split("-")[0]);
+  refreshRepo();
+}
+window.addEventListener("offline",function(){
+ if(repoOpened&&!repoLoaded){stopRepoLoadTimer();document.getElementById("repoRefresh").disabled=false;setRepoMessage("No internet connection","Your device appears to be offline. Reconnect to the internet and tap Try again.","⌁","Your selected keybox source has not been changed.");}
+});
+window.addEventListener("online",function(){if(repoOpened&&!repoLoaded)refreshRepo();});
+
+document.getElementById("repoClose").addEventListener("click",closeRepo);
+document.getElementById("repoRefresh").addEventListener("click",refreshRepo);
+document.getElementById("repoTryAgain").addEventListener("click",refreshRepo);
+
+window.addEventListener("message",function(event){
+  if(event.origin!==REPO_URL||!event.data||typeof event.data!=="object")return;
+  if(event.data.type==="handshake_ack"){
+    if(repoHandshake){clearInterval(repoHandshake);repoHandshake=null;}
+    repoLoaded=true;stopRepoLoadTimer();
+    document.getElementById("repoRefresh").disabled=false;
+    hideRepoMessage();
+    return;
+  }
+  if(event.data.type==="error"){
+    closeRepo();
+    popup("Keybox download failed");
+    document.getElementById("status").textContent="Repository download failed";
+    return;
+  }
+  if(event.data.type!=="download"||typeof event.data.url!=="string")return;
+
+  if(execBusy)return;
+  execBusy=true;
+  var button=document.getElementById("download");
+  var status=document.getElementById("status");
+  button.disabled=true;
+  status.textContent="Downloading keybox...";
+  fetch(event.data.url).then(function(response){
+    if(!response.ok)throw new Error("HTTP "+response.status);
+    return response.text();
+  }).then(function(content){
+    if(!content||!content.trim())throw new Error("Empty keybox");
+    pendingKeyboxText=content;
+    closeRepo();
+    document.getElementById("pendingKeyboxName").textContent="Choose where to install this keybox";
+    document.getElementById("destinationModal").classList.add("show");
+    document.getElementById("destinationModal").setAttribute("aria-hidden","false");
+    status.textContent="Choose a destination";
+    execBusy=false;
+    button.disabled=!selectedId;
+  }).catch(function(error){
+    execBusy=false;
+    button.disabled=!selectedId;
+    status.textContent="Download failed: "+(error.message||"unknown error");
+    popup("Keybox download failed");
+  });
+});
+
+async function installPendingKeybox(targetKey){
+ if(targetKey!=="tricky"){
+  const state=heIntegration.parse(await heIntegration.call('status'));
+  if(state[targetKey==='omk'?'external_omk':'external_teesim']!=='1'){popup('External engine is not enabled. Use bundled Tricky Store OSS.');return;}
+ }
+
+ if(execBusy)return;
+ var target=KEYBOX_DESTINATIONS[targetKey];if(!target)return;
+ var status=document.getElementById("status");
+ if(selectedId==="specter"){
+  execBusy=true;
+  var button=document.getElementById("download");button.disabled=true;
+  status.textContent="Installing keybox...";
+  var source=shellQuote(SPECTER_KEYBOX),path=shellQuote(target),tmp=shellQuote(target+".specter-new"),backup=shellQuote(target+".bak");
+  var dir=shellQuote(target.substring(0,target.lastIndexOf("/")));
+  var cmd="[ -s "+source+" ] || { echo KEYBOX_SOURCE_MISSING; exit 1; }; mkdir -p "+dir+" || { echo KEYBOX_DIR_FAILED; exit 1; }; cp "+source+" "+tmp+" || { rm -f "+tmp+"; echo KEYBOX_STAGE_FAILED; exit 1; }; chmod 644 "+tmp+" || { rm -f "+tmp+"; echo KEYBOX_PERMISSIONS_FAILED; exit 1; }; if [ -e "+path+" ]; then cp -p "+path+" "+backup+" || { rm -f "+tmp+"; echo KEYBOX_BACKUP_FAILED; exit 1; }; fi; mv -f "+tmp+" "+path+" || { rm -f "+tmp+"; echo KEYBOX_MOVE_FAILED; exit 1; }; [ -s "+path+" ] && cmp -s "+source+" "+path+" || { echo KEYBOX_VERIFY_FAILED; exit 1; }; echo KEYBOX_INSTALLED";
+  run(cmd,function(out){
+   execBusy=false;button.disabled=!selectedId;
+   var ok=String(out||"").indexOf("KEYBOX_INSTALLED")!==-1;
+   document.getElementById("destinationModal").classList.remove("show");document.getElementById("destinationModal").setAttribute("aria-hidden","true");
+   status.textContent=ok?"Keybox installed at "+target:"Installation failed: "+(String(out||"").match(/KEYBOX_[A-Z_]+/)||["check destination permissions"])[0];
+   popup(ok?"Keybox installed":"Keybox installation failed");
+  });
+  return;
+ }
+ if(!pendingKeyboxText)return;
+ execBusy=true;
+ status.textContent="Installing keybox...";
+ button=document.getElementById("download");button.disabled=true;
+ document.querySelectorAll(".dest-choice").forEach(function(choice){choice.disabled=true;});
+ showBusy("Installing keybox","Copying the downloaded keybox and verifying the destination. Please wait.");
+ var encoded=btoa(unescape(encodeURIComponent(pendingKeyboxText)));
+ var path2=shellQuote(target),backup2=shellQuote(target+".bak"),tmp2=shellQuote(target+".new"),dir2=shellQuote(target.substring(0,target.lastIndexOf("/")));
+ var cmd2="mkdir -p "+dir2+" || { echo KEYBOX_DIR_FAILED; exit 1; }; printf '%s' "+shellQuote(encoded)+" | base64 -d > "+tmp2+" || { rm -f "+tmp2+"; echo KEYBOX_DECODE_FAILED; exit 1; }; [ -s "+tmp2+" ] || { rm -f "+tmp2+"; echo KEYBOX_EMPTY; exit 1; }; chmod 644 "+tmp2+" || { rm -f "+tmp2+"; echo KEYBOX_PERMISSIONS_FAILED; exit 1; }; if [ -e "+path2+" ]; then cp -p "+path2+" "+backup2+" || { rm -f "+tmp2+"; echo KEYBOX_BACKUP_FAILED; exit 1; }; fi; mv -f "+tmp2+" "+path2+" || { rm -f "+tmp2+"; echo KEYBOX_MOVE_FAILED; exit 1; }; [ -s "+path2+" ] || { echo KEYBOX_VERIFY_FAILED; exit 1; }; echo KEYBOX_SET:1";
+ run(cmd2,function(out){
+  execBusy=false;hideBusy();button.disabled=!selectedId;pendingKeyboxText=null;
+  document.querySelectorAll(".dest-choice").forEach(function(choice){choice.disabled=false;});
+  document.getElementById("destinationModal").classList.remove("show");
+  document.getElementById("destinationModal").setAttribute("aria-hidden","true");
+  var result=String(out||"");var ok=result.indexOf("KEYBOX_SET:1")!==-1;
+  status.textContent=ok?"Keybox installed at "+target:"Installation failed: "+((result.match(/KEYBOX_[A-Z_]+/)||[])[0]||"check destination permissions");
+  popup(ok?"Keybox installed":"Keybox installation failed");
+ });
+}
+document.querySelectorAll(".dest-choice").forEach(function(button){button.addEventListener("click",function(){installPendingKeybox(button.dataset.target);});});
+document.getElementById("destCancel").addEventListener("click",function(){pendingKeyboxText=null;document.getElementById("destinationModal").classList.remove("show");document.getElementById("destinationModal").setAttribute("aria-hidden","true");});
+
+function runKey(){
+ if(!selectedId||execBusy)return;
+ if(selectedId==="tricky-addon"){openRepo();return;}
+ execBusy=true;
+ var button=document.getElementById("download"),status=document.getElementById("status");
+ button.disabled=true;
+ status.textContent="Downloading latest keybox…";
+ showBusy("Downloading keybox","Fetching the latest catalog and decoding a keybox. Please wait.");
+ var script=shellQuote(KEY_SCRIPT),source=shellQuote(SPECTER_KEYBOX);
+ setTimeout(function(){
+  run("[ -f "+script+" ] || { echo SPECTER_SCRIPT_MISSING; exit 1; }; sh "+script+" >/dev/null 2>&1 || { echo SPECTER_DOWNLOAD_FAILED; exit 1; }; [ -s "+source+" ] || { echo SPECTER_OUTPUT_MISSING; exit 1; }; echo SPECTER_DOWNLOAD_OK",function(out){
+   execBusy=false;hideBusy();button.disabled=!selectedId;
+   var result=String(out||"");
+   if(result.indexOf("SPECTER_DOWNLOAD_OK")!==-1){
+    pendingKeyboxText="specter-file";
+    document.getElementById("pendingKeyboxName").textContent="Latest keybox downloaded. Choose where to install it.";
+    document.getElementById("destinationModal").classList.add("show");
+    document.getElementById("destinationModal").setAttribute("aria-hidden","false");
+    status.textContent="Download complete — choose a destination";
+   }else{
+    status.textContent="Specter download failed";
+    popup("Keybox download failed");
+   }
+  });
+ },50);
+}
+
+function openHelp(){
+ document.getElementById("helpModal").classList.add("show");
+ document.body.style.overflow="hidden";
+}
+
+function closeHelp(){
+ document.getElementById("helpModal").classList.remove("show");
+ document.body.style.overflow="";
+}
+
+function closeHelpOnBackdrop(e){
+ if(e.target===e.currentTarget)closeHelp();
+}
+
+function init(){
+ render();
+
+  run("[ -f "+shellQuote(DEFAULT_FLAG)+" ] && echo DEFAULT_ENABLED || echo DEFAULT_DISABLED",function(out){
+  var enabled=String(out||"").indexOf("DEFAULT_ENABLED")!==-1;
+  applyState(enabled?"specter":null);
+
+  var input=document.getElementById("defaultInput");
+  input.checked=enabled;
+  input.disabled=!enabled && selectedId!=="specter";
+  setOn("default",enabled);
+ });
+}
+
+document.addEventListener("DOMContentLoaded",init);
+</script>
+
+
+<script src="../TRANSLATIONS/i18n.js"></script>
+</body>
+</html>

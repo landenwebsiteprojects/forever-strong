@@ -1,0 +1,517 @@
+[
+  {
+    "path": "system.prop",
+    "size": 71,
+    "sha256": "2237f7bbe1d2094b81a094aaaa7b6d9f26300772014d00ad0e3b7f222e3cdb7f"
+  },
+  {
+    "path": "uninstall.sh",
+    "size": 3973,
+    "sha256": "7c88a4c37723e0f8e7cc6c9a12d9ec17ab87b1f5bd972c8b798b148106e30906"
+  },
+  {
+    "path": "key.png",
+    "size": 21404,
+    "sha256": "0dc67eb17f78ea973e29587532ce0baf0ac9dfe0e8266c2cf0057b36c1b93b8a"
+  },
+  {
+    "path": "classes.dex",
+    "size": 23844,
+    "sha256": "d1159e4fa305c81cff2178041f35b2b286302c6393eb4649d1587c6ab47117da"
+  },
+  {
+    "path": "box.png",
+    "size": 15769,
+    "sha256": "6a0315d6337fe13c539bb85443078ca0c66c2f00cbe5310eb84656d51a899b65"
+  },
+  {
+    "path": "CHANGELOG.md",
+    "size": 1275,
+    "sha256": "af040c4bf9b24c1668dfbcfa8a16b34269a4811c367588d06541e1d9b770dfb8"
+  },
+  {
+    "path": "hello.sh",
+    "size": 4586,
+    "sha256": "54ec68b73ca2db7459be24ac377a29bf9657e12a1a2b00669c75e67220c6c1b0"
+  },
+  {
+    "path": "post-fs-data.sh",
+    "size": 4599,
+    "sha256": "6c11d07f5bee0aebe214f7cca44719cabe9636b9339f8ab72a9c66825f00366f"
+  },
+  {
+    "path": "osm0sis.sh",
+    "size": 12281,
+    "sha256": "61f29cf435f8eb59cbc34fe4ec4f84e2c4ca50e2b6f201b74e99844f3bd0d1be"
+  },
+  {
+    "path": "action.sh",
+    "size": 15622,
+    "sha256": "a083b38307ffa151b1ecc691b1898b258d922550178ff17dc72f1a3222cf637e"
+  },
+  {
+    "path": "migrate.sh",
+    "size": 6967,
+    "sha256": "fbb178e2e835df0c1ad3c3785ccb205d2dd2da2adade15331a48d1f2de18ce5a"
+  },
+  {
+    "path": "service.sh",
+    "size": 6947,
+    "sha256": "6e5dcf423a2db01a2735c7cbfb2607c04f2de43c1e9e4067066ab44b1913aa1e"
+  },
+  {
+    "path": "module.prop",
+    "size": 503,
+    "sha256": "a12ab91773276fc75fd46e85e7b1682ea97d9ec95dfab557b0ea78263e510eb0"
+  },
+  {
+    "path": "hash",
+    "size": 8211,
+    "sha256": "afb9a460e1d1a216ebe66cecd5666ce3fdc66f12bf3149a3670b5c7eb458b532"
+  },
+  {
+    "path": "verify.sh",
+    "size": 752,
+    "sha256": "40654eb87f14dba998ff3505b72d30373d46404cd2a0f5be2797f02a3e3c46f2"
+  },
+  {
+    "path": "common_func.sh",
+    "size": 11203,
+    "sha256": "042891fd3317a55c5c9b09ec0437d22eea4f04360edbdbb3d182110b02b22d12"
+  },
+  {
+    "path": "customize.sh",
+    "size": 23444,
+    "sha256": "25527bad64e10c93bd31fd51b78bff7a09666ff2d88ec3073990fea2458075e6"
+  },
+  {
+    "path": "credits.md",
+    "size": 219,
+    "sha256": "872d4560c05c0eee30edab2069fb6f38ab383c88e3cd53090dbfea4b4a882302"
+  },
+  {
+    "path": "apps.txt",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "common_setup.sh",
+    "size": 1475,
+    "sha256": "21bf24a808f6fce44a6111a1f23b3829b63d0ea46e28362b2d67b2bff8c4b549"
+  },
+  {
+    "path": "zygisk/x86_64.so",
+    "size": 151112,
+    "sha256": "3c157a41659d21d1ad6e74f8ecb38df00cd77610fb7e8b0b164c1603f918b9b1"
+  },
+  {
+    "path": "zygisk/armeabi-v7a.so",
+    "size": 193836,
+    "sha256": "64b3e44fbf2d71db4bca71f83a33b27880fedb3ccf91cff1073616491441f528"
+  },
+  {
+    "path": "zygisk/source.md",
+    "size": 64,
+    "sha256": "47708d304bfeccb2781371910eef6c8163e34245a72370e4bdc0c48010fae65d"
+  },
+  {
+    "path": "zygisk/arm64-v8a.so",
+    "size": 269064,
+    "sha256": "4856b31010b25c61b29b532744aed7de15b0de2f816c2827a817c94b4cc0ce50"
+  },
+  {
+    "path": "webroot/style.css",
+    "size": 102714,
+    "sha256": "678815747f5ed39713e12e22f8b405edb375753d296a1df0aebe32ba2e6b2015"
+  },
+  {
+    "path": "webroot/UpdateTranslation.sh",
+    "size": 3946,
+    "sha256": "9456c02edf45342be26f050f3503f9de54f6510b8e1321e117d87ad631ddaf99"
+  },
+  {
+    "path": "webroot/meowna.ttf",
+    "size": 44520,
+    "sha256": "5f45c93a5bccdac14f108e486843b9b49e49f797bb8f41b93e9164f0cbf735c0"
+  },
+  {
+    "path": "webroot/marked.min.js",
+    "size": 98076,
+    "sha256": "5c3fccad525c20d7eedc0bbab81341c0f686e9e323560bea5fff81611e2ae164"
+  },
+  {
+    "path": "webroot/service-worker.js",
+    "size": 1252,
+    "sha256": "c6c619589d108ac107e3600f52a1e81d851bff0008b4437aec29682d80367871"
+  },
+  {
+    "path": "webroot/script.js",
+    "size": 51906,
+    "sha256": "7c6648a3cfb75c0f7108f0fabc153b88cd97418e34fa61db200b2da586f0b636"
+  },
+  {
+    "path": "webroot/index.html",
+    "size": 39420,
+    "sha256": "d59c1ae16be93222db0082faed36d1784088f503c684f51a0d0f502696422c65"
+  },
+  {
+    "path": "webroot/icon.png",
+    "size": 245294,
+    "sha256": "1a987bb05d45563f14f53dc1e400e931544cc07c51ab1eb95aece265c3d2a911"
+  },
+  {
+    "path": "legacy/source.md",
+    "size": 57,
+    "sha256": "daa8bbf59e8dd723bd82bb9cee6568e02835807176ece72a7454b223c5574555"
+  },
+  {
+    "path": "legacy/README.md",
+    "size": 1163,
+    "sha256": "8a10f61aaab115008ffeca27147b9cdd2f809d4a7b2095ab884cf907176d70b0"
+  },
+  {
+    "path": "legacy/legacy.dex",
+    "size": 22852,
+    "sha256": "ac478d1f9f63f7d7707257dab8149c34216a65896caaefb8b0b1f7fc232d4c4e"
+  },
+  {
+    "path": "toolkit/HMA-OOS.json",
+    "size": 154595,
+    "sha256": "04fd9f097ee80aa4bf34160c45946a23ebd029a8664088538b1defbd2bee5b98"
+  },
+  {
+    "path": "toolkit/pixelify.prop",
+    "size": 670,
+    "sha256": "e2c20b08d491fab2f00581d4ed4b171b65542cd98a125671f21801ea586eae63"
+  },
+  {
+    "path": "toolkit/legacy.prop",
+    "size": 670,
+    "sha256": "ccfe5f56bf023e5f282b65e13d3b7255b2fe6c9915c28147efc05ee9e7ab5d3a"
+  },
+  {
+    "path": "toolkit/integrity_box_ui_settings",
+    "size": 227,
+    "sha256": "098a5aec577da6bc354e19c20690111d4eaf3132e54f3dddedbb7d6c2a131fcc"
+  },
+  {
+    "path": "webroot/Pixel/index.html",
+    "size": 32529,
+    "sha256": "91b7ad64d8cc67a4cf0017f0320c00427b26a60c23fcd5e52b8e704d674a0efd"
+  },
+  {
+    "path": "webroot/Profile/index.html",
+    "size": 20203,
+    "sha256": "a520a5e2eaec7581140d0af08525caf39d523d2da1ef8ea69fbe5c8d64ee2fc8"
+  },
+  {
+    "path": "webroot/common_scripts/cleanup.sh",
+    "size": 3285,
+    "sha256": "02cd889a33e6515ad9a3719bb111007079246d476b37a6641e9b361c93fb4e21"
+  },
+  {
+    "path": "webroot/common_scripts/hma.sh",
+    "size": 3732,
+    "sha256": "2e0df3c651eb19d31d4e3e854cddc3e46dc9aaa58c2fde42898d6b0f6593046b"
+  },
+  {
+    "path": "webroot/common_scripts/zygisk.sh",
+    "size": 2532,
+    "sha256": "99a275e5600a6aa4a9ec4de0106542a3548129c28c9da181aebb67b15e4d6936"
+  },
+  {
+    "path": "webroot/common_scripts/susfiles.sh",
+    "size": 2413,
+    "sha256": "ce3982a71597d21f1888d6b85c22a3d806b7c07f266310857d7d06c7896a7dcb"
+  },
+  {
+    "path": "webroot/common_scripts/scan_keybox.sh",
+    "size": 246,
+    "sha256": "118d8a8db914f93450386d3e976379ab12a55ba8b34d06778909dfb42683496a"
+  },
+  {
+    "path": "webroot/common_scripts/spectre.sh",
+    "size": 5110,
+    "sha256": "861a1adc6e95dd77068c4a65c322431001603b4339f8bf70e9516ca553688708"
+  },
+  {
+    "path": "webroot/common_scripts/prop.sh",
+    "size": 861,
+    "sha256": "562369b6bfef5fda15a93a51bb34c4f598e0f7bcecec18ba310ffcbad999c94f"
+  },
+  {
+    "path": "webroot/common_scripts/autopilot.sh",
+    "size": 7752,
+    "sha256": "c688768d1e617069c8b513018ce06ed8846a2c5c060a2e89bbf2303aad36647f"
+  },
+  {
+    "path": "webroot/common_scripts/key.sh",
+    "size": 8248,
+    "sha256": "b233c60a5eed9aee2a72e91e1e331b1b50f4ab8c613aacb62f661d34028d1246"
+  },
+  {
+    "path": "webroot/common_scripts/force_override.sh",
+    "size": 319,
+    "sha256": "0bff6cf58e1ae6867da521267cdf7f4579aa7184233e021d42da295eb172bec4"
+  },
+  {
+    "path": "webroot/common_scripts/hehe.sh",
+    "size": 639,
+    "sha256": "1d34410b8fb11f5b744e09764188182976bff79fcb7c572cc11717ada5d438dc"
+  },
+  {
+    "path": "webroot/common_scripts/resetprop.sh",
+    "size": 1465,
+    "sha256": "a9c5b5093e644e04ca88b50b36c71bfaefb0e13c9da425c269bc2ecc0b611523"
+  },
+  {
+    "path": "webroot/common_scripts/keymint.sh",
+    "size": 2461,
+    "sha256": "a12a1a0074776fbd1bea8fbe191cf5dcf310868565df034f5c2d41ea1f174bab"
+  },
+  {
+    "path": "webroot/common_scripts/extract_boot.sh",
+    "size": 9342,
+    "sha256": "9e9507ad39c3f61de5fa2e0ed4cfb258203dbc1ef91d672bd2330023531a15c6"
+  },
+  {
+    "path": "webroot/common_scripts/kernel.sh",
+    "size": 4687,
+    "sha256": "afd260ed230725c0acda5b34db61456399e91904d8d8f06d1af9093d38344c5e"
+  },
+  {
+    "path": "webroot/common_scripts/target.sh",
+    "size": 4138,
+    "sha256": "f1a7f84e0807fdc368123e4c1fbce16027c850210f3781a15c8f2896bf684401"
+  },
+  {
+    "path": "webroot/common_scripts/gms.sh",
+    "size": 216,
+    "sha256": "fc13da06091e68c7de952f4b7935852f46b8e1e690f61dbef16976bfe614d03e"
+  },
+  {
+    "path": "webroot/common_scripts/webui.sh",
+    "size": 472,
+    "sha256": "1f090060a5bf2b8b810b9fa2778aa5fb4db70276821ec86f7f56c344d55c9c07"
+  },
+  {
+    "path": "webroot/common_scripts/multiroot.sh",
+    "size": 2941,
+    "sha256": "0910a374185ce210cc29bf2671ed747bdfd329039b375e2fa525d51336eb542b"
+  },
+  {
+    "path": "webroot/common_scripts/Report.sh",
+    "size": 12921,
+    "sha256": "bac5ae50df44e81c45daed98c980d688298ad3e3addc6cc0ef4765d1539b4cc0"
+  },
+  {
+    "path": "webroot/common_scripts/teesim.sh",
+    "size": 2768,
+    "sha256": "54ef26491dae68fba7859ba929fc58b4f90d870e1efe86ed616d043076c02459"
+  },
+  {
+    "path": "webroot/common_scripts/override_lineage.sh",
+    "size": 2325,
+    "sha256": "bbd10b3b06e40ac19248e340ef203a0f03df62d86fa113fded21bf9d84665f0d"
+  },
+  {
+    "path": "webroot/Report/index.html",
+    "size": 10035,
+    "sha256": "80e56dfe3e339e9749710e086c8bb15afdd5b5714f220d284af38fed81d420ff"
+  },
+  {
+    "path": "webroot/RepairMode/index.html",
+    "size": 2110570,
+    "sha256": "0e94e577c5b200b23504722e8df0f4fb3a49a38ce26155c10ff4d1c0e6945d8f"
+  },
+  {
+    "path": "webroot/Control/index.html",
+    "size": 24252,
+    "sha256": "6791ea158972b04effc05e452ccebfc664d32299125d36f0235a9b0b9b9c6d18"
+  },
+  {
+    "path": "webroot/PlayIntegrityFork/index.html",
+    "size": 32474,
+    "sha256": "655c188d6067a37219b429f7755958f883a6d6bb532104172c277e1ebfa8655a"
+  },
+  {
+    "path": "webroot/Assistant/index.html",
+    "size": 26267,
+    "sha256": "35f2ea39f1a8ba722a8fba8bf60ef68b6c89b05cc03a9950cc346ba3df543bb3"
+  },
+  {
+    "path": "webroot/PropSpoofer/index.html",
+    "size": 86039,
+    "sha256": "754ad915464829153583d4b3b878630f167c1ff0a04c56f3af59d5168f1ca051"
+  },
+  {
+    "path": "webroot/BootHash/index.html",
+    "size": 17453,
+    "sha256": "5fad2a547fc1307a288e91721e3d82a962d11bcce2b6f6ed6ea0a69ea3178d3b"
+  },
+  {
+    "path": "webroot/Support/index.html",
+    "size": 12877,
+    "sha256": "ce81f2bf3abc4d91075abfef863f7b98ddc22c8896f644377daf161a1cb91dad"
+  },
+  {
+    "path": "webroot/RootImplementation/index.html",
+    "size": 20348,
+    "sha256": "2d372fb15bf40686319af7bf78d91efb03cc83450cc1de121965dc78c9d99f32"
+  },
+  {
+    "path": "webroot/Spoofing/index.html",
+    "size": 18110,
+    "sha256": "167d8dd978cf6a34e9ffb7b90adac7eaa800153d35bd75f92e92f35cd6320c21"
+  },
+  {
+    "path": "webroot/KeyboxSource/index.html",
+    "size": 36294,
+    "sha256": "837f845ccf1fe68d3b72151a6933e51f90b8bcecdcdd8d4fa9ecfb74b3f9de9f"
+  },
+  {
+    "path": "webroot/HideMyFiles/index.html",
+    "size": 37526,
+    "sha256": "9a92e39c77083154944b8fbeb16f85fde4e9e9668d5f12842e55c46a6c097913"
+  },
+  {
+    "path": "webroot/Pilot/index.html",
+    "size": 20374,
+    "sha256": "34c581d088c9e0944ab5f0f22f730df40b8bd1a447cba7e6130b3480838a73cd"
+  },
+  {
+    "path": "webroot/Flags/index.html",
+    "size": 36220,
+    "sha256": "4bc33a42a0ddc2d05be698ba7b82259c99acb25b79a7c57ed7e8bce663ba80fb"
+  },
+  {
+    "path": "webroot/KeyboxLoader/index.html",
+    "size": 30493,
+    "sha256": "7dd5a0ad49b300d791e1510a049c0213ed7783ef32a6f541639837e5c9029011"
+  },
+  {
+    "path": "webroot/Downloader/index.html",
+    "size": 24453,
+    "sha256": "569eb7bd99a693c90c60b68a54e565580eec73c5d21e1f7f3fa3a1271561df45"
+  },
+  {
+    "path": "webroot/TrickyStore/index.html",
+    "size": 42858,
+    "sha256": "d88a0d8d6249502c06ffbdc9883db32620ea14171450b55ac42cd3103883c98a"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/ru.js",
+    "size": 77292,
+    "sha256": "ee1196fd211b293adc26aa91cd424070065fa6d1b6bb4b3324cc718ffa88f8c5"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/de.js",
+    "size": 104990,
+    "sha256": "199c04b0813ee5f8c5e067042fe79e6683e5c4fc2400c7c798df5cf01c508ba7"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/ar.js",
+    "size": 70418,
+    "sha256": "12889dc32a74192bfbae8f2ef2b0205023a5dc69d1e8b0f9e066412d671210bb"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/meow.js",
+    "size": 23534,
+    "sha256": "d300c5cd7f6c0bb288055c0b871d9c7e07e7339ab2c3070cf2f0f5a7da56d9f6"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/tr.js",
+    "size": 67548,
+    "sha256": "72ada689b2e17ed9522a06dc515550b9f57610091954cdf9548f740f89223a61"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/nl.js",
+    "size": 102538,
+    "sha256": "a25d3af66009583cd1bac346668badbdb873e72f943e1b1e982906bed0ab4140"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/ro.js",
+    "size": 105734,
+    "sha256": "9c805dd9685e1c56e9aa372f30e09cf25534056290302af633e12e8d734ad92a"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/zh_CN.js",
+    "size": 56945,
+    "sha256": "8fc976cb5794572f0bc0ccd024562da2ea1596a4751695864f50966564a3977c"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/template.js",
+    "size": 41256,
+    "sha256": "d04fea841a1eda204661ab05e3aca4773bd0ec9e73607c7f91a3c1e26f1b92f9"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/id.js",
+    "size": 61272,
+    "sha256": "a4ea642b201231c2c673815ac4657f71557394490302d7c942d7efd972d9e764"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/en.js",
+    "size": 66,
+    "sha256": "1f635ac8fe1ad08f0dbc7cbf52edb5754a123962ef5e70273d8aff99684b2872"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/es.js",
+    "size": 67471,
+    "sha256": "42732ca24168bdf2dc3181a63ccc488bb08d5947adc0e4dcc8e490f38345e52d"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/hu.js",
+    "size": 106601,
+    "sha256": "adba7ba17b82fdcfb404f843ed8aff0375fe13039d6c6df58c785cdc94683706"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/pt_BR.js",
+    "size": 104774,
+    "sha256": "2a43b427228f54a03b1f9e031f9fcef2c41dc5b3876988ae2ae98867d248abb1"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/it.js",
+    "size": 104020,
+    "sha256": "db54f86e7211dd8cde2501b3111ebfd2b2761d8cdf0556e1e48bb4ee5535f792"
+  },
+  {
+    "path": "webroot/TRANSLATIONS/contributors.json",
+    "size": 1814,
+    "sha256": "a2c0be0efbbeb89e3c0441eba556731d7fb02ce8627bf0ea9b06ccd5da2a31d3"
+  },
+  {
+    "path": "legacy/zygisk/x86_64.so",
+    "size": 177360,
+    "sha256": "6f6fe5d7200104f004d99a7e0e698aa936fbde3739b784b9e1add3c3dc847026"
+  },
+  {
+    "path": "legacy/zygisk/armeabi-v7a.so",
+    "size": 106876,
+    "sha256": "bd9a2b89626f06899187b45989169ccad4ec0b336b2280f2b08941655e4f1cb3"
+  },
+  {
+    "path": "legacy/zygisk/arm64-v8a.so",
+    "size": 144632,
+    "sha256": "f7e563e34b55194152d32c6c75bc7a10415a504d3ba86a49cad802886f792559"
+  },
+  {
+    "path": "legacy/zygisk/x86.so",
+    "size": 162652,
+    "sha256": "119d5f1d4d7a6f81dd17a488dcb366a2790504e69c6b832d848a2e1d1eb1790a"
+  },
+  {
+    "path": "META-INF/com/google/android/update-binary",
+    "size": 612,
+    "sha256": "bcf4b1d9913f3af17755569c853e0b5a75b8005f6a18eb3f86dadcc0e968c29d"
+  },
+  {
+    "path": "META-INF/com/google/android/updater-script",
+    "size": 8,
+    "sha256": "d2b8203193a083e43ad076fde01b9c7821e0aa521e1f8077b8628fb1cdb70c60"
+  },
+  {
+    "path": "toolkit/BootConfiguration/index.html",
+    "size": 52904,
+    "sha256": "81368ccb81668a1e2038974a2943ffcf3b181a5791488227691d136e43edc99b"
+  }
+]

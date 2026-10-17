@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>ForeverStrong · Pilot</title><script src="../theme.js"></script>
+
+
+<link href="../halloween.css" rel="stylesheet"/><link href="../components.css" rel="stylesheet"/><script src="../integration.js"></script><script src="../component-bridge.js"></script><link href="../forever.css" rel="stylesheet"/></head>
+<body class="component"><header class="he-component-header"><div><p>FOREVER STRONG / CONTROL CENTER</p><h1>Automatic updates</h1></div></header>
+<div id="loader">
+<div class="loader-content">
+<div class="spinner"></div>
+<div class="loader-text">Processing...</div>
+</div>
+</div>
+<div class="container">
+<div class="card">
+<h1 class="fs-original-title">
+<span class="material-icons">smart_toy</span>
+      AutoPilot Manager
+    </h1>
+<div class="section-header">System Status</div>
+<div class="ios-list">
+<div class="ios-item">
+<div class="ios-item-icon blue">
+<span class="material-icons">power_settings_new</span>
+</div>
+<div class="ios-item-content">
+<div class="ios-item-title">Automation Service</div>
+<div class="ios-item-subtitle" id="statusSubtitle">Checking...</div>
+</div>
+<label class="ios-toggle">
+<input id="autopilotToggle" onchange="toggleAutopilot()" type="checkbox"/>
+<span class="ios-toggle-slider"></span>
+</label>
+</div>
+<div class="ios-item">
+<div class="ios-item-icon green" id="heartbeatIcon">
+<span class="material-icons">monitor_heart</span>
+</div>
+<div class="ios-item-content">
+<div class="ios-item-title">Daemon Heartbeat</div>
+<div class="ios-item-subtitle" id="heartbeatSubtitle">Checking...</div>
+<div class="ios-item-time" id="heartbeatTime">--</div>
+</div>
+</div>
+<div class="ios-item">
+<div class="ios-item-icon orange" id="githubIcon">
+<span class="material-icons">cloud_sync</span>
+</div>
+<div class="ios-item-content">
+<div class="ios-item-title">Last GitHub Check</div>
+<div class="ios-item-subtitle" id="githubSubtitle">Checking...</div>
+<div class="ios-item-time" id="githubTime">--</div>
+</div>
+</div>
+<div class="ios-item">
+<div class="ios-item-icon orange">
+<span class="material-icons">emergency</span>
+</div>
+<div class="ios-item-content">
+<div class="ios-item-title">Emergency Level</div>
+<div class="ios-item-subtitle">Master Control</div>
+</div>
+<div class="emergency-badge" id="emergencyBadge">
+<span class="material-icons">warning</span>
+<span id="emergencyText">None</span>
+</div>
+</div>
+</div>
+<div class="section-header">Execution Mode</div>
+<div class="mode-grid">
+<div class="mode-btn" id="fullMode" onclick="setMode('full')">
+<div class="mode-icon">
+<span class="material-icons">auto_fix_high</span>
+</div>
+<div class="mode-label">Xtreme Mode</div>
+</div>
+<div class="mode-btn" id="keyboxMode" onclick="setMode('keybox')">
+<div class="mode-icon">
+<span class="material-icons">vpn_key</span>
+</div>
+<div class="mode-label">Keybox Only Mode</div>
+</div>
+</div>
+<div class="mode-desc">
+<div class="mode-desc-header">
+<span class="material-icons">info</span>
+<span class="mode-desc-title" id="modeDescTitle">Select Mode</span>
+</div>
+<p class="mode-desc-text" id="modeDescText">Choose an execution mode to view details</p>
+</div>
+</div>
+</div>
+<script>
+const AUTOPILOT_FLAG = '/data/adb/Box-Brain/autopilot';
+const RUN_ACTION = '/data/adb/Box-Brain/run_action';
+const SERVICE_SCRIPT = '/data/adb/modules/halloweenedition/service.sh';
+const EMERGENCY_DIR = '/data/adb/Box-Brain';
+const DAEMON_SCRIPT = '/data/adb/modules/halloweenedition/webroot/common_scripts/autopilot.sh';
+
+function runShell(cmd,cb){return window.heShell(cmd).then(out=>{if(cb)cb(out);return out;});}
+
+function popup(msg, type="info") {
+  try {
+    if (typeof window.toast === "function") { window.toast(String(msg)); return; }
+    if (window.kernelsu && typeof window.kernelsu.toast === "function") { window.kernelsu.toast(String(msg)); return; }
+    if (typeof ksu === "object" && typeof ksu.toast === "function") { ksu.toast(String(msg)); return; }
+  } catch {}
+
+  const n = document.createElement("div");
+  n.className = "webui-popup";
+  n.textContent = msg;
+  const colors = { 
+    error: { bg: "#FF453A", shadow: "rgba(255, 69, 58, 0.3)" }, 
+    success: { bg: "#30D158", shadow: "rgba(48, 209, 88, 0.3)" }, 
+    info: { bg: "#1592FF", shadow: "rgba(21, 146, 255, 0.3)" }, 
+    warn: { bg: "#FF9F0A", shadow: "rgba(255, 159, 10, 0.3)" }
+  };
+  const style = colors[type] || colors.info;
+
+  Object.assign(n.style, {
+    position:"fixed", 
+    top:"-100px", 
+    left:"50%", 
+    transform:"translateX(-50%)",
+    background: style.bg, 
+    color:"#fff", 
+    padding:"14px 24px",
+    borderRadius:"14px", 
+    fontWeight:"600", 
+    fontSize:"15px",
+    zIndex:"99999",
+    boxShadow:`0 8px 24px ${style.shadow}`,
+    transition:"all 0.4s cubic-bezier(0.32, 0.72, 0, 1)", 
+    opacity:"0",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(255,255,255,0.1)"
+  });
+  document.body.appendChild(n);
+  requestAnimationFrame(()=>{ n.style.top="60px"; n.style.opacity="1"; });
+  setTimeout(()=>{ 
+    n.style.top="-100px"; 
+    n.style.opacity="0"; 
+    setTimeout(()=>n.remove(), 400); 
+  }, 2800);
+}
+
+function showLoader(show, text = "Processing..."){
+  const loader = document.getElementById("loader");
+  const loaderText = loader.querySelector(".loader-text");
+  if(text) loaderText.textContent = text;
+
+  if(show){
+    loader.style.display = "flex";
+    requestAnimationFrame(() => loader.classList.add("show"));
+  } else {
+    loader.classList.remove("show");
+    setTimeout(() => loader.style.display = "none", 300);
+  }
+}
+
+function timeAgo(timestamp) {
+  if (!timestamp || timestamp === "0") return "Never";
+  
+  const now = Math.floor(Date.now() / 1000);
+  const diff = now - parseInt(timestamp);
+  
+  if (diff < 0) return "Just now";
+  if (diff < 60) return diff + " seconds ago";
+  if (diff < 3600) return Math.floor(diff / 60) + " minutes ago";
+  if (diff < 86400) return Math.floor(diff / 3600) + " hours ago";
+  if (diff < 604800) return Math.floor(diff / 86400) + " days ago";
+  if (diff < 2592000) return Math.floor(diff / 604800) + " weeks ago";
+  if (diff < 31536000) return Math.floor(diff / 2592000) + " months ago";
+  return Math.floor(diff / 31536000) + " years ago";
+}
+
+function formatExactTime(timestamp) {
+  if (!timestamp || timestamp === "0") return "--";
+  const date = new Date(parseInt(timestamp) * 1000);
+  return date.toLocaleString();
+}
+
+function getHeartbeatStatus(timestamp) {
+  if (!timestamp || timestamp === "0") return { status: 'dead', text: 'Not running' };
+  const now = Math.floor(Date.now() / 1000);
+  const diff = now - parseInt(timestamp);
+  
+  if (diff < 120) return { status: 'active', text: 'Healthy' };
+  if (diff < 300) return { status: 'stale', text: 'Slow response' };
+  return { status: 'dead', text: 'Not responding' };
+}
+
+function getHighestEmergencyFlag(cb) {
+  runShell('ls ' + EMERGENCY_DIR + '/emergency_[A-Z]* 2>/dev/null | sed "s/.*emergency_//" | sort -V | tail -1', function(result) {
+    const flag = result.trim();
+    if (flag && flag.match(/^[A-Z]+$/)) {
+      cb(flag);
+    } else {
+      cb(null);
+    }
+  });
+}
+
+function updateEmergencyUI(flag) {
+  const badge = document.getElementById('emergencyBadge');
+  const text = document.getElementById('emergencyText');
+  if (flag) {
+    text.textContent = flag;
+    badge.classList.remove('none');
+  } else {
+    text.textContent = 'None';
+    badge.classList.add('none');
+  }
+}
+
+function updateAutopilotUI(enabled) {
+  document.getElementById('autopilotToggle').checked = enabled;
+  const subtitle = document.getElementById('statusSubtitle');
+  subtitle.textContent = enabled ? 'Active and running' : 'Disabled';
+}
+
+function updateModeUI(mode) {
+  const fullBtn = document.getElementById('fullMode');
+  const keyboxBtn = document.getElementById('keyboxMode');
+  const descTitle = document.getElementById('modeDescTitle');
+  const descText = document.getElementById('modeDescText');
+  
+  if (mode === 'full') {
+    fullBtn.classList.add('active');
+    keyboxBtn.classList.remove('active');
+    descTitle.textContent = 'Xtreme Mode Active';
+    descText.textContent = 'Executes complete automation: Keybox injection, fingerprint spoofing, target configuration, and system patching.';
+  } else {
+    fullBtn.classList.remove('active');
+    keyboxBtn.classList.add('active');
+    descTitle.textContent = 'Keybox Only Mode';
+    descText.textContent = 'Performs single keybox injection only. Minimal footprint for attestation bypass.';
+  }
+}
+
+function updateHeartbeatUI(timestamp) {
+  const subtitle = document.getElementById('heartbeatSubtitle');
+  const timeEl = document.getElementById('heartbeatTime');
+  const icon = document.getElementById('heartbeatIcon');
+  
+  const status = getHeartbeatStatus(timestamp);
+  
+  subtitle.textContent = status.text;
+  timeEl.textContent = timeAgo(timestamp) + ' • ' + formatExactTime(timestamp);
+  
+  icon.className = 'ios-item-icon';
+  if (status.status === 'active') {
+    icon.classList.add('green');
+  } else if (status.status === 'stale') {
+    icon.classList.add('orange');
+  } else {
+    icon.classList.add('red');
+  }
+}
+
+function updateGithubUI(timestamp) {
+  const subtitle = document.getElementById('githubSubtitle');
+  const timeEl = document.getElementById('githubTime');
+  
+  if (!timestamp || timestamp === "0") {
+    subtitle.textContent = 'Not checked yet';
+    timeEl.textContent = '--';
+    return;
+  }
+  
+  subtitle.textContent = 'Last checked';
+  timeEl.textContent = timeAgo(timestamp) + ' • ' + formatExactTime(timestamp);
+}
+
+function checkAutopilot() {
+  runShell('[ -f ' + AUTOPILOT_FLAG + ' ] && echo "1" || echo "0"', function(result) {
+    updateAutopilotUI(result.trim() === '1');
+  });
+}
+
+function checkMode() {
+  runShell('[ -f ' + RUN_ACTION + ' ] && echo "1" || echo "0"', function(result) {
+    updateModeUI(result.trim() === '1' ? 'full' : 'keybox');
+  });
+}
+
+function checkEmergency() {
+  getHighestEmergencyFlag(function(flag) {
+    updateEmergencyUI(flag);
+  });
+}
+
+function checkTimestamps() {
+  runShell('cat /data/adb/Box-Brain/daemon_heartbeat 2>/dev/null || echo "0"', function(beat) {
+    updateHeartbeatUI(beat.trim());
+  });
+  
+  runShell('cat /data/adb/Box-Brain/last_github_check 2>/dev/null || echo "0"', function(check) {
+    updateGithubUI(check.trim());
+  });
+}
+
+function toggleAutopilot() {
+  const enabled = document.getElementById('autopilotToggle').checked;
+  showLoader(true, enabled ? 'Enabling...' : 'Disabling...');
+  if (enabled) {
+    runShell('mkdir -p /data/adb/Box-Brain && touch ' + AUTOPILOT_FLAG, function() {
+      runShell('sh ' + DAEMON_SCRIPT + ' &', function() {
+        showLoader(false);
+        popup('AutoPilot enabled', 'success');
+        updateAutopilotUI(true);
+        setTimeout(checkTimestamps, 1000);
+      });
+    });
+  } else {
+    runShell('rm -f ' + AUTOPILOT_FLAG, function() {
+      showLoader(false);
+      popup('AutoPilot disabled', 'info');
+      updateAutopilotUI(false);
+    });
+  }
+}
+
+function setMode(mode) {
+  const currentIsFull = document.getElementById('fullMode').classList.contains('active');
+  const targetIsFull = mode === 'full';
+  if (currentIsFull === targetIsFull) return;
+  
+  showLoader(true, 'Switching mode...');
+  if (targetIsFull) {
+    runShell('touch ' + RUN_ACTION, function() {
+      showLoader(false);
+      popup('Xtreme Mode activated', 'success');
+      updateModeUI('full');
+    });
+  } else {
+    runShell('rm -f ' + RUN_ACTION, function() {
+      showLoader(false);
+      popup('Keybox Only mode activated', 'success');
+      updateModeUI('keybox');
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  checkAutopilot();
+  checkMode();
+  checkEmergency();
+  checkTimestamps();
+  
+  setInterval(checkTimestamps, 30000);
+  setInterval(checkEmergency, 60000);
+});
+</script>
+
+
+<script src="../TRANSLATIONS/i18n.js"></script>
+</body>
+</html>

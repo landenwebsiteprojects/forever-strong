@@ -1,0 +1,17 @@
+*.iml
+.cxx
+.DS_Store
+.externalNativeBuild
+.gradle
+.idea/assetWizardSettings.xml
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/navEditor.xml
+.idea/workspace.xml
+build/
+local.properties
+module/classes.dex
+module/pif.json
+module/zygisk/
+out/

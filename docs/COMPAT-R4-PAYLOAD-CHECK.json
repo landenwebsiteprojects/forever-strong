@@ -1,0 +1,27 @@
+{
+  "baseline": "ui-r3 / Integrity Box v44 + OSS v3.1.0",
+  "unchanged_payloads": [
+    "bin/validator.dex",
+    "classes.dex",
+    "legacy/legacy.dex",
+    "legacy/zygisk/arm64-v8a.so",
+    "legacy/zygisk/armeabi-v7a.so",
+    "legacy/zygisk/x86.so",
+    "legacy/zygisk/x86_64.so",
+    "tricky/classes.dex",
+    "tricky/daemon",
+    "tricky/lib/arm64-v8a/libTrickyStoreOSS.so",
+    "tricky/lib/arm64-v8a/libinject.so",
+    "tricky/lib/armeabi-v7a/libTrickyStoreOSS.so",
+    "tricky/lib/armeabi-v7a/libinject.so",
+    "tricky/lib/x86/libTrickyStoreOSS.so",
+    "tricky/lib/x86/libinject.so",
+    "tricky/lib/x86_64/libTrickyStoreOSS.so",
+    "tricky/lib/x86_64/libinject.so",
+    "zygisk/arm64-v8a.so",
+    "zygisk/armeabi-v7a.so",
+    "zygisk/x86_64.so"
+  ],
+  "result": "PASS",
+  "v45_applied": false
+}

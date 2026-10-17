@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>ForeverStrong · RootImplementation</title><script src="../theme.js"></script>
+
+
+<link href="../halloween.css" rel="stylesheet"/><link href="../components.css" rel="stylesheet"/><script src="../integration.js"></script><script src="../component-bridge.js"></script><link href="../forever.css" rel="stylesheet"/></head>
+<body class="component"><header class="he-component-header"><div><p>FOREVER STRONG / CONTROL CENTER</p><h1>Root setup</h1></div></header>
+<div class="card">
+<button class="help-btn" onclick="openHelp()"><span class="material-icons">help_outline</span></button>
+<h1 class="fs-original-title"><span class="material-icons">security</span>Conflict Reslover</h1>
+<div class="section-label">Choose Your Primary Root</div>
+<div id="rootList"></div>
+<div class="consent-card" id="consentCard">
+<div class="consent-top">
+<div class="consent-icon"><span class="material-icons">warning</span></div>
+<div class="consent-content">
+<div class="consent-title">Root Conflict Warning</div>
+<div class="consent-text">
+     Your ROM ships with <strong>KernelSU</strong> as its built-in root implementation.
+     If you are choosing <strong><span id="consentRootName">this root solution</span></strong> as your primary root,
+     other root implementations may still be detected by modules and cause conflicts.
+     <br/><br/>
+     Only continue if this is the root solution you actually want modules to treat as your primary environment.
+    </div>
+</div>
+</div>
+<div class="consent-actions">
+<button class="consent-btn consent-deny" onclick="denySelection()">Deny</button>
+<button class="consent-btn consent-agree" onclick="agreeSelection()">Agree &amp; Continue</button>
+</div>
+</div>
+<div class="status" id="status">Checking root configuration...</div>
+<div class="footer">Conflict Reslover © 2026</div>
+</div>
+<div class="toast" id="toast">
+<span class="material-icons">check_circle</span><span id="toastText"></span>
+</div>
+<div class="modal-overlay" id="helpModal" onclick="closeHelpOnBackdrop(event)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+<div class="modal-header">
+<h2><span class="material-icons">help_outline</span>What does this do?</h2>
+<button class="modal-close" onclick="closeHelp()"><span class="material-icons">close</span></button>
+</div>
+<div class="modal-body">
+<div class="help-section">
+<div class="help-section-title">Usage</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">priority_high</span></div>
+<div class="help-content">
+<div class="help-title">Choose your primary root</div>
+<div class="help-desc">Select the root solution you actually intend to use on your device. This is useful when your ROM ships with KernelSU by default but you prefer to use Magisk or APatch as your actual root solution.</div>
+</div>
+</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">hub</span></div>
+<div class="help-content">
+<div class="help-title">Resolve root conflicts</div>
+<div class="help-desc">Some modules detect more than one root implementation and cannot reliably determine which environment should be treated as primary. This tool lets you explicitly identify whether Magisk or APatch is the root solution you want them to recognize.</div>
+</div>
+</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">warning</span></div>
+<div class="help-content">
+<div class="help-title">When should you use it?</div>
+<div class="help-desc">Use it when your ROM ships with KernelSU but you intentionally use Magisk or APatch instead, or when the bundled KernelSU version is too old and you need another root solution.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+var DIR="/data/adb/Box-Brain";
+var ROOT_DIR=DIR+"/ROOT";
+
+var ROOTS=[
+ {id:"apatch",name:"APatch",icon:"security",subtitle:"Use APatch as your primary root solution"},
+ {id:"magisk",name:"Magisk",icon:"android",subtitle:"Use Magisk as your primary root solution"}
+];
+
+var selectedId=null;
+var pendingId=null;
+var execBusy=false;
+
+function rootPath(id){
+ return ROOT_DIR+"/"+id;
+}
+
+function shellQuote(value){
+ return "'"+String(value).replace(/'/g,"'\\''")+"'";
+}
+
+function popup(msg){
+ var toast=document.getElementById("toast");
+ document.getElementById("toastText").textContent=msg;
+ toast.classList.add("show");
+ clearTimeout(popup.timer);
+ popup.timer=setTimeout(function(){
+  toast.classList.remove("show");
+ },2400);
+}
+
+function run(cmd,cb){return window.heShell(cmd).then(out=>{if(cb)cb(out);return out;});}
+
+function render(){
+ var list=document.getElementById("rootList");
+ list.innerHTML="";
+
+ ROOTS.forEach(function(item){
+  var row=document.createElement("div");
+  row.className="root-option";
+  row.id="row-"+item.id;
+  row.onclick=function(){
+   selectRoot(item.id);
+  };
+
+  row.innerHTML=
+   '<div class="root-icon"><span class="material-icons">'+item.icon+'</span></div>'+
+   '<div class="root-details">'+
+    '<div class="root-title">'+item.name+'</div>'+
+    '<div class="root-subtitle">'+item.subtitle+'</div>'+
+   '</div>'+
+   '<span class="material-icons root-arrow">chevron_right</span>';
+
+  list.appendChild(row);
+ });
+}
+
+function setActive(id,on){
+ var row=document.getElementById("row-"+id);
+ if(row)row.classList.toggle("active",!!on);
+}
+
+function inspectFlags(cb){
+ var checks=ROOTS.map(function(item){
+  return "[ -e "+shellQuote(rootPath(item.id))+" ] && echo 'FOUND:"+item.id+"'";
+ }).join("; ");
+
+ run(checks,function(out){
+  var found=[];
+
+  ROOTS.forEach(function(item){
+   if(out.indexOf("FOUND:"+item.id)!==-1){
+    found.push(item.id);
+   }
+  });
+
+  cb(found);
+ });
+}
+
+function applyState(found){
+ selectedId=found.length?found[0]:null;
+
+ ROOTS.forEach(function(item){
+  setActive(item.id,item.id===selectedId);
+ });
+
+ pendingId=null;
+ hideConsent();
+
+ var status=document.getElementById("status");
+
+ if(selectedId){
+  var item=ROOTS.find(function(root){
+   return root.id===selectedId;
+  });
+  status.textContent="Primary root: "+item.name;
+ }else{
+  status.textContent="No primary root selected";
+ }
+}
+
+function normalizeFlags(found){
+ if(found.length<=1){
+  applyState(found);
+  return;
+ }
+
+ var remove=found.slice(1).map(function(id){
+  return shellQuote(rootPath(id));
+ }).join(" ");
+
+ run("rm -f "+remove,function(){
+  applyState([found[0]]);
+ });
+}
+
+function showConsent(id){
+ pendingId=id;
+
+ var item=ROOTS.find(function(root){
+  return root.id===id;
+ });
+
+ document.getElementById("consentRootName").textContent=item.name;
+ document.getElementById("consentCard").classList.add("show");
+
+ setTimeout(function(){
+  document.getElementById("consentCard").scrollIntoView({
+   behavior:"smooth",
+   block:"nearest"
+  });
+ },30);
+}
+
+function hideConsent(){
+ document.getElementById("consentCard").classList.remove("show");
+}
+
+function selectRoot(id){
+ if(execBusy)return;
+
+ if(selectedId===id){
+  execBusy=true;
+
+  run("rm -f "+shellQuote(rootPath(id)),function(){
+   execBusy=false;
+
+   inspectFlags(function(found){
+    normalizeFlags(found);
+    popup("Primary root selection cleared");
+   });
+  });
+
+  return;
+ }
+
+ if(pendingId===id){
+  return;
+ }
+
+ showConsent(id);
+}
+
+function denySelection(){
+ pendingId=null;
+ hideConsent();
+ popup("Selection denied");
+}
+
+function agreeSelection(){
+ if(!pendingId||execBusy)return;
+
+ var id=pendingId;
+ execBusy=true;
+
+ var remove=ROOTS.filter(function(item){
+  return item.id!==id;
+ }).map(function(item){
+  return shellQuote(rootPath(item.id));
+ }).join(" ");
+
+ run(
+  "mkdir -p "+shellQuote(ROOT_DIR)+
+  " && rm -f "+remove+
+  " && touch "+shellQuote(rootPath(id)),
+  function(){
+   execBusy=false;
+
+   inspectFlags(function(found){
+    normalizeFlags(found);
+
+    if(found.indexOf(id)!==-1){
+     popup("Primary root set to "+ROOTS.find(function(x){return x.id===id}).name);
+    }else{
+     popup("Failed to set primary root");
+    }
+   });
+  }
+ );
+}
+
+function openHelp(){
+ document.getElementById("helpModal").classList.add("show");
+ document.body.style.overflow="hidden";
+}
+
+function closeHelp(){
+ document.getElementById("helpModal").classList.remove("show");
+ document.body.style.overflow="";
+}
+
+function closeHelpOnBackdrop(e){
+ if(e.target===e.currentTarget){
+  closeHelp();
+ }
+}
+
+function init(){
+ render();
+
+ inspectFlags(function(found){
+  normalizeFlags(found);
+ });
+}
+
+document.addEventListener("DOMContentLoaded",init);
+</script>
+
+
+<script src="../TRANSLATIONS/i18n.js"></script>
+</body>
+</html>

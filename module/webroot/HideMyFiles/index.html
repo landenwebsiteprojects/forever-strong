@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>ForeverStrong · HideMyFiles</title><script src="../theme.js"></script>
+
+
+<link href="../halloween.css" rel="stylesheet"/><link href="../components.css" rel="stylesheet"/><script src="../integration.js"></script><script src="../component-bridge.js"></script><link href="../forever.css" rel="stylesheet"/></head>
+<body class="component"><header class="he-component-header"><div><p>FOREVER STRONG / CONTROL CENTER</p><h1>File visibility</h1></div></header>
+<div class="ambient"></div>
+<div class="container">
+<div class="header">
+<div class="header-left">
+<div class="title"><span class="material-icons">folder_off</span>Hide My Files</div>
+<div class="subtitle">Powered by IntegrityBox</div>
+</div>
+<button class="info-btn" onclick="openInfo()">
+<span class="material-icons">info</span>
+</button>
+</div>
+<div class="card">
+<div class="card-inner">
+<div class="btn-row-top">
+<button class="btn" onclick="runCleaner()">
+<span class="material-icons">visibility_off</span>
+<span>HIDE</span>
+</button>
+<button class="btn secondary" onclick="unhide()">
+<span class="material-icons">visibility</span>
+<span>UNHIDE</span>
+</button>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+<div class="stats">
+<div class="stat">
+<span class="material-icons stat-icon">folder</span>
+<div class="stat-num" id="statDetected">0</div>
+<div class="stat-label">Detected</div>
+</div>
+<div class="stat">
+<span class="material-icons stat-icon">check_circle</span>
+<div class="stat-num" id="statSelected">0</div>
+<div class="stat-label">Selected</div>
+</div>
+<div class="stat">
+<span class="material-icons stat-icon">warning</span>
+<div class="stat-num" id="statWarn">0</div>
+<div class="stat-label">Warnings</div>
+</div>
+</div>
+<div class="toolbar">
+<button class="toolbar-btn" onclick="selectAll()">
+<span class="material-icons">select_all</span>Select All
+        </button>
+<button class="toolbar-btn" onclick="deselectAll()">
+<span class="material-icons">deselect</span>Deselect All
+        </button>
+<button class="toolbar-btn" onclick="selectAllMove()">
+<span class="material-icons">visibility_off</span>All Move
+        </button>
+<button class="toolbar-btn" onclick="selectAllRename()">
+<span class="material-icons">deblur</span>All Rename
+        </button>
+</div>
+<div class="list-wrap">
+<div class="skeleton-list" id="skeleton">
+<div class="skeleton-item">
+<div class="skeleton-header">
+<div class="skeleton-icon"></div>
+<div class="skeleton-text"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+</div>
+<div class="skeleton-actions"><div class="skeleton-pill"></div><div class="skeleton-pill"></div><div class="skeleton-btn"></div></div>
+</div>
+<div class="skeleton-item">
+<div class="skeleton-header">
+<div class="skeleton-icon"></div>
+<div class="skeleton-text"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+</div>
+<div class="skeleton-actions"><div class="skeleton-pill"></div><div class="skeleton-pill"></div><div class="skeleton-btn"></div></div>
+</div>
+<div class="skeleton-item">
+<div class="skeleton-header">
+<div class="skeleton-icon"></div>
+<div class="skeleton-text"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+</div>
+<div class="skeleton-actions"><div class="skeleton-pill"></div><div class="skeleton-pill"></div><div class="skeleton-btn"></div></div>
+</div>
+</div>
+<div class="list" id="list"></div>
+<div class="empty-state" id="emptyState">
+<span class="material-icons">check_circle</span>
+<p>No suspicious files detected</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="snack"><span class="snack-icon">check_circle</span><span id="snackText"></span><div class="snack-timer"></div></div>
+<div class="modal" id="infoModal">
+<div class="modal-backdrop" onclick="closeInfo()"></div>
+<div class="modal-card">
+<div class="modal-header">
+<span class="material-icons">info</span>
+<span>About Hide My Files</span>
+<button class="modal-close" onclick="closeInfo()"><span class="material-icons">close</span></button>
+</div>
+<div class="modal-body">
+<div class="modal-section">
+<h4><span class="material-icons">visibility_off</span>Move to Vault</h4>
+<p>Moves the selected file or folder to a hidden vault directory. The original path will appear completely empty or missing to any app that checks for it.</p>
+</div>
+<div class="modal-divider"></div>
+<div class="modal-section">
+<h4><span class="material-icons">deblur</span>Rename / Mask</h4>
+<p>Renames the file or folder with a random 12-character string. The content stays in the same location but is unrecognizable by name.</p>
+</div>
+</div>
+</div>
+</div>
+<script>
+const SIZE_LIMIT_MB = 512;
+
+const BASE="/data/adb/Vault/.hidefiles";
+const LOG="/data/adb/Vault/webui.log";
+const VAULT="/data/adb/Vault";
+
+let PREDEFINED={
+  MT2:"/sdcard/MT2",Log:"/sdcard/MeowLog",TWRP:"/sdcard/TWRP",Fox:"/sdcard/Fox",JQ:"/data/local/tmp/jq_extract",
+  PBRP:"/sdcard/PBRP",Magisk:"/sdcard/Magisk",SHRP:"/sdcard/SHRP",Gulag:"/data/local/tmp/DisabledAllGoogleServices",
+  Migrate:"/sdcard/Migrate",CustomROM:"/vendor/bin/install-recovery.sh",Rec:"/data/recovery",
+  SwiftBackup:"/sdcard/SwiftBackup",AppManager:"/sdcard/AppManager",Boot:"/sdcard/BootImages",
+  TMP:"/sdcard/InfinityResource",KernelSU:"/sdcard/.ksu",FolkPatch:"/sdcard/Download/FolkPatch",
+  DataBackup:"/sdcard/DataBackup",OTA:"/system/addon.d"
+};
+
+let TARGETS={...PREDEFINED};
+let detectedItems = [];
+const sh=cmd=>parent.runShellFromIframe(cmd);
+
+const exists=async p=>(await sh(`[ -e "${p}" ] && echo 1 || echo 0`)).trim()=="1";
+
+async function getSizeSafe(p){
+  return (await sh(`du -sh "${p}" 2>/dev/null | awk '{print $1}'`)).trim()||"0B";
+}
+function sizeToMB(s){
+  const v=parseFloat(s)||0;
+  if(s.endsWith("G")) return v*1024;
+  if(s.endsWith("M")) return v;
+  if(s.endsWith("K")) return v/1024;
+  return 0;
+}
+
+async function loadConf(k){
+  try{
+    const o=await sh(`. ${BASE}/${k}.conf 2>/dev/null; echo "$ENABLED|$MODE"`);
+    const [e,m]=o.trim().split("|");
+    return {e:e==="1",m:m||"move"};
+  }catch{return {e:false,m:"move"}}
+}
+async function saveConf(k,e,m){
+  await sh(`mkdir -p ${BASE};
+    echo "ENABLED=${e?1:0}" > ${BASE}/${k}.conf;
+    echo "MODE=${m}" >> ${BASE}/${k}.conf`);
+}
+
+function popup(msg, isError){
+ try {
+   if (typeof window.toast === "function") { window.toast(String(msg)); return; }
+   if (window.kernelsu && typeof window.kernelsu.toast === "function") { window.kernelsu.toast(String(msg)); return; }
+   if (typeof ksu === "object" && typeof ksu.toast === "function") { ksu.toast(String(msg)); return; }
+ } catch(e) {}
+
+ const el = document.getElementById("snack");
+ const txt = document.getElementById("snackText");
+ const icon = el.querySelector(".snack-icon");
+ const timer = el.querySelector(".snack-timer");
+ txt.textContent = msg;
+ icon.textContent = isError ? "error" : "check_circle";
+ el.className = isError ? "error" : "";
+ el.classList.add("show");
+ timer.style.animation = "none";
+ timer.offsetHeight;
+ timer.style.animation = "snackTimer 2.2s linear forwards";
+ setTimeout(()=> el.classList.remove("show"), 2200);
+}
+
+function animateValue(el, start, end, duration){
+  const range = end - start;
+  const minTimer = 50;
+  let stepTime = Math.abs(Math.floor(duration / range));
+  stepTime = Math.max(stepTime, minTimer);
+  let startTime = new Date().getTime();
+  let endTime = startTime + duration;
+  let timer;
+
+  function run(){
+    let now = new Date().getTime();
+    let remaining = Math.max((endTime - now) / duration, 0);
+    let value = Math.round(end - (remaining * range));
+    el.textContent = value;
+    if(value == end) clearInterval(timer);
+  }
+
+  timer = setInterval(run, stepTime);
+  run();
+}
+
+function updateCounts(animate){
+  const detectedEl = document.getElementById("statDetected");
+  const selectedEl = document.getElementById("statSelected");
+  const warnEl = document.getElementById("statWarn");
+
+  let selectedCount = 0, warnCount = 0;
+  for(const k in TARGETS){
+    const p = TARGETS[k];
+    if(!existsSync(p)) continue;
+    const large = sizeToMB(getSizeCached(k)) > SIZE_LIMIT_MB;
+    const recovery = p==="/vendor/bin/install-recovery.sh"||p==="/system/addon.d";
+    if(recovery || large) warnCount++;
+  }
+
+  document.querySelectorAll('.check-btn.active').forEach(() => selectedCount++);
+
+  if(animate){
+    animateValue(detectedEl, 0, detectedItems.length, 600);
+    animateValue(selectedEl, 0, selectedCount, 600);
+    animateValue(warnEl, 0, warnCount, 600);
+  } else {
+    detectedEl.textContent = detectedItems.length;
+    selectedEl.textContent = selectedCount;
+    warnEl.textContent = warnCount;
+  }
+}
+
+let sizeCache = {};
+function getSizeCached(k){ return sizeCache[k] || "0B"; }
+function existsSync(p){ return detectedItems.some(item => TARGETS[item] === p); }
+
+function updateRowVisuals(el, k){
+  const cfg = el.dataset;
+  const isActive = cfg.enabled === "1";
+  const isMove = cfg.mode === "move";
+  const isLarge = cfg.large === "1";
+  const isRecovery = cfg.recovery === "1";
+  const checkBtn = el.querySelector(".check-btn");
+  const movePill = el.querySelector(".mode-pill[data-mode='move']");
+  const maskPill = el.querySelector(".mode-pill[data-mode='rename']");
+
+  el.classList.remove("targeted", "warn-item", "danger-item");
+  if(isActive && !isLarge && !isRecovery) el.classList.add("targeted");
+  if(isLarge) el.classList.add("warn-item");
+  if(isRecovery) el.classList.add("danger-item");
+
+  if(isLarge || isRecovery){
+    checkBtn.classList.add("disabled");
+    checkBtn.classList.remove("active");
+  } else {
+    checkBtn.classList.remove("disabled");
+    if(isActive) checkBtn.classList.add("active");
+    else checkBtn.classList.remove("active");
+  }
+
+  if(isMove && !isLarge && !isRecovery){
+    movePill.classList.add("active");
+    movePill.classList.remove("warn-active","danger-active","disabled");
+    maskPill.classList.remove("active","warn-active","danger-active");
+  } else if(isLarge){
+    movePill.classList.add("warn-active","disabled");
+    movePill.classList.remove("active","danger-active");
+    maskPill.classList.add("active");
+    maskPill.classList.remove("warn-active","danger-active","disabled");
+  } else if(isRecovery){
+    movePill.classList.add("danger-active","disabled");
+    movePill.classList.remove("active","warn-active");
+    maskPill.classList.add("danger-active","disabled");
+    maskPill.classList.remove("active","warn-active");
+  } else {
+    movePill.classList.remove("active","warn-active","danger-active","disabled");
+    maskPill.classList.add("active");
+    maskPill.classList.remove("warn-active","danger-active","disabled");
+  }
+}
+
+function selectAll(){
+  document.querySelectorAll('.check-btn:not(.disabled)').forEach(btn => {
+    if(!btn.classList.contains('active')) btn.click();
+  });
+  popup("All detected items selected");
+}
+
+function deselectAll(){
+  document.querySelectorAll('.check-btn.active').forEach(btn => btn.click());
+  popup("All items deselected");
+}
+
+function selectAllMove(){
+  let count = 0;
+  document.querySelectorAll('.item').forEach(el => {
+    const k = el.dataset.key;
+    const isLarge = el.dataset.large === "1";
+    const isRecovery = el.dataset.recovery === "1";
+    if(isLarge || isRecovery) return;
+    el.dataset.mode = "move";
+    updateRowVisuals(el, k);
+    saveConf(k, el.dataset.enabled === "1", "move");
+    count++;
+  });
+  popup(count > 0 ? "All items set to Move to Vault" : "No items available for Move");
+}
+
+function selectAllRename(){
+  let count = 0;
+  document.querySelectorAll('.item').forEach(el => {
+    const k = el.dataset.key;
+    const isRecovery = el.dataset.recovery === "1";
+    if(isRecovery) return;
+    el.dataset.mode = "rename";
+    updateRowVisuals(el, k);
+    saveConf(k, el.dataset.enabled === "1", "rename");
+    count++;
+  });
+  popup(count > 0 ? "All items set to Rename / Mask" : "No items available for Rename");
+}
+
+async function render(){
+  list.innerHTML="";
+  detectedItems = [];
+  let hasItems = false;
+  let idx = 0;
+
+  for(const k in TARGETS){
+    const p=TARGETS[k];
+    if(!await exists(p)) continue;
+    hasItems = true;
+    detectedItems.push(k);
+
+    const size=await getSizeSafe(p);
+    sizeCache[k] = size;
+    const large=sizeToMB(size)>SIZE_LIMIT_MB;
+    const recovery=p==="/vendor/bin/install-recovery.sh"||p==="/system/addon.d";
+    let cfg=await loadConf(k);
+
+    if(cfg.e === false && !large && !recovery){
+      cfg.e = true;
+      await saveConf(k, true, cfg.m);
+    }
+
+    const el=document.createElement("div");
+    el.className="item";
+    el.dataset.key = k;
+    el.dataset.enabled = cfg.e ? "1" : "0";
+    el.dataset.mode = cfg.m;
+    el.dataset.large = large ? "1" : "0";
+    el.dataset.recovery = recovery ? "1" : "0";
+    el.style.animationDelay = (idx * 0.04) + "s";
+    idx++;
+
+    const moveLabel = large ? "Too Big" : (recovery ? "Blocked" : "Move to Vault");
+    const maskLabel = recovery ? "Blocked" : "Rename / Mask";
+
+    el.innerHTML=`
+      <div class="item-header">
+        <div class="item-path-wrap">
+          <span class="material-icons">folder</span>
+          <div style="min-width:0;flex:1">
+            <div class="item-path">${p}</div>
+            <div class="item-meta">
+              <span>Size: ${size}</span>
+              ${large?`<span class="meta-badge warn"><span class="material-icons" style="font-size:11px">block</span>Too big to move</span>`:""}
+              ${recovery?`<span class="meta-badge danger"><span class="material-icons" style="font-size:11px">build</span>Remove it from recovery</span>`:""}
+            </div>
+          </div>
+        </div>
+        <button class="check-btn ${cfg.e&&!large&&!recovery?"active":""} ${large||recovery?"disabled":""}" data-key="${k}">
+          <span class="material-icons">check</span>
+        </button>
+      </div>
+      <div class="item-actions-row">
+        <div class="mode-group">
+          <button class="mode-pill ${cfg.m==="move"&&!large&&!recovery?"active":""} ${large?"warn-active disabled":""} ${recovery?"danger-active disabled":""}" data-key="${k}" data-mode="move" title="${moveLabel}">
+            <span class="material-icons">visibility_off</span>
+            <span>${moveLabel}</span>
+          </button>
+          <button class="mode-pill ${cfg.m==="rename"||large||recovery?"active":""} ${recovery?"danger-active disabled":""}" data-key="${k}" data-mode="rename" title="${maskLabel}">
+            <span class="material-icons">deblur</span>
+            <span>${maskLabel}</span>
+          </button>
+        </div>
+      </div>
+    `;
+
+    const checkBtn = el.querySelector(".check-btn");
+    const movePill = el.querySelector(".mode-pill[data-mode='move']");
+    const maskPill = el.querySelector(".mode-pill[data-mode='rename']");
+
+    checkBtn.onclick = () => {
+      if(checkBtn.classList.contains("disabled")){ popup("Cannot select this item", true); return; }
+      const isActive = checkBtn.classList.contains("active");
+      const newEnabled = !isActive;
+      const currentMode = el.dataset.mode;
+      el.dataset.enabled = newEnabled ? "1" : "0";
+      updateRowVisuals(el, k);
+      saveConf(k, newEnabled, currentMode);
+      updateCounts(false);
+    };
+
+    movePill.onclick = () => {
+      if(movePill.classList.contains("disabled")){ popup(movePill.textContent.trim(), true); return; }
+      const currentEnabled = el.dataset.enabled === "1";
+      el.dataset.mode = "move";
+      updateRowVisuals(el, k);
+      saveConf(k, currentEnabled, "move");
+    };
+
+    maskPill.onclick = () => {
+      if(maskPill.classList.contains("disabled")){ popup(maskPill.textContent.trim(), true); return; }
+      const currentEnabled = el.dataset.enabled === "1";
+      el.dataset.mode = "rename";
+      updateRowVisuals(el, k);
+      saveConf(k, currentEnabled, "rename");
+    };
+
+    list.appendChild(el);
+    updateRowVisuals(el, k);
+  }
+
+  const empty = document.getElementById("emptyState");
+  if(!hasItems){
+    empty.classList.add("show");
+  } else {
+    empty.classList.remove("show");
+  }
+
+  updateCounts(true);
+}
+
+async function runCleaner(){
+  const keys = Object.keys(TARGETS);
+  let done = 0;
+  const bar = document.getElementById("progressFill");
+  await sh(`mkdir -p ${BASE}/.unhide ${VAULT}; echo "[$(date)] RUN" >> ${LOG}`);
+  for (const k of keys){
+    const p = TARGETS[k];
+    const conf = `${BASE}/${k}.conf`;
+    await sh(`
+      if [ ! -f "${conf}" ]; then echo "[SKIP] ${p} (no config)" >> ${LOG};
+      else . "${conf}";
+        if [ "$ENABLED" != "1" ]; then echo "[SKIP] ${p} (disabled)" >> ${LOG};
+        elif [ ! -e "${p}" ]; then echo "[SKIP] ${p} (missing)" >> ${LOG};
+        else TS=$(date +%s);
+          if [ -d "${p}" ]; then [ -z "$(ls -A "${p}" 2>/dev/null)" ] && EMPTY=1 || EMPTY=0;
+          else [ ! -s "${p}" ] && EMPTY=1 || EMPTY=0; fi;
+          if [ "$EMPTY" = "1" ]; then
+            mv "${p}" "${BASE}/.unhide/$(basename "${p}").$TS";
+            echo "mv \"${BASE}/.unhide/$(basename "${p}").$TS\" \"${p}\"" >> ${BASE}/last_action.sh;
+            echo "[EMPTY] ${p}" >> ${LOG};
+          else
+            if [ "$MODE" = "move" ]; then
+              dst="${VAULT}/$(basename "${p}")"; [ -e "$dst" ] && dst="$dst.$TS"; mv "${p}" "$dst";
+              echo "mv \"$dst\" \"${p}\"" >> ${BASE}/last_action.sh;
+              echo "[MOVE] ${p} -> Vault" >> ${LOG};
+            else
+              newname=$(tr -dc a-zA-Z0-9 </dev/urandom | head -c12)
+              mv "${p}" "${p}.$newname";
+              echo "mv \"${p}.$newname\" \"${p}\"" >> ${BASE}/last_action.sh;
+              echo "[RENAME] ${p}" >> ${LOG};
+            fi
+          fi
+        fi
+      fi
+    `);
+    done++;
+    bar.style.width = Math.round(done / keys.length * 100) + "%";
+  }
+  render();
+  popup("Hide completed");
+}
+
+async function unhide(){
+  await sh(`[ -f ${BASE}/last_action.sh ] && sh ${BASE}/last_action.sh`);
+  await sh(`echo "[$(date)] UNHIDE" >> "${LOG}"`);
+  document.getElementById("progressFill").style.width="0%";
+  render();
+  popup("Unhide completed!");
+}
+
+function openInfo(){ document.getElementById("infoModal").classList.add("show"); }
+function closeInfo(){ document.getElementById("infoModal").classList.remove("show"); }
+
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape"){
+    closeInfo();
+  }
+});
+
+(async()=>{
+  document.getElementById("skeleton").style.display = "none";
+  render();
+})();
+</script>
+
+
+<script src="../TRANSLATIONS/i18n.js"></script>
+</body>
+</html>

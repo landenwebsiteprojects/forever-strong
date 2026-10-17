@@ -1,0 +1,1 @@
+https://github.com/MeowDump/PlayIntegrityFork/tree/legacy

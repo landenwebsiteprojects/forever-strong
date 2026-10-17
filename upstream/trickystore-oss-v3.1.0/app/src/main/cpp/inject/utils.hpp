@@ -1,0 +1,124 @@
+// Copyright 2026 Dakkshesh <beakthoven@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#pragma once
+#include <sys/ptrace.h>
+#include <unistd.h>
+
+#include <map>
+#include <string>
+
+#include "maps.hpp"
+
+#define LOG_TAG "TrickyStoreOSS"
+
+#define SYSCALL_IS_ERR(e) (((unsigned long)e) > -4096UL)
+#define SYSCALL_ERR(e) (-(int)(e))
+
+#if defined(__x86_64__)
+#    define REG_SP rsp
+#    define REG_IP rip
+#    define REG_RET rax
+#    define REG_NR orig_rax
+#    define REG_SYS_ARG0 rdi
+#elif defined(__i386__)
+#    define REG_SP esp
+#    define REG_IP eip
+#    define REG_RET eax
+#    define REG_NR orig_eax
+#    define REG_SYS_ARG0 ebx
+#elif defined(__aarch64__)
+#    define REG_SP sp
+#    define REG_IP pc
+#    define REG_RET regs[0]
+#    define REG_NR regs[8]
+#    define REG_SYS_ARG0 regs[0]
+#elif defined(__arm__)
+#    define REG_SP uregs[13]
+#    define REG_IP uregs[15]
+#    define REG_RET uregs[0]
+#    define REG_NR uregs[7]
+#    define REG_SYS_ARG0 uregs[0]
+#    define user_regs_struct user_regs
+#    define SYS_mmap SYS_mmap2
+#endif
+
+ssize_t write_proc(int pid, uintptr_t remote_addr, const void *buf, size_t len, bool use_proc_mem = false);
+ssize_t read_proc(int pid, uintptr_t remote_addr, void *buf, size_t len);
+
+bool get_regs(int pid, struct user_regs_struct &regs);
+bool set_regs(int pid, struct user_regs_struct &regs);
+
+void *find_module_base(const std::vector<ts::MapInfo> &map_info, std::string_view module_suffix);
+void *find_func_addr(const std::vector<ts::MapInfo> &local_map_info, const std::vector<ts::MapInfo> &remote_map_info,
+                     std::string_view module_name, std::string_view function_name);
+void align_stack(struct user_regs_struct &regs, uintptr_t preserve_bytes = 0);
+uintptr_t push_memory(int pid, struct user_regs_struct &regs, const void *data, size_t length);
+uintptr_t push_string(int pid, struct user_regs_struct &regs, const char *str);
+
+uintptr_t remote_call(int pid, struct user_regs_struct &regs, uintptr_t func_addr, uintptr_t return_addr,
+                      std::vector<uintptr_t> &args);
+bool remote_pre_call(int pid, struct user_regs_struct &regs, uintptr_t func_addr, uintptr_t return_addr, std::vector<uintptr_t> &args);
+uintptr_t remote_post_call(int pid, struct user_regs_struct &regs, uintptr_t expected_return_addr);
+
+bool wait_for_trace(int pid, int *status, int flags);
+std::string parse_status(int status);
+void *find_module_return_addr(const std::vector<ts::MapInfo> &map_info, std::string_view module_suffix);
+
+constexpr size_t kMainMagicLength = 16;
+std::string generateMagic(size_t length);
+int setfilecon(const char *file_path, const char *security_context);
+
+class UniqueFd {
+    using Fd = int;
+
+public:
+    UniqueFd() = default;
+    UniqueFd(Fd fd) : fd_(fd) {}
+    ~UniqueFd() {
+        if (fd_ >= 0)
+            close(fd_);
+    }
+    UniqueFd(const UniqueFd &) = delete;
+    UniqueFd &operator=(const UniqueFd &) = delete;
+    UniqueFd(UniqueFd &&other) {
+        std::swap(fd_, other.fd_);
+    }
+    UniqueFd &operator=(UniqueFd &&other) {
+        std::swap(fd_, other.fd_);
+        return *this;
+    }
+    operator const Fd &() const {
+        return fd_;
+    }
+
+private:
+    Fd fd_ = -1;
+};
+
+bool set_sockcreate_con(const char *security_context);
+
+#define WPTEVENT(x) (x >> 16)
+#define CASE_CONST_RETURN(x) \
+    case x:                  \
+        return #x;
+inline const char *parse_ptrace_event(int status) {
+    status = status >> 16;
+    switch (status) {
+        CASE_CONST_RETURN(PTRACE_EVENT_FORK)
+        CASE_CONST_RETURN(PTRACE_EVENT_VFORK)
+        CASE_CONST_RETURN(PTRACE_EVENT_CLONE)
+        CASE_CONST_RETURN(PTRACE_EVENT_EXEC)
+        CASE_CONST_RETURN(PTRACE_EVENT_VFORK_DONE)
+        CASE_CONST_RETURN(PTRACE_EVENT_EXIT)
+        CASE_CONST_RETURN(PTRACE_EVENT_SECCOMP)
+        CASE_CONST_RETURN(PTRACE_EVENT_STOP)
+    default:
+        return "(no event)";
+    }
+}
+inline const char *sigabbrev_np(int sig) {
+    if (sig > 0 && sig < NSIG)
+        return sys_signame[sig];
+    return "(unknown)";
+}

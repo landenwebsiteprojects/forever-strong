@@ -1,0 +1,38 @@
+[
+  {
+    "test": "Bundled engine detected with no standalone Tricky Store module directory",
+    "result": "PASS"
+  },
+  {
+    "test": "External sync detection distinguishes stale, disabled and enabled external modules",
+    "result": "PASS"
+  },
+  {
+    "test": "Idempotent ensure keeps one owned daemon and supervisor",
+    "result": "PASS"
+  },
+  {
+    "test": "Restart refreshes the owned daemon under the existing supervisor",
+    "result": "PASS"
+  },
+  {
+    "test": "Repair routes to bundled engine, runs action once, archives legacy caches and preserves native app keys/modes/patches",
+    "result": "PASS"
+  },
+  {
+    "test": "Action failure is reported as partial repair, never a successful repair",
+    "result": "PASS"
+  },
+  {
+    "test": "Disabled unified module blocks repair and restart",
+    "result": "PASS"
+  },
+  {
+    "test": "Incomplete bundled native payload is accurately diagnosed",
+    "result": "PASS"
+  },
+  {
+    "test": "Stale PID token cannot claim or terminate an unrelated process; foreign daemon is refused",
+    "result": "PASS"
+  }
+]

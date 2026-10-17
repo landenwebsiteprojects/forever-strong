@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>ForeverStrong · Spoofing</title><script src="../theme.js"></script>
+
+
+<link href="../halloween.css" rel="stylesheet"/><link href="../components.css" rel="stylesheet"/><script src="../integration.js"></script><script src="../component-bridge.js"></script><link href="../forever.css" rel="stylesheet"/></head>
+<body class="component"><header class="he-component-header"><div><p>FOREVER STRONG / CONTROL CENTER</p><h1>Spoofing options</h1></div></header>
+<div id="loader">
+<div class="loader-box">
+<div class="spinner"></div>
+<div class="loader-text">Applying changes...</div>
+</div>
+</div>
+<div class="modal-overlay" id="rebootModal">
+<div class="modal">
+<div class="modal-handle"></div>
+<div class="modal-icon">
+<span class="material-icons-round">restart_alt</span>
+</div>
+<div class="modal-title">Reboot Device?</div>
+<div class="modal-text">
+      A reboot is required for the spoofing configuration changes to take effect.
+    </div>
+<div class="modal-buttons">
+<button class="modal-btn" onclick="closeRebootModal()">Cancel</button>
+<button class="modal-btn confirm" onclick="confirmReboot()">Reboot</button>
+</div>
+</div>
+</div>
+<main class="app">
+<header class="header">
+<div class="header-icon">
+<span class="material-icons-round">verified</span>
+</div>
+<div class="header-content">
+<div class="header-title">GMS Spoofing Manager</div>
+<div class="header-subtitle">Inbuilt spoofing configuration</div>
+</div>
+</header>
+<section class="section">
+<div class="section-label">
+<span class="material-icons-round">apps</span>
+      Google Play Services
+    </div>
+<div class="panel" id="gmsProfiles"></div>
+</section>
+<section class="section">
+<div class="section-label">
+<span class="material-icons-round">shopping_bag</span>
+      Google Play Store
+    </div>
+<div class="panel" id="vendingProfiles"></div>
+</section>
+<div class="info">
+<div class="info-icon">
+<span class="material-icons-round">info</span>
+</div>
+<div class="info-text">
+      These options are intended for <strong>custom ROM users</strong>.
+      Choose the desired spoofing state and reboot the device to apply the change.
+    </div>
+</div>
+<footer class="footer">
+<button class="reboot-button" onclick="showRebootModal()">
+<span class="material-icons-round">restart_alt</span>
+      Reboot Device
+    </button>
+</footer>
+</main>
+<script>
+const BASE_DIR="/data/adb/Box-Brain";
+
+const FILES={
+  enablegms:`${BASE_DIR}/enablegms`,
+  disablegms:`${BASE_DIR}/disablegms`,
+  enablevending:`${BASE_DIR}/enablevending`,
+  disablevending:`${BASE_DIR}/disablevending`
+};
+
+const COOLDOWN=1000;
+
+let lastSwitch=0;
+
+const options=[
+  {
+    id:"enablegms",
+    name:"Enable Device Spoofing",
+    icon:"apps",
+    desc:"Resume the ROM's inbuilt GMS spoofing",
+    group:"gms"
+  },
+  {
+    id:"disablegms",
+    name:"Disable Device Spoofing",
+    icon:"apps_outage",
+    desc:"Pause the ROM's inbuilt GMS spoofing",
+    group:"gms"
+  },
+  {
+    id:"enablevending",
+    name:"Enable Play Store Spoofing",
+    icon:"shopping_bag",
+    desc:"Resume the ROM's inbuilt Play Store spoofing",
+    group:"vending"
+  },
+  {
+    id:"disablevending",
+    name:"Disable Play Store Spoofing",
+    icon:"shopping_bag",
+    desc:"Pause the ROM's inbuilt Play Store spoofing",
+    group:"vending"
+  }
+];
+
+function popup(msg,type="info"){
+  try{
+    if(typeof window.toast==="function"){
+      window.toast(String(msg));
+      return;
+    }
+
+    if(
+      window.kernelsu &&
+      typeof window.kernelsu.toast==="function"
+    ){
+      window.kernelsu.toast(String(msg));
+      return;
+    }
+
+    if(
+      typeof ksu==="object" &&
+      typeof ksu.toast==="function"
+    ){
+      ksu.toast(String(msg));
+      return;
+    }
+  }catch{}
+
+  const n=document.createElement("div");
+
+  n.className="webui-popup";
+  n.textContent=msg;
+
+  const colors={
+    error:{
+      bg:"#FF453A",
+      shadow:"rgba(255,69,58,.3)"
+    },
+    success:{
+      bg:"#30D158",
+      shadow:"rgba(48,209,88,.3)"
+    },
+    info:{
+      bg:"#1592FF",
+      shadow:"rgba(21,146,255,.3)"
+    }
+  };
+
+  const c=colors[type]||colors.info;
+
+  Object.assign(n.style,{
+    position:"fixed",
+    top:"-100px",
+    left:"50%",
+    transform:"translateX(-50%)",
+    background:c.bg,
+    color:"#fff",
+    padding:"12px 19px",
+    borderRadius:"13px",
+    fontWeight:"650",
+    fontSize:"13px",
+    zIndex:"99999",
+    boxShadow:`0 8px 24px ${c.shadow}`,
+    transition:"all .35s cubic-bezier(.32,.72,0,1)",
+    opacity:"0",
+    border:"1px solid rgba(255,255,255,.1)"
+  });
+
+  document.body.appendChild(n);
+
+  requestAnimationFrame(()=>{
+    n.style.top="45px";
+    n.style.opacity="1";
+  });
+
+  setTimeout(()=>{
+    n.style.top="-100px";
+    n.style.opacity="0";
+
+    setTimeout(()=>{
+      n.remove();
+    },350);
+  },2600);
+}
+
+function showLoader(show,text="Applying changes..."){
+  const loader=document.getElementById("loader");
+  const loaderText=loader.querySelector(".loader-text");
+
+  if(text){
+    loaderText.textContent=text;
+  }
+
+  if(show){
+    loader.style.display="flex";
+
+    requestAnimationFrame(()=>{
+      loader.classList.add("show");
+    });
+  }else{
+    loader.classList.remove("show");
+
+    setTimeout(()=>{
+      loader.style.display="none";
+    },200);
+  }
+}
+
+function sh(cmd){return window.heShell(cmd);}
+
+async function getActiveFiles(){
+  const active=[];
+
+  for(const key in FILES){
+    const exists=
+      (await sh(`test -f "${FILES[key]}" && echo yes`)).trim()==="yes";
+
+    if(exists){
+      active.push(key);
+    }
+  }
+
+  return active;
+}
+
+async function validateFiles(){
+  const active=await getActiveFiles();
+
+  if(active.length>2){
+    showLoader(true,"Resetting configuration...");
+
+    for(const key in FILES){
+      await sh(`rm -f "${FILES[key]}"`);
+    }
+
+    popup(
+      "Too many options selected. All settings cleared.",
+      "error"
+    );
+
+    showLoader(false);
+
+    return [];
+  }
+
+  return active;
+}
+
+function getConflictingOptions(activeFiles,optionId){
+  const conflicts=[];
+
+  const option=options.find(
+    o=>o.id===optionId
+  );
+
+  if(!option){
+    return conflicts;
+  }
+
+  for(const active of activeFiles){
+
+    const activeOption=options.find(
+      o=>o.id===active
+    );
+
+    if(
+      activeOption &&
+      activeOption.group===option.group &&
+      active!==optionId
+    ){
+      conflicts.push(active);
+    }
+  }
+
+  return conflicts;
+}
+
+async function toggleOption(optionId){
+
+  if(Date.now()-lastSwitch<COOLDOWN){
+    popup(
+      "Please wait before switching again",
+      "error"
+    );
+
+    return;
+  }
+
+  lastSwitch=Date.now();
+
+  const activeFiles=await getActiveFiles();
+
+  const isCurrentlyActive=
+    activeFiles.includes(optionId);
+
+  if(!isCurrentlyActive){
+
+    const conflicts=
+      getConflictingOptions(
+        activeFiles,
+        optionId
+      );
+
+    if(conflicts.length>0){
+      popup(
+        "Cannot select the opposite option. Deselect it first.",
+        "error"
+      );
+
+      return;
+    }
+
+    if(activeFiles.length>=2){
+      popup(
+        "Maximum 2 options allowed. Deselect one first.",
+        "error"
+      );
+
+      return;
+    }
+  }
+
+  const selected=options.find(
+    o=>o.id===optionId
+  );
+
+  showLoader(
+    true,
+    isCurrentlyActive
+      ?"Disabling..."
+      :"Enabling..."
+  );
+
+  popup(
+    `${isCurrentlyActive?"👎":"👍"} ${selected.name}...`,
+    "info"
+  );
+
+  requestAnimationFrame(()=>{
+    setTimeout(async ()=>{
+
+      try{
+
+        if(isCurrentlyActive){
+
+          await sh(`rm -f "${FILES[optionId]}"`);
+
+          popup(
+            "Reboot to apply changes",
+            "success"
+          );
+
+        }else{
+
+          await sh(
+            `touch "${FILES[optionId]}" && chmod 0644 "${FILES[optionId]}"`
+          );
+
+          popup(
+            "Reboot to apply changes",
+            "success"
+          );
+        }
+
+      }catch(e){
+
+        popup(
+          "Failed to apply changes",
+          "error"
+        );
+      }
+
+      showLoader(false);
+      render();
+
+    },0);
+  });
+}
+
+function createOption(option,isActive,isDisabled){
+
+  const button=document.createElement("button");
+
+  button.type="button";
+
+  button.className=
+    "option"+
+    (isActive?" active":"")+
+    (isDisabled?" disabled-option":"");
+
+  button.innerHTML=`
+    <div class="option-icon">
+      <span class="material-icons-round">
+        ${option.icon}
+      </span>
+    </div>
+
+    <div class="option-content">
+
+      <div class="option-title">
+        ${option.name}
+      </div>
+
+      <div class="option-description">
+        ${option.desc}
+      </div>
+
+    </div>
+
+    <div class="option-check">
+      <span class="material-icons-round">
+        check_circle
+      </span>
+    </div>
+  `;
+
+  if(!isDisabled){
+    button.addEventListener(
+      "click",
+      ()=>toggleOption(option.id)
+    );
+  }
+
+  return button;
+}
+
+async function render(){
+
+  await validateFiles();
+
+  const activeFiles=await getActiveFiles();
+
+  const gmsRoot=
+    document.getElementById("gmsProfiles");
+
+  const vendingRoot=
+    document.getElementById("vendingProfiles");
+
+  gmsRoot.innerHTML="";
+  vendingRoot.innerHTML="";
+
+  options.forEach(option=>{
+
+    const isActive=
+      activeFiles.includes(option.id);
+
+    const conflicts=
+      getConflictingOptions(
+        activeFiles,
+        option.id
+      );
+
+    const isDisabled=
+      !isActive &&
+      conflicts.length>0;
+
+    const element=
+      createOption(
+        option,
+        isActive,
+        isDisabled
+      );
+
+    if(option.group==="gms"){
+      gmsRoot.appendChild(element);
+    }else{
+      vendingRoot.appendChild(element);
+    }
+
+  });
+}
+
+function showRebootModal(){
+  document
+    .getElementById("rebootModal")
+    .style.display="flex";
+
+  requestAnimationFrame(()=>{
+    document
+      .getElementById("rebootModal")
+      .classList.add("show");
+  });
+}
+
+function closeRebootModal(){
+
+  const modal=
+    document.getElementById("rebootModal");
+
+  modal.classList.remove("show");
+
+  setTimeout(()=>{
+    modal.style.display="none";
+  },200);
+}
+
+function confirmReboot(){
+
+  closeRebootModal();
+
+  showLoader(
+    true,
+    "Rebooting..."
+  );
+
+  popup(
+    "Rebooting device...",
+    "info"
+  );
+
+  requestAnimationFrame(()=>{
+
+    setTimeout(async ()=>{
+
+      try{
+
+        await sh("reboot");
+
+      }catch(e){
+
+        popup(
+          "Reboot command failed",
+          "error"
+        );
+
+        showLoader(false);
+      }
+
+    },1000);
+  });
+}
+
+document
+  .getElementById("rebootModal")
+  .addEventListener(
+    "click",
+    event=>{
+
+      if(
+        event.target.id==="rebootModal"
+      ){
+        closeRebootModal();
+      }
+
+    }
+  );
+
+document.addEventListener(
+  "keydown",
+  event=>{
+
+    if(event.key==="Escape"){
+      closeRebootModal();
+    }
+
+  }
+);
+
+document.addEventListener(
+  "DOMContentLoaded",
+  render
+);
+</script>
+
+
+<script src="../TRANSLATIONS/i18n.js"></script>
+</body>
+</html>

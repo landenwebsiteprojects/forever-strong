@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>ForeverStrong · PlayIntegrityFork</title><script src="../theme.js"></script>
+
+
+<link href="../halloween.css" rel="stylesheet"/><link href="../components.css" rel="stylesheet"/><script src="../integration.js"></script><script src="../component-bridge.js"></script><link href="../forever.css" rel="stylesheet"/></head>
+<body class="component"><header class="he-component-header"><div><p>FOREVER STRONG / CONTROL CENTER</p><h1>PIF engine</h1></div></header>
+<div class="modal-overlay" id="infoModal" onclick="closeInfoModal(event)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+<div class="modal-header">
+<div class="modal-title"><span class="material-icons">info</span>What do these do?</div>
+<div class="modal-close" onclick="closeInfoModal()"><span class="material-icons">close</span></div>
+</div>
+<div id="infoContent"></div>
+</div>
+</div>
+<div class="card">
+<div class="header-actions">
+<button class="icon-btn" onclick="openInfoModal()"><span class="material-icons">info</span></button>
+</div>
+<h1 class="fs-original-title"><span class="material-icons">verified_user</span>Play Integrity Box</h1>
+<div class="subtitle">Droidguard Spoofer</div>
+<div class="warning-line" id="warningLine">
+<span class="material-icons">error_outline</span>
+<span id="warningText"></span>
+</div>
+<div class="section-label">Zygisk Injection</div>
+<div class="zygisk-card" id="zygiskCard" onclick="toggleZygiskPause()">
+<div class="icon-wrap" id="zygiskIconWrap"><span class="material-icons" id="zygiskIcon">play_arrow</span></div>
+<div class="content">
+<div class="title" id="zygiskTitle">Resume Zygisk</div>
+<div class="subtitle-text" id="zygiskSub">Tap to pause zygisk injection</div>
+</div>
+<div class="status-dot" id="zygiskDot"></div>
+</div>
+<div class="section-label behaviour">Customize Integrity Behaviour</div>
+<div class="row-group behaviour-group" id="behaviour-rows">
+<div class="row" id="row-advanced" onclick="toggleBehaviour('advanced')">
+<div class="icon-wrap"><span class="material-icons">tune</span></div>
+<div class="content">
+<div class="title">Advanced Mode</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="advanced" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="row-verbose" onclick="toggleBehaviour('verbose')">
+<div class="icon-wrap"><span class="material-icons">build_circle</span></div>
+<div class="content">
+<div class="title">Verbose Mode</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="verbose" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="row-skip_json" onclick="toggleBehaviour('skip_json')">
+<div class="icon-wrap"><span class="material-icons">code_off</span></div>
+<div class="content">
+<div class="title">Skip JSON</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="skip_json" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="row-skip_key" onclick="toggleBehaviour('skip_key')">
+<div class="icon-wrap"><span class="material-icons">vpn_key_off</span></div>
+<div class="content">
+<div class="title">Skip Key</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="skip_key" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+</div>
+<div class="section-label">PIF Controls</div>
+<div class="row-group pif-group" id="rows">
+<div class="row" id="row-spoofPixel" onclick="toggle('spoofPixel')">
+<div class="icon-wrap"><span class="material-icons">shop</span></div>
+<div class="content">
+<div class="title">Pixelify Playstore</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="spoofPixel" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="row-spoofVendingFinger" onclick="toggle('spoofVendingFinger')">
+<div class="icon-wrap"><span class="material-icons">android</span></div>
+<div class="content">
+<div class="title">Pixel Fingerprint</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="spoofVendingFinger" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="row-spoofBuild" onclick="toggle('spoofBuild')">
+<div class="icon-wrap"><span class="material-icons">phone_iphone</span></div>
+<div class="content">
+<div class="title">Build Spoof</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="spoofBuild" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="row-spoofProps" onclick="toggle('spoofProps')">
+<div class="icon-wrap"><span class="material-icons">android</span></div>
+<div class="content">
+<div class="title">GMS Spoof</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="spoofProps" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="row-spoofProvider" onclick="toggle('spoofProvider')">
+<div class="icon-wrap"><span class="material-icons">dynamic_form</span></div>
+<div class="content">
+<div class="title">Attestation API</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="spoofProvider" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="row-spoofSignature" onclick="toggle('spoofSignature')">
+<div class="icon-wrap"><span class="material-icons">verified_user</span></div>
+<div class="content">
+<div class="title">ROM Signature</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="spoofSignature" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="row-spoofVendingSdk" onclick="toggle('spoofVendingSdk')">
+<div class="icon-wrap"><span class="material-icons">engineering</span></div>
+<div class="content">
+<div class="title">A10 Downgrade SDK</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="spoofVendingSdk" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+</div>
+<div class="action-btn" onclick="restartServices()">
+<span class="material-icons">refresh</span>
+<span>Restart Services</span>
+</div>
+<div class="footer">© IntegrityBox • 2026</div>
+</div>
+<div class="toast" id="toast">
+<span class="material-icons">check_circle</span>
+<span id="toastText">Saved</span>
+</div>
+<script>
+const PROP_CANDIDATES = [
+ "/data/adb/modules/halloweenedition/custom.pif.prop",
+ "/data/adb/custom.pif.prop"
+];
+
+const KEYS = ["spoofBuild","spoofProps","spoofProvider","spoofSignature","spoofVendingFinger","spoofVendingSdk","spoofPixel"];
+const ZYGISK_PATH = "/data/adb/modules/halloweenedition/zygisk";
+const FLAG_DIR = "/data/adb/Box-Brain/PIF";
+const STOP_FLAG = "/data/adb/Box-Brain/PIF/stop";
+const ZYGISK_SCRIPT = "/data/adb/modules/halloweenedition/webroot/common_scripts/zygisk.sh";
+
+const behaviourFlags = [
+ {id:"advanced",icon:"tune",title:"Advanced Mode",label:"behaviour",desc:"Enabling this will preserve spoofing settings otherwise they'll be reset automatically when you run action. Please do not disable this toggle."},
+ {id:"verbose",icon:"article",title:"Verbose Mode",label:"behaviour",desc:"Enables detailed logging of all PIF operations for debugging and troubleshooting purposes. Only enable if you know what you're doing."},
+ {id:"skip_json",icon:"code_off",title:"Skip JSON",label:"behaviour",desc:"Generates a valid meow.json file in your device's internal storage (/sdcard) whenever you trigger the Integrity Box action. The generated file can then be manually imported into your custom ROM's spoofing settings. Recommended for users running Integrity Box in ZYGISKLESS Mode. (ROM's inbuilt spoofing)."},
+ {id:"skip_key",icon:"vpn_key_off",title:"Skip Key",label:"behaviour",desc:"Generates a valid keybox.xml file in your device's internal storage (/sdcard) whenever you trigger the Integrity Box action. The generated file can then be manually imported into your custom ROM's spoofing settings. Recommended for users running Integrity Box in ZYGISKLESS Mode. (ROM's inbuilt spoofing)."}
+];
+
+const pifRows = [
+ {id:"spoofPixel",icon:"shop",title:"Pixelify Playstore",sub:"Spoofs latest canary Pixel-exclusive build properties to playstore. Keep this enabled if your android version is 13 or higher"},
+ {id:"spoofVendingFinger",icon:"apps",title:"Pixel Fingerprint",sub:"Latest canary imprint"},
+ {id:"spoofBuild",icon:"api",title:"Build Spoof",sub:"System build Properties"},
+ {id:"spoofProps",icon:"android",title:"GMS Spoof",sub:"GMS properties"},
+ {id:"spoofProvider",icon:"dynamic_form",title:"Attestation API",sub:"Breaks Google Wallet"},
+ {id:"spoofSignature",icon:"verified_user",title:"ROM Signature",sub:"OEM-signed mask"},
+ {id:"spoofVendingSdk",icon:"key_off",title:"A10 Downgrade SDK",sub:"Use if keybox is banned"}
+];
+
+let propFile = null;
+let zygiskExists = false;
+let zygiskPaused = false;
+
+function showToast(msg){
+ document.getElementById('toastText').textContent = msg;
+ document.getElementById('toast').classList.add('show');
+ setTimeout(()=>document.getElementById('toast').classList.remove('show'), 1400);
+}
+
+function showWarning(text){
+ const line = document.getElementById('warningLine');
+ if(!text){
+   line.classList.remove('show');
+   return;
+ }
+ document.getElementById('warningText').textContent = text;
+ line.classList.add('show');
+}
+
+function setDisabled(key, disabled){
+ const input = document.getElementById(key);
+ const row = document.getElementById('row-'+key);
+ if(input) input.disabled = disabled;
+ if(row){
+   row.style.opacity = disabled ? '0.4' : '1';
+   row.style.pointerEvents = disabled ? 'none' : 'auto';
+ }
+}
+
+function updateVisuals(key, isActive){
+ document.getElementById('row-'+key).classList.toggle('active', isActive);
+ document.getElementById(key).checked = isActive;
+}
+
+function updateZygiskCard(){
+ const card = document.getElementById('zygiskCard');
+ const icon = document.getElementById('zygiskIcon');
+ const title = document.getElementById('zygiskTitle');
+ const sub = document.getElementById('zygiskSub');
+ const dot = document.getElementById('zygiskDot');
+ const iconWrap = document.getElementById('zygiskIconWrap');
+
+ if(zygiskPaused){
+   card.classList.add('paused');
+   icon.textContent = 'pause';
+   title.textContent = 'Resume Zygisk';
+   sub.textContent = 'Zygisk injection is paused. Tap to resume.';
+   dot.style.background = 'var(--danger)';
+   dot.style.boxShadow = '0 0 12px var(--danger)';
+   iconWrap.style.background = 'var(--danger)';
+   iconWrap.style.boxShadow = '0 4px 16px rgba(255,77,77,0.3)';
+ }else{
+   card.classList.remove('paused');
+   icon.textContent = 'gavel';
+   title.textContent = 'Pause Zygisk';
+   sub.textContent = 'Tap to pause zygisk injection';
+   dot.style.background = 'var(--success)';
+   dot.style.boxShadow = '0 0 12px var(--success)';
+   iconWrap.style.background = 'var(--accent)';
+   iconWrap.style.boxShadow = '0 4px 16px var(--accent-glow)';
+ }
+}
+
+async function toggleZygiskPause(){
+ const card = document.getElementById('zygiskCard');
+ if(card.classList.contains('spinning')) return;
+
+ card.classList.add('spinning');
+ try{
+   if(zygiskPaused){
+     await sh(`sh -c 'rm -f "${STOP_FLAG}"'`);
+     zygiskPaused = false;
+     showToast('Zygisk resumed');
+   }else{
+     await sh(`sh -c 'mkdir -p "${FLAG_DIR}" && touch "${STOP_FLAG}"'`);
+     zygiskPaused = true;
+     showToast('Zygisk paused');
+   }
+   updateZygiskCard();
+   lockPifControls(zygiskPaused);
+   await sh(`sh -c 'sh "${ZYGISK_SCRIPT}"'`);
+ }catch(e){
+   showToast('Error: ' + (e.message || ''));
+   zygiskPaused = !zygiskPaused;
+   updateZygiskCard();
+   lockPifControls(zygiskPaused);
+ }finally{
+   card.classList.remove('spinning');
+ }
+}
+
+function lockPifControls(locked){
+ KEYS.forEach(k => setDisabled(k, locked));
+}
+
+async function toggle(key){
+ if(!propFile || !zygiskExists || zygiskPaused){
+   if(zygiskPaused) showWarning("Zygisk injection is paused");
+   else if(!zygiskExists) showWarning("zygiskless mode has been enabled");
+   return;
+ }
+ const input = document.getElementById(key);
+ if(input.disabled) return;
+
+ const newVal = input.checked ? '0' : '1';
+ input.checked = !input.checked;
+
+ if(key === 'spoofVendingSdk' && newVal === '1'){
+   await writeKey(propFile, key, newVal);
+   const others = KEYS.filter(k => k !== key && k !== 'spoofBuild' && k !== 'spoofProps');
+   for(const k of others){
+     await writeKey(propFile, k, '0');
+     updateVisuals(k, false);
+   }
+   showToast('A10 mode enabled, others disabled');
+ } else {
+   await writeKey(propFile, key, newVal);
+   showToast(newVal === '1' ? 'Enabled' : 'Disabled');
+ }
+
+ await restartGMS();
+ updateVisuals(key, newVal === '1');
+}
+
+async function toggleBehaviour(id){
+ const row = document.getElementById('row-' + id);
+ const input = document.getElementById(id);
+ if(row.classList.contains('spinning')) return;
+
+ const newVal = !input.checked;
+ input.checked = newVal;
+ row.classList.toggle('active', newVal);
+
+ row.classList.add('spinning');
+ try{
+   if(newVal){
+     await sh(`sh -c 'mkdir -p "${FLAG_DIR}" && touch "${FLAG_DIR}/${id}"'`);
+     showToast(id + ' enabled');
+   }else{
+     await sh(`sh -c 'rm -f "${FLAG_DIR}/${id}"'`);
+     showToast(id + ' disabled');
+   }
+ }catch(e){
+   showToast('Error: ' + (e.message || ''));
+   input.checked = !newVal;
+   row.classList.toggle('active', !newVal);
+ }finally{
+   row.classList.remove('spinning');
+ }
+}
+
+function sh(cmd){return window.heShell(cmd);}
+
+async function findPropFile(){
+ for(const p of PROP_CANDIDATES){
+   const out = await sh(`sh -c 'if [ -f "${p}" ]; then echo found; else echo missing; fi'`);
+   if(out.trim() === 'found') return p;
+ }
+ return null;
+}
+
+async function checkZygisk(){
+ const out = await sh(`sh -c 'if [ -d "${ZYGISK_PATH}" ]; then echo exists; else echo missing; fi'`);
+ return out.trim() === 'exists';
+}
+
+async function checkStopFlag(){
+ const out = await sh(`sh -c 'if [ -f "${STOP_FLAG}" ]; then echo paused; else echo running; fi'`);
+ return out.trim() === 'paused';
+}
+
+async function hasAdvancedSettings(file){
+ if(!file) return false;
+ const out = await sh(`sh -c 'grep -q "^spoofProvider=" "${file}" && echo 1 || echo 0'`);
+ return out.trim() === '1';
+}
+
+async function readKey(file, key){
+ if(!file) return '';
+ const cmd = `sh -c 'grep -m1 "^${key}=" "${file}" | cut -d"=" -f2- || echo ""'`;
+ const out = await sh(cmd);
+ return (out ?? '').toString().trim();
+}
+
+async function writeKey(file, key, value){
+ if(!file) return false;
+ const cmd = `sh -c 'if grep -q "^${key}=" "${file}"; then sed -i "s/^${key}=.*/${key}=${value}/" "${file}"; else printf "\\n${key}=${value}\\n" >> "${file}"; fi'`;
+ await sh(cmd);
+ return true;
+}
+
+async function restartGMS(){
+ await sh(`sh -c 'am force-stop com.google.android.gms.unstable 2>/dev/null || true; am force-stop com.android.vending 2>/dev/null || true'`);
+}
+
+async function restartServices(){
+ await restartGMS();
+ showToast('Services restarted');
+}
+
+async function refreshBehaviourStates(){
+ for(const f of behaviourFlags){
+   try{
+     const out = await sh(`sh -c 'if [ -f "${FLAG_DIR}/${f.id}" ]; then echo 1; else echo 0; fi'`);
+     const val = out.trim() === '1';
+     const cb = document.getElementById(f.id);
+     const row = document.getElementById('row-' + f.id);
+     if(cb && row){
+       cb.checked = val;
+       row.classList.toggle('active', val);
+     }
+   }catch(e){}
+ }
+}
+
+function openInfoModal(){
+ const modal = document.getElementById("infoModal");
+ const content = document.getElementById("infoContent");
+ if(!content.innerHTML){
+   const behaviourTitle = document.createElement("div");
+   behaviourTitle.className = "info-section-title";
+   behaviourTitle.textContent = "Customize Integrity Behaviour";
+   content.appendChild(behaviourTitle);
+
+   behaviourFlags.forEach((item, i) => {
+     const div = document.createElement("div");
+     div.className = "info-item";
+     div.innerHTML = `<div class="info-item-title"><span class="material-icons">${item.icon}</span>${item.title}</div><div class="info-item-desc">${item.desc}</div><div class="info-item-flag">Flag: ${item.id}</div>`;
+     content.appendChild(div);
+     if(i < behaviourFlags.length - 1){
+       const d = document.createElement("div");
+       d.className = "modal-divider";
+       content.appendChild(d);
+     }
+   });
+
+   const pifTitle = document.createElement("div");
+   pifTitle.className = "info-section-title";
+   pifTitle.textContent = "PIF Controls";
+   pifTitle.style.marginTop = "20px";
+   content.appendChild(pifTitle);
+
+   pifRows.forEach((item, i) => {
+     const div = document.createElement("div");
+     div.className = "info-item";
+     div.innerHTML = `<div class="info-item-title"><span class="material-icons">${item.icon}</span>${item.title}</div><div class="info-item-desc">${item.sub}</div><div class="info-item-flag">Key: ${item.id}</div>`;
+     content.appendChild(div);
+     if(i < pifRows.length - 1){
+       const d = document.createElement("div");
+       d.className = "modal-divider";
+       content.appendChild(d);
+     }
+   });
+ }
+ modal.style.display = "flex";
+ requestAnimationFrame(() => modal.classList.add("show"));
+}
+
+function closeInfoModal(e){
+ if(e && e.target !== e.currentTarget) return;
+ const modal = document.getElementById("infoModal");
+ modal.classList.remove("show");
+ setTimeout(() => modal.style.display = "none", 350);
+}
+
+async function init(){
+ propFile = await findPropFile();
+ zygiskExists = await checkZygisk();
+ zygiskPaused = await checkStopFlag();
+
+ updateZygiskCard();
+
+ if(zygiskPaused){
+   showWarning("Zygisk injection is paused");
+   KEYS.forEach(k => setDisabled(k, true));
+   await refreshBehaviourStates();
+   return;
+ }
+
+ if(!zygiskExists){
+   showWarning("zygiskless mode has been enabled");
+   KEYS.forEach(k => setDisabled(k, true));
+   await refreshBehaviourStates();
+   return;
+ }
+
+ if(!propFile){
+   showWarning("Change IntegrityBox profile first");
+   KEYS.forEach(k => setDisabled(k, true));
+   await refreshBehaviourStates();
+   return;
+ }
+
+ const adv = await hasAdvancedSettings(propFile);
+ if(!adv){
+   showWarning("Change your current profile brother");
+   KEYS.forEach(k => setDisabled(k, true));
+   await refreshBehaviourStates();
+   return;
+ }
+
+ showWarning('');
+
+ for(const key of KEYS){
+   const val = await readKey(propFile, key);
+   updateVisuals(key, val === '1');
+ }
+
+ KEYS.forEach(key => {
+   const input = document.getElementById(key);
+   input.addEventListener('change', () => toggle(key));
+ });
+
+ await refreshBehaviourStates();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+ init().catch(() => showWarning("Check KSU availability"));
+});
+</script>
+
+
+<script src="../TRANSLATIONS/i18n.js"></script>
+</body>
+</html>

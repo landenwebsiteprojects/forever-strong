@@ -1,0 +1,6 @@
+[submodule "PlayIntegrityFork"]
+	path = PlayIntegrityFork
+	url = https://github.com/MeowDump/PlayIntegrityFork
+[submodule "webroot/TRANSLATIONS"]
+	path = webroot/TRANSLATIONS
+	url = https://github.com/MeowDump/TRANSLATIONS.git

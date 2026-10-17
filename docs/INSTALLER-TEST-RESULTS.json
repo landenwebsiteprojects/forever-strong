@@ -1,0 +1,70 @@
+[
+  {
+    "test": "Install staging and correct payload selection: arm64",
+    "result": "PASS"
+  },
+  {
+    "test": "Install staging and correct payload selection: arm",
+    "result": "PASS"
+  },
+  {
+    "test": "Install staging and correct payload selection: x64",
+    "result": "PASS"
+  },
+  {
+    "test": "Install staging and correct payload selection: x86",
+    "result": "PASS"
+  },
+  {
+    "test": "Active conflicting module aborts without deletion",
+    "result": "PASS"
+  },
+  {
+    "test": "Exact baseline service hooks quarantined; disabled module and settings retained",
+    "result": "PASS"
+  },
+  {
+    "test": "Unrecognized generic service hook aborts untouched",
+    "result": "PASS"
+  },
+  {
+    "test": "Upgrade retains module config and paused state",
+    "result": "PASS"
+  },
+  {
+    "test": "Damaged DEX rejected with Manager-style extraction",
+    "result": "PASS"
+  },
+  {
+    "test": "Missing DEX rejected with Manager-style extraction",
+    "result": "PASS"
+  },
+  {
+    "test": "kernelsu install and upgrade preserve config without Magisk dependency",
+    "result": "PASS"
+  },
+  {
+    "test": "kernelsu-next install and upgrade preserve config without Magisk dependency",
+    "result": "PASS"
+  },
+  {
+    "test": "apatch install and upgrade preserve config without Magisk dependency",
+    "result": "PASS"
+  },
+  {
+    "test": "Unknown manager rejected",
+    "result": "PASS"
+  },
+  {
+    "test": "Missing resetprop rejected before mutation",
+    "result": "PASS"
+  },
+  {
+    "test": "Recovery installation rejected",
+    "result": "PASS"
+  },
+  {
+    "test": "KernelSU flags outrank leftover Magisk directory",
+    "result": "PASS"
+  }
+]

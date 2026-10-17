@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>ForeverStrong · TrickyStore</title><script src="../theme.js"></script>
+
+
+<link href="../halloween.css" rel="stylesheet"/><link href="../components.css" rel="stylesheet"/><script src="../integration.js"></script><script src="../component-bridge.js"></script><link href="../forever.css" rel="stylesheet"/></head>
+<body class="component"><header class="he-component-header"><div><p>FOREVER STRONG / CONTROL CENTER</p><h1>Scope & blacklist</h1></div></header>
+<div class="ambient"></div>
+<div class="container">
+<div class="header">
+<div class="header-left">
+<div class="title"><span class="material-icons">apps</span>Bootloader Spoofer</div>
+<div class="subtitle">Powered by Integrity Box</div>
+</div>
+<button class="info-btn" onclick="openInfo()">
+<span class="material-icons">info</span>
+</button>
+</div>
+<div class="card">
+<div class="card-inner">
+<div class="search-wrap">
+<span class="material-icons">search</span>
+<input autocomplete="off" class="search" id="search" placeholder="Search packages..."/>
+<button class="search-clear" id="searchClear" onclick="clearSearch()">
+<span class="material-icons">close</span>
+</button>
+</div>
+<div class="stats">
+<div class="stat">
+<span class="material-icons stat-icon">apps</span>
+<div class="stat-num" id="appCount">0</div>
+<div class="stat-label">Apps</div>
+</div>
+<div class="stat">
+<span class="material-icons stat-icon">check_circle</span>
+<div class="stat-num" id="targetCount">0</div>
+<div class="stat-label">Spoofed</div>
+</div>
+<div class="stat">
+<span class="material-icons stat-icon">block</span>
+<div class="stat-num" id="blackCount">0</div>
+<div class="stat-label">Blocked</div>
+</div>
+</div>
+<div class="toolbar">
+<button class="toolbar-btn" onclick="confirmBulk('target')">
+<span class="material-icons">check_circle</span>Spoof All
+        </button>
+<button class="toolbar-btn" onclick="confirmBulk('blacklist')">
+<span class="material-icons">block</span>Block All
+        </button>
+<button class="toolbar-btn" onclick="resetDefaults()">
+<span class="material-icons">restart_alt</span>Reset All
+        </button>
+</div>
+<div class="toolbar settings-toolbar">
+<button class="toolbar-btn" id="teeSimToggle" onclick="toggleTeeSim()"><span class="material-icons">sync</span><span id="teeSimLabel">TeeSim: …</span></button>
+</div>
+<div class="list-wrap">
+<div class="skeleton-list" id="skeleton">
+<div class="skeleton-item"><div class="skeleton-icon"></div><div class="skeleton-text"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div><div class="skeleton-actions"><div class="skeleton-btn"></div><div class="skeleton-btn"></div></div></div>
+<div class="skeleton-item"><div class="skeleton-icon"></div><div class="skeleton-text"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div><div class="skeleton-actions"><div class="skeleton-btn"></div><div class="skeleton-btn"></div></div></div>
+<div class="skeleton-item"><div class="skeleton-icon"></div><div class="skeleton-text"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div><div class="skeleton-actions"><div class="skeleton-btn"></div><div class="skeleton-btn"></div></div></div>
+<div class="skeleton-item"><div class="skeleton-icon"></div><div class="skeleton-text"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div><div class="skeleton-actions"><div class="skeleton-btn"></div><div class="skeleton-btn"></div></div></div>
+<div class="skeleton-item"><div class="skeleton-icon"></div><div class="skeleton-text"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div><div class="skeleton-actions"><div class="skeleton-btn"></div><div class="skeleton-btn"></div></div></div>
+<div class="skeleton-item"><div class="skeleton-icon"></div><div class="skeleton-text"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div><div class="skeleton-actions"><div class="skeleton-btn"></div><div class="skeleton-btn"></div></div></div>
+</div>
+<div class="list" id="list"></div>
+<div class="empty-state" id="emptyState">
+<span class="material-icons">search_off</span>
+<p>No apps match your search</p>
+</div>
+</div>
+<div class="btn-row">
+<button class="btn" onclick="backupTargets()">
+<span class="material-icons">backup</span>
+<span>Backup</span>
+</button>
+<button class="btn secondary" onclick="restoreTargets()">
+<span class="material-icons">restore</span>
+<span>Restore</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div id="snack"><span class="snack-icon">check_circle</span><span id="snackText"></span><div class="snack-timer"></div></div>
+<div class="modal" id="infoModal">
+<div class="modal-backdrop" onclick="closeInfo()"></div>
+<div class="modal-card">
+<div class="modal-header">
+<span class="material-icons">info</span>
+<span>About Bootloader Spoofer</span>
+<button class="modal-close" onclick="closeInfo()"><span class="material-icons">close</span></button>
+</div>
+<div class="modal-body">
+<div class="modal-section">
+<h4><span class="material-icons">check_circle</span>Spoofed</h4>
+<p>Checked apps will be able to use the keybox to pass Play Integrity checks.</p>
+</div>
+<div class="modal-divider"></div>
+<div class="modal-section">
+<h4><span class="material-icons">block</span>Blacklist</h4>
+<p>Blacklisted apps are excluded entirely. They are removed from spoofed and blocked from processing. Removing an app from the blacklist automatically restores it to spoofed.</p>
+</div>
+<div class="modal-divider"></div>
+<div class="modal-section">
+<h4><span class="material-icons">done_all</span>Spoof All</h4>
+<p>Adds all listed apps to the spoofed list, except apps that are blocked.</p>
+</div>
+<div class="modal-divider"></div>
+<div class="modal-section">
+<h4><span class="material-icons">block</span>Block All</h4>
+<p>Blocks all listed apps at once. The built-in default packages are protected and are not blocked.</p>
+</div>
+<div class="modal-divider"></div>
+<div class="modal-section">
+<h4><span class="material-icons">restart_alt</span>Reset All</h4>
+<p>Clears the current target list and adds only the built-in default packages. You must confirm before this change is applied.</p>
+</div>
+<div class="modal-divider"></div>
+<div class="modal-section">
+<h4><span class="material-icons">sync</span>TeeSim</h4>
+<p>Shows whether TeeSim is installed. The toggle lets you allow or skip its script when the app updates the spoofed list.</p>
+</div>
+<div class="modal-divider"></div>
+<div class="modal-section">
+<h4><span class="material-icons">backup</span>Backup and Restore</h4>
+<p>Backup saves your current blocked-app list. Restore loads that saved list again.</p>
+</div>
+<div class="modal-divider"></div>
+<div class="modal-section">
+<h4><span class="material-icons">search</span>Search</h4>
+<p>Type an app name or package name to find it quickly.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="modal" id="confirmModal">
+<div class="modal-backdrop" onclick="closeConfirm()"></div>
+<div class="modal-card">
+<div class="modal-header">
+<span class="material-icons" id="confirmIcon">help</span>
+<span id="confirmTitle">Confirm</span>
+<button class="modal-close" onclick="closeConfirm()"><span class="material-icons">close</span></button>
+</div>
+<div class="confirm-body">
+<p id="confirmText">Are you sure?</p>
+<div class="confirm-btns">
+<button class="btn secondary" onclick="closeConfirm()">Cancel</button>
+<button class="btn" id="confirmAction">Confirm</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+const TARGET_FILE=heIntegration.config+"/target.txt";
+const BLACK_FILE="/data/adb/Box-Brain/blacklist.txt";
+const BACKUP_FILE="/sdcard/Download/blacklist_backup.txt.bak";
+const HIDDEN_DEFAULTS=new Set(["com.android.vending","com.google.android.gms","com.google.android.gsf","io.github.qwq233.keyattestation","io.github.vvb2060.keyattestation","com.google.android.apps.walletnfcrel","com.google.android.apps.messaging"]);
+
+let cachedApps = [];
+let targetSet = new Set();
+let blackSet = new Set();
+let initialSortDone = false;
+let searchDebounce = null;
+let pendingBulkAction = null;
+let teeBroken = false;
+let originalModes = new Map();
+
+function runShell(cmd,cb){return window.heShell(cmd).then(out=>{if(cb)cb(0,out,"");return out;},err=>{if(cb)cb(1,"",err.message);throw err;});}
+
+function esc(s){return "'"+String(s).replace(/'/g,"'\\''")+"'";}
+
+function popup(msg, isError){
+ try {
+   if (typeof window.toast === "function") { window.toast(String(msg)); return; }
+   if (window.kernelsu && typeof window.kernelsu.toast === "function") { window.kernelsu.toast(String(msg)); return; }
+   if (typeof ksu === "object" && typeof ksu.toast === "function") { ksu.toast(String(msg)); return; }
+ } catch(e) {}
+
+ const el = document.getElementById("snack");
+ const txt = document.getElementById("snackText");
+ const icon = el.querySelector(".snack-icon");
+ const timer = el.querySelector(".snack-timer");
+ txt.textContent = msg;
+ icon.textContent = isError ? "error" : "check_circle";
+ el.className = isError ? "error" : "";
+ el.classList.add("show");
+ timer.style.animation = "none";
+ timer.offsetHeight;
+ timer.style.animation = "snackTimer 2.2s linear forwards";
+ setTimeout(()=> el.classList.remove("show"), 2200);
+}
+
+function readLines(path, cb){
+runShell(`if [ -f ${esc(path)} ]; then cat ${esc(path)}; fi`, (c,o)=> cb((o||"").split("\n").map(l=>l.trim()).filter(l=>l)));
+}
+
+function writeLines(path, lines, cb){
+if(lines.length === 0){
+  runShell(`> ${esc(path)}`, c=> cb?.(c===0));
+  return;
+}
+const args = lines.map(l=>esc(l)).join(" ");
+runShell(`mkdir -p $(dirname ${esc(path)}) && printf "%s\\n" ${args} > ${esc(path)}`, c=> cb?.(c===0));
+}
+
+function normalizeTargets(lines){ originalModes=new Map();return lines.filter(l=>!l.startsWith("#")).map(l=>{const suffix=/[!?]$/.test(l)?l.slice(-1):"";const pkg=l.replace(/[!?]$/,"");originalModes.set(pkg,suffix);return pkg;}); }
+function targetsForWrite(){ return Array.from(targetSet).map(pkg => pkg+(originalModes.has(pkg)?originalModes.get(pkg):(teeBroken?"!":""))); }
+function readTeeStatus(cb){
+  runShell(`if [ -f /data/adb/tricky_store/tee_status ]; then cat /data/adb/tricky_store/tee_status; fi`,(c,o)=>{
+    teeBroken = /(?:^|\s)teeBroken\s*=\s*true(?:\s|$)/i.test(o||"");
+    if(cb) cb();
+  });
+}
+
+function runTeeSimIfExists(cb){if(cb)cb(true,"Bundled OSS reloads target.txt directly","");}
+function refreshSettings(cb){
+ heIntegration.call('status').then(raw=>{
+  const state=heIntegration.parse(raw),t=document.getElementById("teeSimLabel"),button=document.getElementById("teeSimToggle");
+  if(t)t.textContent="Bundled OSS: "+(state.running==="1"?"process present":state.installed==="1"?"installed; not running":"payload incomplete");
+  if(button){button.disabled=false;button.title="Refresh bundled engine status";}
+  if(cb)cb(false,state.installed==="1");
+ }).catch(e=>popup(e.message,true));
+}
+
+function toggleTeeSim(){refreshSettings();}
+
+
+function fetchInstalled(cb){
+  runShell(`pm list packages -3`,(c,out)=>{
+    const byPkg=new Map();
+    (out||"").split("\n").forEach(line=>{
+      const pkg=line.trim().replace(/^package:/,"");
+      if(pkg) byPkg.set(pkg,{pkg,label:pkg,apk:""});
+    });
+    [...targetSet,...blackSet].forEach(pkg=>{
+      if(pkg && !byPkg.has(pkg)) byPkg.set(pkg,{pkg,label:pkg,apk:""});
+    });
+    cb(Array.from(byPkg.values()));
+  });
+}
+
+function sortAppsOnce(){
+  if(initialSortDone) return;
+  cachedApps.sort((a,b) => {
+    const aT = targetSet.has(a.pkg);
+    const bT = targetSet.has(b.pkg);
+    if(aT && !bT) return -1;
+    if(!aT && bT) return 1;
+    return 0;
+  });
+  initialSortDone = true;
+}
+
+function animateValue(el, start, end, duration){
+  const range = end - start;
+  const minTimer = 50;
+  let stepTime = Math.abs(Math.floor(duration / range));
+  stepTime = Math.max(stepTime, minTimer);
+  let startTime = new Date().getTime();
+  let endTime = startTime + duration;
+  let timer;
+
+  function run(){
+    let now = new Date().getTime();
+    let remaining = Math.max((endTime - now) / duration, 0);
+    let value = Math.round(end - (remaining * range));
+    el.textContent = value;
+    if(value == end) clearInterval(timer);
+  }
+
+  timer = setInterval(run, stepTime);
+  run();
+}
+
+function updateCounts(animate){
+  const appEl = document.getElementById("appCount");
+  const targetEl = document.getElementById("targetCount");
+  const blackEl = document.getElementById("blackCount");
+
+  if(animate){
+    animateValue(appEl, 0, cachedApps.length, 600);
+    animateValue(targetEl, 0, targetSet.size, 600);
+    animateValue(blackEl, 0, blackSet.size, 600);
+  } else {
+    appEl.textContent = cachedApps.length;
+    targetEl.textContent = targetSet.size;
+    blackEl.textContent = blackSet.size;
+  }
+}
+
+function updateRowVisuals(el, pkg){
+ const isTarget = targetSet.has(pkg);
+ const isBlack = blackSet.has(pkg);
+ const checkBtn = el.querySelector(".check-btn");
+ const blackBtn = el.querySelector(".black-btn");
+
+ el.classList.remove("targeted", "blacklisted");
+ if(isTarget) el.classList.add("targeted");
+ if(isBlack) el.classList.add("blacklisted");
+
+ if(isBlack){
+   checkBtn.classList.add("disabled");
+   checkBtn.classList.remove("active");
+   blackBtn.classList.add("active");
+   blackBtn.querySelector(".material-icons").textContent = "block";
+ } else {
+   checkBtn.classList.remove("disabled");
+   if(isTarget) checkBtn.classList.add("active");
+   else checkBtn.classList.remove("active");
+   blackBtn.classList.remove("active");
+   blackBtn.querySelector(".material-icons").textContent = "block_flipped";
+ }
+ updateCounts(false);
+}
+
+function render(){
+const q=(document.getElementById("search").value||"").toLowerCase().trim();
+const list=document.getElementById("list");
+const empty = document.getElementById("emptyState");
+const frag = document.createDocumentFragment();
+let visibleCount = 0;
+let visibleIdx = 0;
+
+cachedApps.forEach((a)=>{
+  if(HIDDEN_DEFAULTS.has(a.pkg)) return;
+  if(q && !a.pkg.toLowerCase().includes(q) && !a.label.toLowerCase().includes(q)) return;
+  visibleCount++;
+  const isTarget = targetSet.has(a.pkg);
+  const isBlack = blackSet.has(a.pkg);
+  const showPkg = a.label !== a.pkg;
+
+  const item = document.createElement("div");
+  item.className = "item" + (isTarget ? " targeted" : "") + (isBlack ? " blacklisted" : "");
+  item.dataset.pkg = a.pkg;
+  item.style.animationDelay = (visibleIdx * 0.02) + "s";
+  item.innerHTML = `
+    <img class="app-icon" src="ksu://icon/${a.pkg}" alt="" onerror="this.style.opacity='0'">
+    <div class="info">
+      <div class="name">${a.label}</div>
+      ${showPkg ? `<div class="pkg">${a.pkg}</div>` : ''}
+    </div>
+    <div class="actions">
+      <button class="check-btn ${isTarget ? 'active' : ''} ${isBlack ? 'disabled' : ''}" data-pkg="${a.pkg}">
+        <span class="material-icons">check</span>
+      </button>
+      <button class="black-btn ${isBlack ? 'active' : ''}" data-pkg="${a.pkg}">
+        <span class="material-icons">${isBlack ? 'block' : 'block_flipped'}</span>
+      </button>
+    </div>
+  `;
+  frag.appendChild(item);
+  visibleIdx++;
+});
+
+list.innerHTML = "";
+
+if(visibleCount === 0 && q){
+  empty.classList.add("show");
+} else {
+  empty.classList.remove("show");
+  list.appendChild(frag);
+}
+
+attachListeners();
+}
+
+function attachListeners(){
+document.querySelectorAll(".check-btn").forEach(btn=>{
+  btn.onclick = ()=>{
+    if(btn.classList.contains("disabled")){ popup("Package is blacklisted", true); return; }
+    const pkg = btn.dataset.pkg;
+    const isActive = btn.classList.contains("active");
+    const item = btn.closest(".item");
+
+    if(isActive){
+      targetSet.delete(pkg);
+      item.classList.remove("targeted");
+      btn.classList.remove("active");
+    } else {
+      targetSet.add(pkg);
+      item.classList.add("targeted");
+      btn.classList.add("active");
+    }
+
+    writeLines(TARGET_FILE, targetsForWrite(), ok=>{
+      popup(ok ? (isActive ? "Removed from spoofed" : "Added to spoofed") : "Write failed", !ok);
+      if(ok) runTeeSimIfExists();
+    });
+  };
+});
+
+document.querySelectorAll(".black-btn").forEach(btn=>{
+  btn.onclick = ()=>{
+    const pkg = btn.dataset.pkg;
+    const isActive = btn.classList.contains("active");
+    const item = btn.closest(".item");
+
+    if(isActive){
+      blackSet.delete(pkg);
+      targetSet.add(pkg);
+      item.classList.remove("blacklisted");
+      item.classList.add("targeted");
+    } else {
+      blackSet.add(pkg);
+      if(targetSet.has(pkg)) targetSet.delete(pkg);
+      item.classList.add("blacklisted");
+      item.classList.remove("targeted");
+    }
+
+    updateRowVisuals(item, pkg);
+
+    writeLines(BLACK_FILE, Array.from(blackSet), ok=>{
+      if(!ok){ popup("Write failed", true); return; }
+      writeLines(TARGET_FILE, targetsForWrite(), ok2=>{
+        popup(ok2 ? (isActive ? "Unblacklisted & restored to spoofed" : "Blacklisted") : "Blacklist updated, spoofed sync failed", !ok2);
+        if(ok2) runTeeSimIfExists();
+      });
+    });
+  };
+});
+}
+
+function clearSearch(){
+  document.getElementById("search").value = "";
+  document.getElementById("searchClear").classList.remove("show");
+  render();
+}
+
+document.getElementById("search").addEventListener("input", function(){
+  const clear = document.getElementById("searchClear");
+  if(this.value) clear.classList.add("show");
+  else clear.classList.remove("show");
+
+  if(searchDebounce) clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(render, 200);
+});
+
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape"){
+    closeInfo();
+    closeConfirm();
+    if(document.getElementById("search") === document.activeElement){
+      clearSearch();
+    }
+  }
+  if((e.key === "/" || (e.ctrlKey && e.key === "k")) && document.activeElement.tagName !== "INPUT"){
+    e.preventDefault();
+    document.getElementById("search").focus();
+  }
+});
+
+function confirmBulk(type){
+  pendingBulkAction = type;
+  const modal = document.getElementById("confirmModal");
+  const icon = document.getElementById("confirmIcon");
+  const title = document.getElementById("confirmTitle");
+  const text = document.getElementById("confirmText");
+  const action = document.getElementById("confirmAction");
+
+  if(type === "target"){
+    icon.textContent = "check_circle";
+    icon.style.color = "var(--accent)";
+    title.textContent = "Spoof All Apps";
+    text.textContent = "This will add all available apps to the spoofed list. Apps currently blacklisted will not be affected.";
+    action.onclick = ()=>{ closeConfirm(); doSelectAllTargets(); };
+  } else {
+    icon.textContent = "block";
+    icon.style.color = "var(--danger)";
+    title.textContent = "Blacklist All Apps";
+    text.textContent = "This will blacklist all apps and remove them from spoofed. Are you sure?";
+    action.onclick = ()=>{ closeConfirm(); doSelectAllBlacklist(); };
+  }
+
+  modal.classList.add("show");
+}
+
+function closeConfirm(){ document.getElementById("confirmModal").classList.remove("show"); pendingBulkAction = null; }
+
+function doSelectAllTargets(){
+let added = 0;
+cachedApps.forEach(a => {
+  if(!targetSet.has(a.pkg) && !blackSet.has(a.pkg)){
+    targetSet.add(a.pkg);
+    added++;
+  }
+});
+
+if(added === 0){ popup("All available apps already spoofed"); return; }
+
+render();
+writeLines(TARGET_FILE, targetsForWrite(), ok=>{
+  popup(ok ? `Spoofed ${added} apps` : "Failed to update spoofed", !ok);
+  if(ok) runTeeSimIfExists();
+});
+}
+
+function doSelectAllBlacklist(){
+let added = 0;
+cachedApps.forEach(a => {
+  if(HIDDEN_DEFAULTS.has(a.pkg)) return;
+  if(!blackSet.has(a.pkg)){
+    blackSet.add(a.pkg);
+    if(targetSet.has(a.pkg)) targetSet.delete(a.pkg);
+    added++;
+  }
+});
+
+if(added === 0){ popup("All apps already blacklisted"); return; }
+
+render();
+writeLines(BLACK_FILE, Array.from(blackSet), ok=>{
+  if(!ok){ popup("Failed to update blacklist", true); return; }
+  writeLines(TARGET_FILE, targetsForWrite(), ok2=>{
+    popup(ok2 ? `Blacklisted ${added} apps` : "Blacklist updated, spoofed removal failed", !ok2);
+    if(ok2) runTeeSimIfExists();
+  });
+});
+}
+
+function backupTargets(){
+  runShell(`mkdir -p $(dirname ${esc(BACKUP_FILE)}) && cp ${esc(BLACK_FILE)} ${esc(BACKUP_FILE)}`, (c,o,e)=>{
+    if(c === 0) popup("Backup saved to Download");
+    else popup("Backup failed: " + (e||"unknown"), true);
+  });
+}
+
+function restoreTargets(){
+  runShell(`if [ -f ${esc(BACKUP_FILE)} ]; then cp ${esc(BACKUP_FILE)} ${esc(BLACK_FILE)}; echo "OK"; else echo "NOBACKUP"; fi`, (c,o,e)=>{
+    if(o && o.trim() === "OK"){
+      readLines(BLACK_FILE, lines=>{
+        blackSet = new Set(lines);
+        render();
+        popup(`Restored ${lines.length} apps from backup`);
+      });
+    } else {
+      popup("No backup found. Tap Backup first.", true);
+    }
+  });
+}
+
+function openInfo(){ document.getElementById("infoModal").classList.add("show"); }
+function closeInfo(){ document.getElementById("infoModal").classList.remove("show"); }
+
+function init(){
+refreshSettings();
+runShell(`mkdir -p $(dirname ${esc(TARGET_FILE)}) && touch ${esc(TARGET_FILE)} && mkdir -p $(dirname ${esc(BLACK_FILE)}) && touch ${esc(BLACK_FILE)}`, ()=>{
+  readTeeStatus(()=>readLines(TARGET_FILE, tLines=>{
+    readLines(BLACK_FILE, bLines=>{
+      targetSet = new Set([...normalizeTargets(tLines), ...HIDDEN_DEFAULTS]);
+      blackSet = new Set(bLines);
+      fetchInstalled(apps=>{
+        cachedApps = apps;
+        sortAppsOnce();
+        document.getElementById("skeleton").style.display = "none";
+        render();
+        updateCounts(true);
+      });
+    });
+  }));
+});
+}
+
+function resetDefaults(){
+  const modal = document.getElementById("confirmModal");
+  document.getElementById("confirmIcon").textContent = "restart_alt";
+  document.getElementById("confirmIcon").style.color = "var(--danger)";
+  document.getElementById("confirmTitle").textContent = "Reset All?";
+  document.getElementById("confirmText").textContent = "This will erase the entire current target.txt list and replace it with only the built-in default packages. This cannot be undone. Continue?";
+  document.getElementById("confirmAction").onclick = ()=>{
+    closeConfirm();
+    targetSet = new Set(HIDDEN_DEFAULTS);
+    render();
+    writeLines(TARGET_FILE, targetsForWrite(), ok=>{
+      if(!ok){ popup("Could not reset target list", true); return; }
+      popup("Target list reset to default packages");
+      runTeeSimIfExists();
+      render();
+    });
+  };
+  modal.classList.add("show");
+}
+
+init();
+</script>
+
+
+<script src="../TRANSLATIONS/i18n.js"></script>
+</body>
+</html>

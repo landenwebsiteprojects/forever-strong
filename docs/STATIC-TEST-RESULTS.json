@@ -1,0 +1,87 @@
+[
+  {
+    "test": "Native path relocation zygisk/x86_64.so",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Native path relocation zygisk/armeabi-v7a.so",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Native path relocation zygisk/arm64-v8a.so",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Native path relocation legacy/zygisk/x86_64.so",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Native path relocation legacy/zygisk/armeabi-v7a.so",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Native path relocation legacy/zygisk/arm64-v8a.so",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Native path relocation legacy/zygisk/x86.so",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Preserved original deletion source customize.sh",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Preserved original deletion source uninstall.sh",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Preserved original deletion source webroot/common_scripts/cleanup.sh",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Shell parser validation",
+    "result": "PASS",
+    "detail": "42 scripts"
+  },
+  {
+    "test": "One module identifier",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Version metadata",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Cat visual assets removed",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "Installer has no animations or decorative art",
+    "result": "PASS",
+    "detail": ""
+  },
+  {
+    "test": "All core frontend assets resolve locally",
+    "result": "PASS",
+    "detail": "[]"
+  },
+  {
+    "test": "No runtime standalone Tricky Store module-directory dependency",
+    "result": "PASS",
+    "detail": "Repair uses shared bundled descriptor; obsolete standalone paths absent outside preserved source/translations"
+  }
+]

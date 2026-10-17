@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>ForeverStrong · Control</title><script src="../theme.js"></script>
+
+
+<link href="../halloween.css" rel="stylesheet"/><link href="../components.css" rel="stylesheet"/><script src="../integration.js"></script><script src="../component-bridge.js"></script><link href="../forever.css" rel="stylesheet"/></head>
+<body class="component"><header class="he-component-header"><div><p>FOREVER STRONG / CONTROL CENTER</p><h1>ROM controls</h1></div></header>
+<div class="card">
+<button aria-label="Help" class="help-btn" onclick="openHelp()">
+<span class="material-icons">help_outline</span>
+</button>
+<h1 class="fs-original-title"><span class="material-icons">security</span>Developer Mode</h1>
+<div class="section-label">Core Settings</div>
+<div class="row" id="zygisk" onclick="toggle('zygisk')">
+<div class="icon-wrap"><span class="material-icons">tune</span></div>
+<div class="content">
+<div class="title">Zygiskless Mode</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="zygiskInput" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="verbose" onclick="toggleProp('verboseLogs')">
+<div class="icon-wrap"><span class="material-icons">developer_mode</span></div>
+<div class="content">
+<div class="title">Zygote Debugging</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="verboseInput" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="safemode" onclick="toggleSafeMode()">
+<div class="icon-wrap"><span class="material-icons">health_and_safety</span></div>
+<div class="content">
+<div class="title">Safe Mode</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="safemodeInput" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="aggressive" onclick="toggleAggressive()">
+<div class="icon-wrap"><span class="material-icons">bolt</span></div>
+<div class="content">
+<div class="title">Agressive Mode</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="aggressiveInput" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="section-label">Tools &amp; Utility</div>
+<div class="row" id="updateTrans" onclick="updateCanary()">
+<div class="icon-wrap"><span class="material-icons">update</span></div>
+<div class="content">
+<div class="title">Sync with Canary</div>
+</div>
+<span class="material-icons">chevron_right</span>
+</div>
+<div class="row" id="zygisknext" onclick="toggleZygiskNext()">
+<div class="icon-wrap"><span class="material-icons">memory</span></div>
+<div class="content">
+<div class="title">Customize ZN</div>
+</div>
+<div class="status-dot"></div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="zygisknextInput" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+<div class="row" id="extractBoot" onclick="extractBoot()">
+<div class="icon-wrap"><span class="material-icons">developer_board</span></div>
+<div class="content">
+<div class="title">Extract boot.img</div>
+</div>
+<span class="material-icons">chevron_right</span>
+</div>
+<div class="row" id="injectHma" onclick="injectHma()">
+<div class="icon-wrap"><span class="material-icons">adb</span></div>
+<div class="content">
+<div class="title">Inject HMA-OOS config</div>
+</div>
+<span class="material-icons">chevron_right</span>
+</div>
+</div>
+<div class="toast" id="toast">
+<span class="material-icons">check_circle</span>
+<span id="toastText">Saved</span>
+</div>
+<div class="modal-overlay" id="helpModal" onclick="closeHelpOnBackdrop(event)">
+<div class="modal-sheet" onclick="event.stopPropagation()">
+<div class="modal-header">
+<h2><span class="material-icons">help_outline</span>What does this do?</h2>
+<button class="modal-close" onclick="closeHelp()"><span class="material-icons">close</span></button>
+</div>
+<div class="modal-body">
+<div class="help-section">
+<div class="help-section-title">Core Settings</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">tune</span></div>
+<div class="help-content">
+<div class="help-title">Zygiskless Mode</div>
+<div class="help-desc">Enable this if you are on a Pixel stock ROM or a ROM with built-in Play Integrity spoofing. It disables Zygisk-based injection to avoid conflicts.</div>
+</div>
+</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">developer_mode</span></div>
+<div class="help-content">
+<div class="help-title">Zygote Debugging</div>
+<div class="help-desc">Enables verbose logging inside the module. Only use for debugging. Many banking and streaming apps detect verbose logs and may refuse to launch. You should not enabled this toggle unless you're reporting a bug.</div>
+</div>
+</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">health_and_safety</span></div>
+<div class="help-content">
+<div class="help-title">Safe Mode</div>
+<div class="help-desc">This prevents custom-ROM-specific features from being used on stock firmware, where they may cause compatibility issues or unexpected behavior. YOU SHOULD NOT disable this if you're using STOCK ROM</div>
+</div>
+</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">bolt</span></div>
+<div class="help-content">
+<div class="help-title">Agressive Mode</div>
+<div class="help-desc">Enabling this forces every prop to be set to its correct value, whether it already exists or not. Disabling it only modifies props that already exist on your device and skips non-existing props by default.</div>
+</div>
+</div>
+</div>
+<div class="help-section">
+<div class="help-section-title">Tools &amp; Utility</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">update</span></div>
+<div class="help-content">
+<div class="help-title">Sync with Canary</div>
+<div class="help-desc">Enables seamless, independent updates for language packs and hotfix patches without requiring a module upgrade or device reboot.</div>
+</div>
+</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">memory</span></div>
+<div class="help-content">
+<div class="help-title">Customize ZN</div>
+<div class="help-desc">You should enable this if you're using ZygiskNext. It automatically configured the best setup for your apps &amp; modules by tweaking memory type, linker hooks, and denylist enforcement.</div>
+</div>
+</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">developer_board</span></div>
+<div class="help-content">
+<div class="help-title">Extract Boot.img</div>
+<div class="help-desc">Extracts the active boot image from your device for backup or manual patching purposes. Output is saved to /sdcard/BootImages.</div>
+</div>
+</div>
+<div class="help-item">
+<div class="icon-wrap"><span class="material-icons">published_with_changes</span></div>
+<div class="help-content">
+<div class="help-title">Inject HMA-OOS config</div>
+<div class="help-desc">Injects the pre-configured Hide My Applist (OOS variant) config for bundled app hiding. Click this button if HMA OOS module is installed</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+const DIR="/data/adb/Box-Brain";
+const FORCE_RESET=DIR+"/force-reset";
+const PROP="/data/adb/modules/halloweenedition/custom.pif.prop";
+const ZYGISK_DIR="/data/adb/zygisksu";
+const EXTRACT_BOOT_SCRIPT="/data/adb/modules/halloweenedition/webroot/common_scripts/extract_boot.sh";
+const UPDATE_TRANS_SCRIPT="/data/adb/modules/halloweenedition/webroot/UpdateTranslation.sh";
+const HMA_SCRIPT="/data/adb/modules/halloweenedition/webroot/common_scripts/hma.sh";
+
+function popup(msg, type) {
+  if(!type) type="info";
+  try {
+    if (typeof window.toast === "function") { window.toast(String(msg)); return; }
+    if (window.kernelsu && typeof window.kernelsu.toast === "function") { window.kernelsu.toast(String(msg)); return; }
+    if (typeof ksu === "object" && typeof ksu.toast === "function") { ksu.toast(String(msg)); return; }
+  } catch(e){}
+
+  var n = document.createElement("div");
+  n.className = "webui-popup";
+  n.textContent = msg;
+  var colors = { error:"#f44336", success:"#4caf50", info:"#1565c0", warn:"#ff8f00" };
+  var bg = colors[type] || "#0099FF";
+  n.style.position="fixed";
+  n.style.top="-70px";
+  n.style.left="50%";
+  n.style.transform="translateX(-50%)";
+  n.style.background=bg;
+  n.style.color="#fff";
+  n.style.padding="0.8rem 1.2rem";
+  n.style.borderRadius="8px";
+  n.style.boxShadow="0 6px 18px rgba(0,0,0,0.35)";
+  n.style.fontWeight="600";
+  n.style.zIndex="99999";
+  n.style.transition="top 0.36s,opacity 0.36s";
+  n.style.opacity="0";
+  document.body.appendChild(n);
+  requestAnimationFrame(function(){ n.style.top="20px"; n.style.opacity="1"; });
+  setTimeout(function(){ n.style.top="-70px"; n.style.opacity="0"; setTimeout(function(){n.remove()},420); },2500);
+}
+
+function run(cmd,cb){return window.heShell(cmd).then(out=>{if(cb)cb(out);return out;});}
+
+function touch(path,on){if(on)run("mkdir -p "+DIR+" && touch "+path,function(){});else run("rm -f "+path,function(){});}
+function write(key,val,cb){
+  run(
+    "mkdir -p $(dirname "+PROP+") && touch "+PROP+" && " +
+    "if grep -q '^"+key+"=' "+PROP+"; then " +
+    "sed -i 's/^"+key+"=.*/"+key+"="+val+"/' "+PROP+"; " +
+    "else " +
+    "printf '\\n"+key+"="+val+"\\n' >> "+PROP+"; " +
+    "fi",
+    cb
+  );
+}
+
+function setOn(id,on){
+  var el=document.getElementById(id);
+  el.classList.toggle("on",on);
+  var input=el.querySelector('input[type="checkbox"]');
+  if(input)input.checked=on;
+}
+
+function toggle(name){
+  var el=document.getElementById(name);
+  var on=!el.classList.contains("on");
+  touch(DIR+"/"+name,on);
+  setOn(name,on);
+  popup((on?"Enabled ":"Disabled ")+name,"success");
+}
+
+function toggleProp(key){
+  var el=document.getElementById(key==="verboseLogs"?"verbose":"");
+  var on=!el.classList.contains("on");
+  write(key,on?"1":"0",function(){
+    setOn(key==="verboseLogs"?"verbose":"",on);
+    popup((on?"Enabled ":"Disabled ")+key,"success");
+  });
+}
+
+function toggleSafeMode(){
+  var el=document.getElementById("safemode");
+  var on=!el.classList.contains("on");
+  touch(DIR+"/safemode",on);
+  setOn("safemode",on);
+  popup(on?"Safe Mode enabled":"Safe Mode disabled","success");
+}
+
+function toggleAggressive(){
+  var el=document.getElementById("aggressive");
+  var on=!el.classList.contains("on");
+  touch(FORCE_RESET,on);
+  setOn("aggressive",on);
+  popup(on?"Agressive Mode enabled":"Agressive Mode disabled","success");
+}
+
+function toggleZygiskNext(){
+  var el=document.getElementById("zygisknext");
+  var on=!el.classList.contains("on");
+  if(on){
+    run(
+      "mkdir -p "+ZYGISK_DIR+" && " +
+      "echo '2' > "+ZYGISK_DIR+"/denylist_enforce && " +
+      "echo '1' > "+ZYGISK_DIR+"/memory_type && " +
+      "echo '1' > "+ZYGISK_DIR+"/linker && " +
+      "echo '0' > "+ZYGISK_DIR+"/klog",
+      function(){
+        setOn("zygisknext",true);
+        popup("Zygisk Next configured","success");
+      }
+    );
+  }else{
+    run(
+      "mkdir -p "+ZYGISK_DIR+" && " +
+      "echo '0' > "+ZYGISK_DIR+"/denylist_enforce && " +
+      "echo '0' > "+ZYGISK_DIR+"/memory_type && " +
+      "echo '0' > "+ZYGISK_DIR+"/linker && " +
+      "echo '0' > "+ZYGISK_DIR+"/klog",
+      function(){
+        setOn("zygisknext",false);
+        popup("Zygisk Next reset to defaults","success");
+      }
+    );
+  }
+}
+
+function runScriptChecked(path, successMsg, failMsg){
+  run("if [ -f '"+path+"' ]; then sh '"+path+"'; echo '___EXIT___:'$?; else echo '___EXIT___:404'; fi", function(r){
+    var m = r.match(/___EXIT___:(\d+)\s*$/);
+    var code = m ? parseInt(m[1]) : -1;
+    if(code === 404){
+      popup("Script not found","error");
+    }else if(code !== 0){
+      popup((failMsg || "Script failed") + " (exit "+code+")","error");
+    }else{
+      popup(successMsg,"success");
+    }
+  });
+}
+
+function updateCanary(){
+  runScriptChecked(UPDATE_TRANS_SCRIPT, "Canary updated", "No update available at the moment");
+}
+
+function extractBoot(){
+  runScriptChecked(EXTRACT_BOOT_SCRIPT, "Boot.img extracted", "Boot extraction failed");
+}
+
+function injectHma(){
+  runScriptChecked(HMA_SCRIPT, "HMA-OOS config injected", "HMA injection failed");
+}
+
+function openHelp(){
+  document.getElementById("helpModal").classList.add("show");
+  document.body.style.overflow="hidden";
+}
+
+function closeHelp(){
+  document.getElementById("helpModal").classList.remove("show");
+  document.body.style.overflow="";
+}
+
+function closeHelpOnBackdrop(e){
+  if(e.target===e.currentTarget) closeHelp();
+}
+
+function init(){
+  var cmd =
+    "DIR='"+DIR+"'; " +
+    "PROP='"+PROP+"'; " +
+    "ZYGISK_DIR='"+ZYGISK_DIR+"'; " +
+    "check(){ [ -f \"$1\" ] && echo 1 || echo 0; }; " +
+    "printf '{\"zygisk\":\"%s\",\"verbose\":\"%s\",\"safemode\":\"%s\",\"aggressive\":\"%s\",\"zn_mem\":\"%s\",\"zn_link\":\"%s\",\"zn_klog\":\"%s\",\"zn_deny\":\"%s\"}\\n' " +
+    "\"$(check $DIR/zygisk)\" " +
+    "\"$(grep -m1 '^verboseLogs=' $PROP | cut -d= -f2- | tr -d '\\n' || echo '')\" " +
+    "\"$(check $DIR/safemode)\" " +
+    "\"$(check $DIR/force-reset)\" " +
+    "\"$(cat $ZYGISK_DIR/memory_type 2>/dev/null | tr -d '\\n' || echo '')\" " +
+    "\"$(cat $ZYGISK_DIR/linker 2>/dev/null | tr -d '\\n' || echo '')\" " +
+    "\"$(cat $ZYGISK_DIR/klog 2>/dev/null | tr -d '\\n' || echo '')\" " +
+    "\"$(cat $ZYGISK_DIR/denylist_enforce 2>/dev/null | tr -d '\\n' || echo '')\"";
+
+  run(cmd, function(r){
+    var d;
+    try { d = JSON.parse(r.trim()); } catch(e) { return; }
+
+    setOn("zygisk", d.zygisk === "1");
+    setOn("verbose", d.verbose === "1");
+    setOn("safemode", d.safemode === "1");
+    setOn("aggressive", d.aggressive === "1");
+
+    var znOn = d.zn_mem === "1" && d.zn_link === "1" && d.zn_klog === "0" && d.zn_deny === "2";
+    setOn("zygisknext", znOn);
+  });
+}
+
+document.addEventListener("DOMContentLoaded",init);
+</script>
+
+
+<script src="../TRANSLATIONS/i18n.js"></script>
+</body>
+</html>

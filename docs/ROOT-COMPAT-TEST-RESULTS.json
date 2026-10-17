@@ -1,0 +1,26 @@
+[
+  {
+    "test": "magisk environment selects matching property binary",
+    "result": "PASS"
+  },
+  {
+    "test": "magisk WebUI marker selects matching property binary",
+    "result": "PASS"
+  },
+  {
+    "test": "kernelsu environment selects matching property binary",
+    "result": "PASS"
+  },
+  {
+    "test": "kernelsu WebUI marker selects matching property binary",
+    "result": "PASS"
+  },
+  {
+    "test": "apatch environment selects matching property binary",
+    "result": "PASS"
+  },
+  {
+    "test": "apatch WebUI marker selects matching property binary",
+    "result": "PASS"
+  }
+]

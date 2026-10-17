@@ -1,0 +1,24 @@
+This project is licensed under the GNU General Public License v3.0
+(see LICENSE file).
+
+Third-party components:
+-----------------------
+
+1. Portions of this project include code from the Android Open Source Project (AOSP) located in:
+       app/src/main/cpp/external/AOSP/
+   The corresponding Apache License 2.0 is provided in:
+       app/src/main/cpp/external/AOSP/LICENSE
+
+2. This project includes the PLTI library as a Git submodule located in:
+       app/src/main/cpp/external/PLTI/
+   PLTI is licensed under the BSD 3-Clause License.
+   The license can be viewed at:
+       https://github.com/PerformanC/PLTI/blob/main/LICENSE
+
+3. Portions of this project include binder header file from the Linux kernel UAPI,
+   located in:
+       app/src/main/cpp/external/linux-kernel/include/android/binder.h
+   The file is licensed under:
+       GNU General Public License v2.0 WITH Linux-syscall-note exception.
+   Information about the exception:
+       https://spdx.org/licenses/Linux-syscall-note.html
