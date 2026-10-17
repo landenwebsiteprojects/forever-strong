@@ -1,0 +1,80 @@
+name: Publish checked ForeverStrong v1.0 compat-r4
+on:
+  push:
+    branches: [main]
+    paths: ['.source-upload/manifest.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: forever-strong-compat-r4-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct and verify complete source
+        run: |
+          set -eu
+          cp .github/workflows/publish-compat-r4.yml "$RUNNER_TEMP/publication.yml"
+          python3 tools/restore_release_source.py
+          cp -a .source-upload/overrides/. ./
+          cp "$RUNNER_TEMP/publication.yml" .github/workflows/publish-compat-r4.yml
+          python3 - <<'PYCODE'
+          from pathlib import Path
+          p=Path('module/module.prop')
+          s=p.read_text()
+          if '\nbanner=' not in s:s+='banner=webroot/assets/dashboard.jpeg\n'
+          p.write_text(s)
+          p=Path('README.md')
+          p.write_text(p.read_text()+'\n## Module card banner\n\nKernelSU Next can show the bundled dashboard artwork behind the module card through its local banner property. KernelSU Next applies its own downward gradient to blend the artwork into the card behind the description. The description is shared unchanged with Kitsune through module.prop. Display depends on the manager and its banner settings; stock Magisk does not show these card banners.\n')
+          p=Path('tools/build.py')
+          p.write_text(p.read_text().replace("('.git','node_modules','__pycache__')", "('.git','.source-upload','node_modules','__pycache__')"))
+          PYCODE
+          rm ForeverStrong-v1.0.zip ForeverStrong-v1.0-SHA256SUMS.txt
+          python3 tools/build.py
+      - name: Verify shell, installer, manager environment, backend and engine
+        run: |
+          set -eu
+          find module -name '*.sh' -print0 | xargs -0 -n1 bash -n
+          bash -n module/META-INF/com/google/android/update-binary
+          mkdir -p "$RUNNER_TEMP/validator-classes"
+          javac --release 11 -d "$RUNNER_TEMP/validator-classes" validator/KeyboxValidator.java
+          export HE_VALIDATOR_CLASSES="$RUNNER_TEMP/validator-classes"
+          python3 tools/test_installer.py
+          python3 tools/test_root_compat.py
+          python3 tools/test_backend.py
+          python3 tools/test_engine.py
+          python3 tools/inspect_package.py
+      - name: Verify WebUI with isolated mocked root bridge
+        run: |
+          set -eu
+          npm install --prefix "$RUNNER_TEMP/forever-ui" playwright@1.51.1 --no-audit --no-fund
+          node "$RUNNER_TEMP/forever-ui/node_modules/playwright/cli.js" install --with-deps chromium
+          HE_PLAYWRIGHT="$RUNNER_TEMP/forever-ui/node_modules/playwright" node tools/test_ui.cjs
+      - name: Commit complete source tree and test evidence
+        run: |
+          set -eu
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -r .source-upload
+          python3 tools/build.py
+          cp ../release/ForeverStrong-v1.0.zip ../release/ForeverStrong-v1.0-SHA256SUMS.txt ./
+          git add --all --force
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add complete v44 integration source and compatibility test evidence'
+            git push origin HEAD:main
+          fi
+      - name: Publish verified engineering release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          cd ../release
+          if gh release view v1.0-compat-r4 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release already exists; refusing to overwrite assets.'
+            exit 1
+          fi
+          gh release create v1.0-compat-r4 --repo "$GITHUB_REPOSITORY" --target "$(git -C "$GITHUB_WORKSPACE" rev-parse HEAD)" --title 'ForeverStrong v1.0 · compat-r4 · v44 engine' --prerelease --notes-file ROOT-COMPATIBILITY-REPORT.md ./*

@@ -1,0 +1,244 @@
+{
+  "results": [
+    {
+      "test": "Dashboard root bridge, status hydration and navigation",
+      "result": "PASS"
+    },
+    {
+      "test": "Target draft modes, save confirmation, patch editor and recovery navigation",
+      "result": "PASS"
+    },
+    {
+      "test": "Diagnostics and persistent flag reporting",
+      "result": "PASS"
+    },
+    {
+      "test": "Component load: Profile",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: PlayIntegrityFork",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: PropSpoofer",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: Pixel",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: Control",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: Flags",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: BootHash",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: Spoofing",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: Pilot",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: KeyboxLoader",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: KeyboxSource",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: HideMyFiles",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: RepairMode",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: RootImplementation",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: Downloader",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: Assistant",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: TrickyStore",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: Support",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: Report",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Component load: BootConfiguration",
+      "result": "PASS",
+      "errors": [],
+      "overflow": false
+    },
+    {
+      "test": "Repair button detects bundled OSS without standalone module and routes to unified repair backend",
+      "result": "PASS"
+    },
+    {
+      "test": "Alternate scope editor preserves leaf/generation/automatic target modes",
+      "result": "PASS"
+    },
+    {
+      "test": "390px mobile layout without horizontal overflow",
+      "result": "PASS"
+    },
+    {
+      "test": "All 20 controls at 320px: no page overflow or property-row children outside cards",
+      "result": "PASS"
+    },
+    {
+      "test": "All 20 controls at 390px: no page overflow or property-row children outside cards",
+      "result": "PASS"
+    },
+    {
+      "test": "All 20 controls at 480px: no page overflow or property-row children outside cards",
+      "result": "PASS"
+    },
+    {
+      "test": "Search icon/input/X share a row, clear action works, Nuke/Spoof align, long labels wrap",
+      "result": "PASS"
+    },
+    {
+      "test": "Theme color preset persists across reload, reaches embedded pages and resets correctly",
+      "result": "PASS"
+    },
+    {
+      "test": "ForeverStrong headline, Halloween Edition badge and locally bundled dashboard backdrop",
+      "result": "PASS"
+    },
+    {
+      "test": "Per-app spoofing toolbar labels remain horizontal and app entries occupy separate full-width rows at 320, 390, 480 and 720px",
+      "result": "PASS",
+      "layouts": [
+        {
+          "width": 320,
+          "frameWidth": 288,
+          "columns": 2,
+          "buttonWidths": [
+            114,
+            114,
+            114,
+            114
+          ],
+          "rowWidths": [
+            238,
+            238,
+            238
+          ]
+        },
+        {
+          "width": 390,
+          "frameWidth": 358,
+          "columns": 2,
+          "buttonWidths": [
+            145,
+            145,
+            145,
+            145
+          ],
+          "rowWidths": [
+            300,
+            300,
+            300
+          ]
+        },
+        {
+          "width": 480,
+          "frameWidth": 448,
+          "columns": 2,
+          "buttonWidths": [
+            190,
+            190,
+            190,
+            190
+          ],
+          "rowWidths": [
+            390,
+            390,
+            390
+          ]
+        },
+        {
+          "width": 720,
+          "frameWidth": 454,
+          "columns": 2,
+          "buttonWidths": [
+            193,
+            193,
+            193,
+            193
+          ],
+          "rowWidths": [
+            396,
+            396,
+            396
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "note": "Mock root bridge; no Android operations executed. Control clicks and native behavior require device tests."
+}

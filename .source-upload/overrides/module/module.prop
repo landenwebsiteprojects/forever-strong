@@ -1,0 +1,9 @@
+id=halloweenedition
+name=ForeverStrong
+version=v1.0
+versionCode=10004
+build=compat-r4
+author=ForeverStrong integration; Integrity Box: MeowDump; Tricky Store OSS: beakthoven
+description=A root module combining Integrity Box v44 by MeowDump and Tricky Store OSS v3.1.0 by beakthoven, with a shared charcoal and orange WebUI. Reboot after installation.
+webui=true
+banner=webroot/assets/dashboard.jpeg

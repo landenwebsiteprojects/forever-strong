@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>ForeverStrong · Pixel</title><script src="../theme.js"></script>
+
+
+<link href="../halloween.css" rel="stylesheet"/><link href="../components.css" rel="stylesheet"/><script src="../integration.js"></script><script src="../component-bridge.js"></script><link href="../forever.css" rel="stylesheet"/></head>
+<body class="component pixel-spoofer"><header class="he-component-header"><div><p>FOREVER STRONG / CONTROL CENTER</p><h1>Per-app spoofing</h1></div></header>
+<div class="container">
+<div class="header">
+<div class="title"><span class="material-icons">android</span>Device Spoofer</div>
+<div class="subtitle">Powered by Integrity Box</div>
+</div>
+<div class="status-bar" id="statusBar">
+<div class="status-chip" id="zygiskChip">
+<span class="dot"></span>
+<span class="text">Zygisk Missing</span>
+</div>
+<div class="status-chip" id="spoofChip">
+<span class="dot"></span>
+<span class="text">Spoofing Off</span>
+</div>
+<div class="status-chip">
+<span class="material-icons">apps</span>
+<span class="text" id="countChip">0 apps</span>
+</div>
+</div>
+<div class="card" id="masterCard">
+<div class="warning-banner" id="warningBanner">
+<span class="material-icons">error_outline</span>
+<span>This feature depends on Zygisk. You're running in Zygisk-less mode, so per-app spoofing is unavailable.</span>
+</div>
+<div class="section-label">Master Control</div>
+<div class="row" id="spoofAppsRow" onclick="toggleSpoofApps()">
+<div class="icon-wrap"><span class="material-icons">dynamic_form</span></div>
+<div class="content">
+<div class="title">Spoof Apps</div>
+</div>
+<div style="display:flex">
+<div class="status-dot"></div>
+<div class="info-btn" onclick="showInfo(event)">
+<span class="material-icons">info</span>
+<div class="info-tooltip" id="infoTooltip">
+<strong>About Spoof Apps</strong>
+            Enable per-app pixel spoofing for selected apps. Apps in your list will receive spoofed build properties (model, fingerprint, device info) when they request them.<br/><br/>
+<b>How to use:</b><br/>
+            1. Enable the master toggle<br/>
+            2. Select apps from the list below<br/>
+            3. Clear data of target apps to apply changes<br/><br/>
+<span>Requires Zygisk. Won't work in Zygisk-less mode.</span>
+</div>
+</div>
+<label class="switch" onclick="event.stopPropagation()">
+<input id="spoofAppsInput" type="checkbox"/>
+<span class="slider"><span class="knob"></span></span>
+</label>
+</div>
+</div>
+</div>
+<div class="card" id="appsCard">
+<div class="apps-header">
+<div class="apps-title">
+<span class="material-icons">list</span>
+        App List
+        <span class="badge" id="appsBadge">0</span>
+</div>
+<button class="btn-text" id="sysBtn" aria-pressed="false" onclick="toggleSystemApps()">
+<span class="material-icons">apps</span>
+          System Apps
+        </button>
+</div>
+<div class="header-actions apps-toolbar" role="toolbar" aria-label="App list controls">
+<button class="btn-text" onclick="openBackupModal()">
+<span class="material-icons">save</span>
+          Backup
+        </button>
+<button class="btn-text" onclick="openRestoreModal()">
+<span class="material-icons">restore</span>
+          Restore
+        </button>
+<button class="btn-text" onclick="selectAllVisible()">
+<span class="material-icons">done_all</span>
+          Select All
+        </button>
+<button class="btn-text" onclick="deselectAllVisible()">
+<span class="material-icons">remove_done</span>
+          Deselect All
+        </button>
+</div>
+<div class="search-wrap">
+<span class="material-icons">search</span>
+<input class="search" id="search" placeholder="Filter by app name or package..." aria-label="Filter apps by name or package"/>
+</div>
+<div class="loading-row" id="loadingRow">
+<span class="material-icons">refresh</span>
+      Loading apps...
+    </div>
+<div class="list" id="list" style="display:none"></div>
+<div class="empty-state" id="emptyState">
+<span class="material-icons">search_off</span>
+<div>No apps match your search</div>
+</div>
+<div class="locked-overlay" id="lockedOverlay">
+<span class="material-icons">lock</span>
+<div class="locked-text">Feature Unavailable</div>
+<div class="locked-sub">Zygisk is required for per-app spoofing. Enable Zygisk in your root manager, ensure IntegrityBox is flashed, then reboot.</div>
+</div>
+</div>
+</div>
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+<div class="modal">
+<div class="modal-title" id="modalTitle"><span class="material-icons">save</span>Backups</div>
+<div class="modal-body" id="modalBody"></div>
+<div class="modal-actions" id="modalActions">
+<button class="btn-text" onclick="closeModal()">Close</button>
+</div>
+</div>
+</div>
+<div class="toast" id="toast">
+<span class="material-icons">check_circle</span>
+<span id="toastText">Saved</span>
+</div>
+<script>
+const TARGET_FILE="/data/adb/modules/halloweenedition/apps.txt";
+const PROP_FILE="/data/adb/modules/halloweenedition/custom.pif.prop";
+const FLAG_FILE="/data/adb/Box-Brain/per-app-spoofing";
+const ZYGISK_PATH="/data/adb/modules/halloweenedition/zygisk";
+const BACKUP_DIR="/sdcard/Download/DeviceSpoofer";
+
+function runShell(cmd,cb){return window.heShell(cmd).then(out=>{if(cb)cb(0,out,"");return out;},err=>{if(cb)cb(1,"",err.message);throw err;});}
+
+function esc(s){return"'"+String(s).replace(/'/g,"'\\''")+"'";}
+
+function popup(msg,type){
+  if(!type)type="info";
+  try{
+    if(typeof window.toast==="function"){window.toast(String(msg));return;}
+    if(window.kernelsu&&typeof window.kernelsu.toast==="function"){window.kernelsu.toast(String(msg));return;}
+    if(typeof ksu==="object"&&typeof ksu.toast==="function"){ksu.toast(String(msg));return;}
+  }catch(e){}
+  const toast=document.getElementById("toast");
+  const toastText=document.getElementById("toastText");
+  toastText.textContent=msg;
+  toast.className="toast"+(type==="error"?" error":"");
+  requestAnimationFrame(()=>toast.classList.add("show"));
+  clearTimeout(toast._timer);
+  toast._timer=setTimeout(()=>toast.classList.remove("show"),2500);
+}
+
+function readLines(path,cb){
+  runShell("if [ -f "+esc(path)+" ]; then cat "+esc(path)+"; fi",(c,o)=>{
+    cb((o||"").split("\n").map(l=>l.trim()).filter(l=>l));
+  });
+}
+
+function writeLines(path,lines,cb){
+  if(lines.length===0){runShell("> "+esc(path),c=>cb?.(c===0));return;}
+  const args=lines.map(l=>esc(l)).join(" ");
+  runShell("mkdir -p $(dirname "+esc(path)+") && printf '%s\\n' "+args+" > "+esc(path),c=>cb?.(c===0));
+}
+
+async function readKey(file,key){
+  return new Promise(resolve=>{
+    const cmd="sh -c 'grep -m1 \"^"+key+"=\" \""+file+"\" | cut -d\"=\" -f2- || echo \"\"'";
+    runShell(cmd,(c,o)=>resolve((o||"").toString().trim()));
+  });
+}
+
+async function writeKey(file,key,value){
+  return new Promise(resolve=>{
+    const cmd="sh -c 'if grep -q \"^"+key+"=.*\" \""+file+"\" 2>/dev/null; then sed -i \"s/^"+key+"=.*/"+key+"="+value+"/\" \""+file+"\"; else printf \"\\n"+key+"="+value+"\\n\" >> \""+file+"\"; fi'";
+    runShell(cmd,c=>resolve(c===0));
+  });
+}
+
+async function checkZygisk(){
+  return new Promise(resolve=>{
+    runShell("sh -c 'if [ -d \""+ZYGISK_PATH+"\" ]; then echo exists; else echo missing; fi'",(c,o)=>resolve((o||"").trim()==="exists"));
+  });
+}
+
+let cachedApps=[];
+let zygiskExists=false;
+let spoofAppsEnabled=false;
+let showSystem=false;
+
+function fetchApps(system,cb){
+  const flag=system?"-s":"-3";
+  const cmd="pm list packages "+flag+" -f | while IFS= read -r line; do pkg=\"${line##*=}\"; apk=\"${line#package:}\"; apk=\"${apk%%=*}\"; label=\"$pkg\"; if command -v aapt >/dev/null 2>&1; then l=$(aapt d badging \"$apk\" 2>/dev/null | grep \"application-label:\" | head -1 | cut -d\"'\" -f2); [ -n \"$l\" ] && label=\"$l\"; fi; echo \"$pkg|$label\"; done";
+  runShell(cmd,(c,out)=>{
+    if(!out)return cb([]);
+    const apps=out.trim().split("\n").map(l=>{
+      const i=l.indexOf("|");
+      return{pkg:i>0?l.slice(0,i):l,label:i>0?l.slice(i+1):l,system:system};
+    }).filter(a=>a.pkg);
+    cb(apps);
+  });
+}
+
+function buildList(){
+  readLines(TARGET_FILE,tLines=>{
+    if(showSystem){
+      fetchApps(true,sysApps=>{
+        fetchApps(false,userApps=>{
+          cachedApps=[...userApps,...sysApps];
+          sortAndRender(cachedApps,tLines);
+          updateStatusBar(tLines.length);
+        });
+      });
+    }else{
+      fetchApps(false,apps=>{
+        cachedApps=apps;
+        sortAndRender(cachedApps,tLines);
+        updateStatusBar(tLines.length);
+      });
+    }
+  });
+}
+
+function sortAndRender(apps,targets){
+  const q=(document.getElementById("search").value||"").toLowerCase();
+  const list=document.getElementById("list");
+  const empty=document.getElementById("emptyState");
+  const loading=document.getElementById("loadingRow");
+  loading.style.display="none";
+  list.style.display="flex";
+  list.innerHTML="";
+  let visibleCount=0;
+
+  const filtered=apps.filter(a=>!q||a.pkg.toLowerCase().includes(q)||a.label.toLowerCase().includes(q));
+  filtered.sort((a,b)=>{
+    const ta=targets.includes(a.pkg);
+    const tb=targets.includes(b.pkg);
+    if(ta&&!tb)return-1;
+    if(!ta&&tb)return 1;
+    return a.label.localeCompare(b.label);
+  });
+
+  filtered.forEach(a=>{
+    visibleCount++;
+    const isTarget=targets.includes(a.pkg);
+    const item=document.createElement("div");
+    item.className="item"+(isTarget?" on":"");
+    item.setAttribute("data-pkg",a.pkg);
+    const icon=document.createElement("img");icon.className="app-icon lazy";icon.dataset.src="ksu://icon/"+a.pkg;icon.alt="";
+    const info=document.createElement("div");info.className="info";
+    const name=document.createElement("div");name.className="name";name.textContent=a.label||a.pkg;info.appendChild(name);
+    if(a.label&&a.label!==a.pkg){const pkg=document.createElement("div");pkg.className="app-pkg";pkg.textContent=a.pkg;info.appendChild(pkg);}
+    const toggle=document.createElement("div");toggle.className="item-toggle"+(isTarget?" active":"");toggle.setAttribute("aria-hidden","true");
+    item.append(icon,info,toggle);
+    list.appendChild(item);
+  });
+
+  empty.classList.toggle("show",visibleCount===0);
+  attachListeners();
+  loadIcons();
+}
+
+function attachListeners(){
+  document.querySelectorAll(".item").forEach(item=>{
+    item.onclick=()=>{
+      if(!zygiskExists)return;
+      const pkg=item.getAttribute("data-pkg");
+      const isOn=item.classList.contains("on");
+      readLines(TARGET_FILE,lines=>{
+        let newTargets=[...lines];
+        if(isOn)newTargets=newTargets.filter(p=>p!==pkg);
+        else if(!newTargets.includes(pkg))newTargets.push(pkg);
+        writeLines(TARGET_FILE,newTargets,ok=>{
+          popup(ok?(isOn?"Removed from targets":"Added to targets"):"Write failed",!ok?"error":"");
+          buildList();
+        });
+      });
+    };
+  });
+}
+
+document.getElementById("search").addEventListener("input",buildList);
+
+function loadIcons(){
+  const imgs=document.querySelectorAll("img.app-icon[data-src]");
+  if(!("IntersectionObserver"in window)){
+    imgs.forEach(img=>{img.src=img.dataset.src;img.classList.add("loaded");});
+    return;
+  }
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const img=e.target;
+      img.src=img.dataset.src;
+      img.onload=()=>{img.classList.remove("lazy");img.classList.add("loaded");};
+      img.onerror=()=>img.style.opacity="0";
+      obs.unobserve(img);
+    });
+  },{rootMargin:"50px"});
+  imgs.forEach(img=>obs.observe(img));
+}
+
+function toggleSystemApps(){
+  showSystem=!showSystem;
+  document.getElementById("sysBtn").classList.toggle("active",showSystem);
+  document.getElementById("sysBtn").setAttribute("aria-pressed",String(showSystem));
+  buildList();
+}
+
+function getVisiblePackages(){
+  const q=(document.getElementById("search").value||"").toLowerCase();
+  return cachedApps.filter(a=>!q||a.pkg.toLowerCase().includes(q)||a.label.toLowerCase().includes(q)).map(a=>a.pkg);
+}
+
+function selectAllVisible(){
+  if(!zygiskExists)return;
+  const visible=getVisiblePackages();
+  if(!visible.length)return;
+  readLines(TARGET_FILE,lines=>{
+    const newTargets=[...new Set([...lines,...visible])];
+    writeLines(TARGET_FILE,newTargets,ok=>{
+      popup(ok?"Added all visible apps":"Write failed",!ok?"error":"");
+      buildList();
+    });
+  });
+}
+
+function deselectAllVisible(){
+  if(!zygiskExists)return;
+  const visible=getVisiblePackages();
+  if(!visible.length)return;
+  readLines(TARGET_FILE,lines=>{
+    const newTargets=lines.filter(p=>!visible.includes(p));
+    writeLines(TARGET_FILE,newTargets,ok=>{
+      popup(ok?"Removed all visible apps":"Write failed",!ok?"error":"");
+      buildList();
+    });
+  });
+}
+
+async function toggleSpoofApps(){
+  if(!zygiskExists)return;
+  const newVal=spoofAppsEnabled?"0":"1";
+  await writeKey(PROP_FILE,"spoofApps",newVal);
+  if(newVal==="1")runShell("mkdir -p $(dirname "+esc(FLAG_FILE)+") && touch "+esc(FLAG_FILE),()=>{});
+  else runShell("rm -f "+esc(FLAG_FILE),()=>{});
+  spoofAppsEnabled=!spoofAppsEnabled;
+  updateSpoofAppsVisuals();
+  updateStatusBar();
+  popup(spoofAppsEnabled?"Spoof Apps enabled":"Spoof Apps disabled");
+}
+
+function updateSpoofAppsVisuals(){
+  const row=document.getElementById("spoofAppsRow");
+  const input=document.getElementById("spoofAppsInput");
+  row.classList.toggle("on",spoofAppsEnabled);
+  input.checked=spoofAppsEnabled;
+}
+
+function updateStatusBar(count){
+  const zygiskChip=document.getElementById("zygiskChip");
+  const spoofChip=document.getElementById("spoofChip");
+  const countChip=document.getElementById("countChip");
+  const badge=document.getElementById("appsBadge");
+
+  zygiskChip.classList.toggle("active",zygiskExists);
+  zygiskChip.querySelector(".text").textContent=zygiskExists?"Zygisk Active":"Zygisk Missing";
+
+  spoofChip.classList.toggle("active",spoofAppsEnabled);
+  spoofChip.querySelector(".text").textContent=spoofAppsEnabled?"Spoofing On":"Spoofing Off";
+
+  if(typeof count==="number"){
+    countChip.textContent=count+" app"+(count!==1?"s":"");
+    badge.textContent=count;
+  }else{
+    readLines(TARGET_FILE,lines=>{
+      const c=lines.length;
+      countChip.textContent=c+" app"+(c!==1?"s":"");
+      badge.textContent=c;
+    });
+  }
+}
+
+function lockUI(){
+  document.getElementById("lockedOverlay").classList.add("show");
+  document.getElementById("warningBanner").classList.add("show");
+  document.getElementById("search").disabled=true;
+  document.getElementById("spoofAppsRow").style.pointerEvents="none";
+  document.getElementById("spoofAppsRow").style.opacity="0.4";
+}
+
+function showInfo(e){
+  e.stopPropagation();
+  const tip=document.getElementById("infoTooltip");
+  tip.classList.toggle("show");
+  if(tip.classList.contains("show")){
+    setTimeout(()=>tip.classList.remove("show"),8000);
+  }
+}
+
+/* Backup / Restore */
+function openBackupModal(){
+  const now=new Date();
+  const name="apps_"+now.getFullYear()+(now.getMonth()+1).toString().padStart(2,"0")+now.getDate().toString().padStart(2,"0")+"_"+now.getHours().toString().padStart(2,"0")+now.getMinutes().toString().padStart(2,"0")+".txt";
+  const path=BACKUP_DIR+"/"+name;
+  runShell("mkdir -p "+esc(BACKUP_DIR)+" && cp "+esc(TARGET_FILE)+" "+esc(path)+" 2>/dev/null; echo $?",(c,o)=>{
+    if((o||"").trim()==="0"&&c===0){
+      popup("Backup saved to "+name,"success");
+    }else{
+      popup("Backup failed","error");
+    }
+  });
+}
+
+function openRestoreModal(){
+  runShell("ls -1 "+esc(BACKUP_DIR)+"/*.txt 2>/dev/null || echo ''",(c,out)=>{
+    const files=(out||"").trim().split("\n").filter(f=>f);
+    const overlay=document.getElementById("modalOverlay");
+    const title=document.getElementById("modalTitle");
+    const body=document.getElementById("modalBody");
+    const actions=document.getElementById("modalActions");
+
+    title.innerHTML='<span class="material-icons">restore</span>Restore Backup';
+    body.innerHTML="";
+    actions.innerHTML='<button class="btn-text" onclick="closeModal()">Close</button>';
+
+    if(!files.length||files[0]===""){
+      body.innerHTML='<div style="text-align:center;padding:20px;color:var(--text2)">No backups found</div>';
+    }else{
+      files.forEach(f=>{
+        const fname=f.replace(/^.*\//,"");
+        const div=document.createElement("div");
+        div.className="backup-item";
+        div.onclick=()=>restoreBackup(f);
+        div.innerHTML='<div><div class="bname">'+fname+'</div><div class="bsize">'+f+'</div></div><span class="material-icons" style="color:var(--accent);font-size:1.2rem">restore</span>';
+        body.appendChild(div);
+      });
+    }
+    overlay.classList.add("show");
+  });
+}
+
+function restoreBackup(path){
+  runShell("cp "+esc(path)+" "+esc(TARGET_FILE)+" 2>/dev/null; echo $?",(c,o)=>{
+    if((o||"").trim()==="0"&&c===0){
+      popup("Backup restored","success");
+      closeModal();
+      buildList();
+    }else{
+      popup("Restore failed","error");
+    }
+  });
+}
+
+function closeModal(){
+  document.getElementById("modalOverlay").classList.remove("show");
+}
+
+async function init(){
+  zygiskExists=await checkZygisk();
+  if(!zygiskExists){
+    lockUI();
+    updateStatusBar(0);
+    buildList();
+    return;
+  }
+  const val=await readKey(PROP_FILE,"spoofApps");
+  const flagExists=await new Promise(resolve=>{
+    runShell("if [ -f "+esc(FLAG_FILE)+" ]; then echo exists; else echo missing; fi",(c,o)=>resolve((o||"").trim()==="exists"));
+  });
+  spoofAppsEnabled=val==="1"||flagExists;
+  if(spoofAppsEnabled&&val!=="1")await writeKey(PROP_FILE,"spoofApps","1");
+  if(!spoofAppsEnabled&&flagExists)runShell("rm -f "+esc(FLAG_FILE),()=>{});
+  updateSpoofAppsVisuals();
+  updateStatusBar();
+  runShell("mkdir -p $(dirname "+esc(TARGET_FILE)+") && touch "+esc(TARGET_FILE),()=>buildList());
+}
+
+init();
+</script>
+
+
+<script src="../TRANSLATIONS/i18n.js"></script>
+</body>
+</html>

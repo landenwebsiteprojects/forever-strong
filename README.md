@@ -1,16 +1,31 @@
-# Forever Strong v1.0
+# ForeverStrong v1.0
 
-A single Kitsune module integrating the supplied **Integrity Box v44** payload and the official **Tricky Store OSS v3.1.0** release, with a new charcoal and pumpkin-orange WebUI.
+ForeverStrong v1.0 combines two existing modules into one: **Integrity Box v44 by [MeowDump](https://github.com/MeowDump/Integrity-Box)** and **Tricky Store OSS v3.1.0 by [beakthoven](https://github.com/beakthoven/TrickyStoreOSS)**. It adds a shared charcoal and pumpkin-orange WebUI and compatibility integration. The original module engines are credited to their upstream authors.
+
+## Downloads and compatibility (compat-r4)
+
+[Download module ZIP](https://github.com/landenwebsiteprojects/forever-strong/releases/download/v1.0-compat-r4/ForeverStrong-v1.0.zip) · [Complete source archive](https://github.com/landenwebsiteprojects/forever-strong/releases/download/v1.0-compat-r4/ForeverStrong-v1.0-Source.zip) · [Release and checksums](https://github.com/landenwebsiteprojects/forever-strong/releases/tag/v1.0-compat-r4)
+
+This revision retains **Integrity Box v44** and **Tricky Store OSS v3.1.0**. No v45 patches or payloads are included. Version remains v1.0; build is `compat-r4`, versionCode `10004`.
+
+| Root manager | Installation/runtime path | Additional requirements |
+|---|---|---|
+| Magisk / Kitsune | Host fixture tested | Active Zygisk loader for Zygisk features |
+| KernelSU / KernelSU Next | Host fixture tested | External Zygisk loader for Zygisk features; mounting metamodule where required for optional system overlays |
+| APatch | Host fixture tested | External Zygisk loader for Zygisk features; manager-supported device/ABI |
+| Other root tools / recovery | Not supported | Not a generic `su` ZIP or recovery installer |
+
+These are compatibility implementation and host-test results, **not on-device certification**. Native interception, boot stability, mounting, loader behavior and WebUI permissions still require device validation. Root alone does not provide a Zygisk loader. Scripts-only mode and the OSS daemon remain available without Zygisk, subject to the same device validation.
 
 **Release status: engineering build awaiting rooted-device acceptance.** Host validation passed as documented in `docs/BUILD-AND-TEST-REPORT.md`. No rooted Android device was available. Installation on Kitsune 30.6, native injection, boot stability and every device-changing control remain unverified on real hardware. No Play Integrity verdict is promised or claimed.
 
 ## Interface refinement (ui-r3)
 
-The project is now **Forever Strong**, retaining the top-right **Halloween Edition 1.0** badge at the user's request. The dashboard headline reads **One module. A lot of control.** The supplied Android Avengers image is bundled locally and fades downward into the selected background. No generated replacement image is used.
+The project is now **ForeverStrong**, retaining the top-right **Halloween Edition 1.0** badge at the user's request. The dashboard headline reads **One module. A lot of control.** The supplied Android Avengers image is bundled locally and fades downward into the selected background. No generated replacement image is used.
 
 The existing screens and navigation remain. Shared spacing rules fix search icon/field/clear alignment, property labels wrapping, Nuke/Spoof action rows, switch containment, warning/log separation, and Settings button spacing. Redundant pumpkin button/tile decorations and duplicate tool headings are removed. Settings includes Pumpkin, Violet and Teal accents plus custom accent/background colors. Appearance persists per WebUI host and reaches embedded tools; reset restores charcoal `#151515` and orange `#FF7900`.
 
-**Upgrade:** Install `Forever-Strong-v1.0.zip` over the existing integrated module, then reboot. The internal ID remains `halloweenedition` so this updates the same module and preserves the known native paths, shared settings and bundled-engine routing. Do not install a duplicate standalone Tricky Store. The user reported integration-r2 working; ui-r3 still requires confirmation on the phone.
+**Upgrade:** Install `ForeverStrong-v1.0.zip` over the existing integrated module, then reboot. The internal ID remains `halloweenedition` so this updates the same module and preserves the known native paths, shared settings and bundled-engine routing. Do not install a duplicate standalone Tricky Store. The user reported integration-r2 working; ui-r3 still requires confirmation on the phone.
 
 ## Bundled engine routing correction (r2)
 
@@ -24,15 +39,15 @@ The first v1.0 package failed the user's installation at checksum verification. 
 
 ## Files
 
-- `Forever-Strong-v1.0.zip`: flashable module, ID `halloweenedition`, version `v1.0` / code `10003`, build `ui-r3`.
-- `Forever-Strong-v1.0-Source.zip`: complete integration source, available upstream source/dependencies, original supplied archive files, manifests, build tools and test fixtures.
-- `Forever-Strong-v1.0-SHA256SUMS.txt`: SHA-256 checksums for release artifacts.
+- `ForeverStrong-v1.0.zip`: flashable module, ID `halloweenedition`, version `v1.0` / code `10004`, build `compat-r4`.
+- `ForeverStrong-v1.0-Source.zip`: complete integration source, available upstream source/dependencies, original supplied archive files, manifests, build tools and test fixtures.
+- `ForeverStrong-v1.0-SHA256SUMS.txt`: SHA-256 checksums for release artifacts.
 
 The module ZIP has one root `module.prop`, one principal `webroot/index.html`, one early boot hook and one service hook. It contains the actual native/DEX payloads; it does not contain two standalone installer ZIPs.
 
 ## Requirements
 
-Android 10 / API 29 or newer; ARM64, ARMv7, x86_64 or x86 as supplied upstream. Target root manager: Kitsune 30.6. Its Magisk-compatible installer and Zygisk loader are required for the native Integrity Box features. Existing scripts-only mode is respected when `/sdcard/zygisk` or `/data/adb/Box-Brain/zygisk` exists. Tricky Store OSS still runs in scripts-only mode.
+Android 10 / API 29 or newer; ARM64, ARMv7, x86_64 or x86 as supplied upstream. Install through the running Android manager: Magisk/Kitsune, KernelSU/KernelSU Next, or APatch. The active manager must supply resetprop. A compatible Zygisk loader is required for the native Integrity Box Zygisk features; KernelSU and APatch require an external loader. Optional app replacements in system/ require the manager's mounting support (a mounting metamodule on KernelSU versions that require one). Existing scripts-only mode is respected when `/sdcard/zygisk` or `/data/adb/Box-Brain/zygisk` exists. Tricky Store OSS still runs in scripts-only mode.
 
 Kitsune does not itself supply the expected WebUI JavaScript bridge. Use KsuWebUIStandalone (`io.github.a13e300.ksuwebui`) or WebUI X (`com.dergoogler.mmrl.webuix`) with root access. The Manager action opens either supported installed host. If neither is installed, the action prints a useful error and does not open an advertising link. Native payload compatibility and host behavior must be checked on your device.
 
@@ -42,7 +57,7 @@ Kitsune does not itself supply the expected WebUI JavaScript bridge. Use KsuWebU
 2. In Kitsune Manager, **disable** the existing Integrity Box / Play Integrity Fix and Tricky Store modules. Also disable competing TEE Simulator or other keystore interceptors. **Reboot with them disabled**, then install this ZIP. A currently injected Tricky Store process remains until reboot.
 3. The installer refuses enabled or queued conflicting module IDs: `playintegrityfix`, `playintegrity`, `tricky_store`, `teesim`, `oh_my_keymint`. It does not delete those modules.
 4. Exact copies of the supplied v44 global `hash.sh`, `prop.sh`, `lineage.sh` and `.box_cleanup.sh` hooks are moved out of `service.d` into a timestamped private migration backup. An unfamiliar script with one of those generic names causes installation to stop rather than guessing its ownership. Preserve it and resolve ownership manually.
-5. Install `Forever-Strong-v1.0.zip` through Kitsune Manager, then reboot. Enable only Halloween Edition for these two engines. Open its WebUI and review Diagnostics before using advanced controls.
+5. Install `ForeverStrong-v1.0.zip` through your active root manager, then reboot. Enable only Halloween Edition for these two engines. Open its WebUI and review Diagnostics before using advanced controls.
 
 Existing `/data/adb/tricky_store/target.txt`, `keybox.xml`, `security_patch.txt`, key persistence databases, Box-Brain settings, fingerprint/profile files, application scopes, paused state and app replacement configuration are retained. Missing targets/keybox receive upstream defaults; an absent patch file remains absent. First installations use the baseline API-appropriate fingerprint template and safe mode. The installer makes a private timestamped migration snapshot before changing defaults.
 
@@ -91,3 +106,7 @@ To rebuild upstream components, use their included Gradle wrappers, Android SDK 
 ## Licenses and testing
 
 GPL-3.0-or-later for new integration code; upstream license terms remain applicable. Full texts are under `module/licenses` and upstream trees. See `ATTRIBUTION.md`, `CHANGELOG.md`, the source audit, manifests and build/test report. Screenshots used internally for layout checks are not evidence of device operation.
+
+## Planned updates
+
+Future updates are planned to incorporate applicable upstream security patches, bug fixes and compatibility improvements. This v1.0 release retains Integrity Box v44.
