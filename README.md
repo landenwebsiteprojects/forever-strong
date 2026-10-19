@@ -1,6 +1,26 @@
-# ForeverStrong v1.0
+# ForeverStrong v1.1
 
-ForeverStrong v1.0 combines two existing modules into one: **Integrity Box v44 by [MeowDump](https://github.com/MeowDump/Integrity-Box)** and **Tricky Store OSS v3.1.0 by [beakthoven](https://github.com/beakthoven/TrickyStoreOSS)**. It adds a shared charcoal and pumpkin-orange WebUI and compatibility integration. The original module engines are credited to their upstream authors.
+ForeverStrong combines **Integrity Box v45 by [MeowDump](https://github.com/MeowDump/Integrity-Box)** and **Tricky Store OSS v3.1.0 by [beakthoven](https://github.com/beakthoven/TrickyStoreOSS)** into one module with a shared charcoal and orange WebUI.
+
+[Download v1.1](https://github.com/landenwebsiteprojects/forever-strong/releases/download/v1.1/ForeverStrong-v1.1.zip) · [Releases](https://github.com/landenwebsiteprojects/forever-strong/releases) · [Release notes](docs/RELEASE-NOTES.md) · [Validation](docs/V1.1-VALIDATION.md)
+
+Install v1.1 over the existing ForeverStrong module, then reboot. The internal module ID remains `halloweenedition`. Existing shared configuration and app keys are retained. ARM64, ARMv7 and x86_64 use v45 payloads; v45 drops legacy 32-bit x86. Root managers and external Zygisk loader requirements remain as documented below. Real-phone boot and injection validation remain pending.
+
+## Updates in your root manager
+
+Version 1.1 embeds the standard `updateJson` URL pointing to the complete latest published release. Supported Magisk/Kitsune, KernelSU/KernelSU Next and APatch versions can check this feed and offer **Update** in their module list. Refresh/check for updates in the manager; installation remains a user action and requires reboot. Check and notification behavior depends on the manager and its settings. Existing v1.0 installations need to install v1.1 once to acquire this feed.
+
+To publish the next version, change `version` and increase `versionCode` in `module/module.prop`, update `docs/RELEASE-NOTES.md`, and push the versioned changes to `main`. `.github/workflows/release.yml` runs the installer, backend, engine, download, update-feed and WebUI checks, then publishes a draft containing the module ZIP, full source, checksums, notes and `update.json`; only then does it publish the release as latest. Failed checks do not advance the feed. Published releases are never overwritten. Changing upstream Integrity Box by itself does not automatically change ForeverStrong.
+
+## Repair downloads
+
+The official v45 release still uses the published GitHub `archive/Megatron` asset. GitHub's tagged source file differs from the packaged release; release payload provenance is recorded in `docs/V45-PROVENANCE.json`. Downloads use automatic tool fallbacks and explicit network/DNS failure reporting. They preserve HTTPS verification and do not alter global Android DNS. A failed download does not replace the active keybox or fingerprint configuration. Offline XML/key-pair validation precedes atomic keybox replacement. Existing target/patch replacement remains opt-in.
+
+Future upstream security patches, bug fixes and compatibility improvements are planned. This release does not promise a particular Play Integrity verdict.
+
+## Earlier v1.0 implementation and migration details
+
+The following sections document the v1.0 baseline and its prior checks. References to v44, x86 legacy payloads and old version filenames describe that earlier build; v1.1 changes above and the current release notes take precedence.
 
 ## Downloads and compatibility (compat-r4)
 

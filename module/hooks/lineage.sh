@@ -13,14 +13,14 @@ note() {
     printf "%s | %s\n" "$TS" "$1" >> "$LOG_DIR/Lineage.log"
 }
 
-# Abort the script & delete flags wen safe mode is active 
+# Abort the script & delete flags wen safe mode is active
 if [ -f "/data/adb/Box-Brain/safemode" ]; then
     note "$(date '+%Y-%m-%d %H:%M:%S') : Safemode active, script aborted." >> "/data/adb/Box-Brain/Integrity-Box-Logs/safemode.log"
     safemode_flags
     exit 1
 fi
 
-# Exit if module is disabled 
+# Exit if module is disabled
 if [ -f "/data/adb/modules/halloweenedition/disable" ]; then
     note "Integrity Box is disabled, exiting..."
     exit 0

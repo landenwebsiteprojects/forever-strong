@@ -18,8 +18,8 @@ case "$1" in
     $N  by osm0sis @ xda-developers $N";;
 esac;
 
-item() { echo "- $@"; }
-die() { [ "$INSTALL" ] || echo "$N$N! $@"; exit 1; }
+item() { [ "$INSTALL" ] || printf '✦ %s\n' "$*"; }
+die() { [ "$INSTALL" ] || printf '✖ %s\n' "$*" >&2; exit 1; }
 
 until [ -z "$1" -o -f "$1" ]; do
   case "$1" in
@@ -151,10 +151,11 @@ if [ -z "$DEVICE_INITIAL_SDK_INT" -o "$DEVICE_INITIAL_SDK_INT" = "null" ]; then
   DEVICE_INITIAL_SDK_INT=25;
 fi;
 
-ADVSETTINGS="spoofBuild spoofProps spoofProvider spoofSignature spoofVendingFinger spoofVendingSdk verboseLogs";
+ADVSETTINGS="spoofBuild spoofProps spoofApps spoofProvider spoofSignature spoofVendingFinger spoofVendingSdk verboseLogs";
 
 spoofBuild=1;
 spoofProps=1;
+spoofApps=0;
 spoofProvider=1;
 spoofSignature=0;
 spoofVendingFinger=0;
@@ -192,27 +193,21 @@ fi;
 [ "$ADVANCED" ] && item "Adding Advanced Settings entries ...";
 
 case $FORMAT in
-  json) CMNT='  //'; EVALPRE='\ \ \ \ \"'; SECPRE1='    '; SECPRE2='"'; PRE='    "'; MID='": "'; POST='",';;
-  prop) CMNT='#'; MID='=';;
+  json) EVALPRE='    "'; MID='": "'; POST='",';;
+  prop) MID='=';;
 esac;
-([ "$FORMAT" = "json" ] && echo '{';
-echo "$CMNT Build Fields";
-for FIELD in $ALLFIELDS; do
-  eval echo "$EVALPRE$FIELD\$MID\$$FIELD\$POST";
-done;
-echo "$N$CMNT System Properties";
-echo "$PRE"'ro.build.fingerprint'"$MID$FINGERPRINT$POST";
-echo "$PRE"'ro.build.id'"$MID$ID$POST";
-echo "$PRE"'ro.product.device'"$MID$DEVICE$POST";
-echo "$PRE"'ro.product.name'"$MID$PRODUCT$POST";
-echo "$SECPRE1$SECURITY_COMMENT$SECPRE2"'ro.build.version.security_patch'"$MID$SECURITY_PATCH$POST";
-echo "$PRE"'ro.board.first_api_level'"$MID"'32'"$POST";
-echo "$PRE"'ro.product.first_api_level'"$MID$DEVICE_INITIAL_SDK_INT$POST";
-if [ "$ADVANCED" ]; then
-  echo "$N$CMNT Advanced Settings";
-  for SETTING in $ADVSETTINGS; do
-    eval echo "$EVALPRE$SETTING\$MID\$$SETTING\$POST";
-  done;
-fi) | sed '$s/,/\n}/' > "$OUT";
+(
+  if [ "$FORMAT" = "json" ]; then echo '{'; else echo '# Build Fields'; fi
+  for FIELD in $ALLFIELDS; do
+    eval VALUE=\$$FIELD
+    if [ "$FORMAT" = "json" ]; then
+      # Escape backslashes and quotes for valid JSON strings.
+      VALUE=$(printf '%s' "$VALUE" | sed 's/\\/\\\\/g; s/"/\\"/g')
+      printf '    "%s": "%s",\n' "$FIELD" "$VALUE"
+    else
+      printf '%s=%s\n' "$FIELD" "$VALUE"
+    fi
+  done
+) | if [ "$FORMAT" = "json" ]; then sed '$s/,$//' | sed '$a\}'; else cat; fi > "$OUT";
 
-[ "$INSTALL" ] || cat "$OUT";
+[ "$INSTALL" ] || item "Wrote $(basename "$OUT")";

@@ -43,29 +43,8 @@ cleanup() {
 }
 trap cleanup EXIT HUP INT TERM
 
-download() {
-    url="$1"
-    out="$2"
-    rm -f "$out"
-
-    if command -v curl >/dev/null 2>&1; then
-        curl -fsSL --connect-timeout 4 --max-time 12 --retry 1 --retry-delay 1 \
-            -o "$out" "$url" 2>/dev/null
-        return $?
-    fi
-
-    if command -v busybox >/dev/null 2>&1 && busybox wget --help >/dev/null 2>&1; then
-        busybox wget -q -T 5 -t 2 -O "$out" "$url" 2>/dev/null
-        return $?
-    fi
-
-    if command -v wget >/dev/null 2>&1; then
-        wget -q --timeout=5 --tries=2 -O "$out" "$url" 2>/dev/null
-        return $?
-    fi
-
-    return 1
-}
+. "${HE_ROOT:-}/data/adb/modules/halloweenedition/bin/download.sh"
+download() { he_download_file "$2" "$1"; }
 
 log " "
 log " ✦ Using Spectre as default keybox source"

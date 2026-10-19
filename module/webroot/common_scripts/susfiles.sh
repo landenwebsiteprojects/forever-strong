@@ -16,7 +16,7 @@ DIR="/sdcard/Download"
 
 if [ -d "$DIR" ]; then
     log_msg "Scanning $DIR for install/action logs..."
-    
+
     find "$DIR" -maxdepth 1 -type f \( \
         -name "*_install_log_2026*" -o \
         -name "*_action_log_2025*" -o \
@@ -51,17 +51,17 @@ TARGETS="
 
 echo "$TARGETS" | while IFS= read -r line; do
     [ -z "$line" ] && continue
-    
+
     path="${line%|*}"
     type="${line#*|}"
     [ -z "$path" ] && continue
-    
+
     if echo "$path" | grep -q '\*'; then
         dir_path="${path%/*}"
         pattern="${path##*/}"
-        
+
         [ -d "$dir_path" ] || continue
-        
+
         find "$dir_path" -maxdepth 1 -type f -name "$pattern" 2>/dev/null | while IFS= read -r match; do
             log_msg "Deleting file: $match"
             rm -f "$match"

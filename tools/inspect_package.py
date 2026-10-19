@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import hashlib,zipfile,json,subprocess
-ROOT=Path(__file__).resolve().parents[1];zip_path=ROOT.parent/'release/ForeverStrong-v1.0.zip'
+from release_info import STEM, VERSION
+
+ROOT=Path(__file__).resolve().parents[1];zip_path=ROOT.parent/'release'/(STEM+'.zip')
 with zipfile.ZipFile(zip_path) as z:
  assert z.testzip() is None
  names=z.namelist();assert len(names)==len(set(names))
  assert names.count('module.prop')==1 and sum(n.endswith('/module.prop') for n in names)==0
  assert all(not n.startswith('/') and '..' not in Path(n).parts for n in names)
  assert 'id=halloweenedition\n' in z.read('module.prop').decode()
- assert 'version=v1.0\n' in z.read('module.prop').decode()
+ assert ('version='+VERSION+'\n') in z.read('module.prop').decode()
  manifest_lines=z.read('files.sha256').decode().splitlines()
  expected_payload={name for name in names if not name.startswith('META-INF/') and name!='files.sha256'}
  assert {line.split('  ',1)[1] for line in manifest_lines}==expected_payload

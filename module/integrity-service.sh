@@ -91,7 +91,7 @@ check_and_set_prop "ro.boot.selinux" "enforcing"
 run_compact
 wait_for_boot
 
-# Spoof Encryption 
+# Spoof Encryption
 {
   echo "ENCRYPT CHECK ($(date))"
 
@@ -114,7 +114,7 @@ wait_for_boot
   echo
 } >> "$LOG2" 2>&1
 
-# Spoof Tag 
+# Spoof Tag
 {
   echo "TAG CHECK ($(date))"
 
@@ -137,7 +137,7 @@ wait_for_boot
   echo
 } >> "$LOG5" 2>&1
 
-# Spoof Build 
+# Spoof Build
 {
   echo "BUILD CHECK ($(date))"
 
@@ -228,7 +228,7 @@ fi
 
 resetprop --compact >/dev/null 2>&1 || true
 
-# Stop daemon if needed 
+# Stop daemon if needed
 if [ -f "$BOX/rukja" ]; then
     exit 0
 fi
@@ -239,12 +239,12 @@ if [ -f "$BOX/autopilot" ]; then
         while true; do
             last=$(cat $BOX/daemon_heartbeat 2>/dev/null || echo "0")
             now=$(date +%s)
-            
+
             if [ $((now - last)) -gt 180 ]; then
                 # The daemon itself checks its live lock before starting.
                 sh "$SCRIPT/autopilot.sh" >/dev/null 2>&1 &
             fi
-            
+
             sleep 60
         done
     ) &

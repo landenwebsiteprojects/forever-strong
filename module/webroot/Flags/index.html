@@ -85,10 +85,8 @@ var ACTION_FLAGS=[
 ];
 
 var GENERAL_FLAGS=[
- {id:"keymint",icon:"timer",title:"Update OMK build",label:"reboot",desc:"Forces to appear as Pixel Device & use latest security patch if using Oh My Keymint module"},
- {id:"teesim",icon:"key",title:"Skip TEEsim",label:"reboot",desc:"This will skip modifications in config.json"},
- {id:"keyswitch",icon:"wifi",title:"DNS Poisoning:",desc:"This fixes keybox download errors in some regions"},
- {id:"noredirect",icon:"block",title:"No Redirect",desc:"Disables automatic Telegram link redirects from the WebUI."}
+ {id:"wait",icon:"engineering",title:"Wait on Action",desc:"Keep action output open for 10 seconds."},
+ {id:"noredirect",icon:"block",title:"No Redirect",desc:"Disable automatic Telegram redirects."}
 ];
 
 var KERNEL_FLAGS=[
@@ -115,10 +113,7 @@ var MESSAGES={
  board:{on:"Reboot your device",off:"Reboot your device"},
  scanall:{on:"Reboot your device",off:"Reboot your device"},
  iframe_gesture_right:{on:"RHS gestures active",off:"RHS gestures disabled"},
- keyswitch:{on:"Using alternate fallback method",off:"Downloads will use default method"},
  twrp:{on:"Custom recovery spoofed",off:"Custom recovery disabled"},
- keymint:{on:"OMK Pixel disabled",off:"OMK Pixel enabled"},
- teesim:{on:"TEEsim modifications will be ignored",off:"TEEsim will be updated by default"},
  "spoof-selinux-boot":{on:"Please reboot your device",off:"Please reboot your device"},
  hidehook:{on:"Please reboot your device",off:"Please reboot your device"},
  encrypt:{on:"Encryption spoofed",off:"Encryption disabled"},

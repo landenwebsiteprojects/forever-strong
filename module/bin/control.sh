@@ -6,7 +6,7 @@ op=$1
 shift || true
 case "$op" in
   status)
-    printf 'version=v1.0\n'
+    printf 'version=v1.1\n'
     printf 'device='; getprop ro.product.model 2>/dev/null || echo unknown
     printf 'android='; getprop ro.build.version.release 2>/dev/null || echo unknown
     printf 'abi='; getprop ro.product.cpu.abi 2>/dev/null || echo unknown
@@ -99,7 +99,7 @@ case "$op" in
     echo 'Configuration restored. A rollback snapshot was saved. Reboot to restore boot behavior.';;
   diagnostics)
     # Deliberately avoid arbitrary logs, getprop dumps, key XML and key persistence databases.
-    echo 'ForeverStrong v1.0 — sanitized diagnostics'
+    echo 'ForeverStrong v1.1 — sanitized diagnostics'
     sh "$BASE/control.sh" status
     for n in targets patch; do p=$(config_path "$n"); if [ -f "$p" ]; then (validate "$n" "$p") && echo "$n=valid" || echo "$n=invalid"; else echo "$n=missing"; fi; done
     echo 'No Play Integrity verdict was measured by this report.'

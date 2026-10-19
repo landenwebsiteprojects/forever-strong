@@ -10,7 +10,7 @@ log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') | $1" >> "$LOG_FILE"
 }
 
-# Exit if module is disabled or safe mode is enabled 
+# Exit if module is disabled or safe mode is enabled
 if [ -f "/data/adb/modules/halloweenedition/disable" ]; then
     log "Integrity Box is disabled, exiting..."
     exit 0

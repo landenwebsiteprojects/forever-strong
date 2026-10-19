@@ -73,13 +73,13 @@ if he_external_enabled oh_my_keymint && [ -d "$OMK_DIR" ]; then
     if [ -f "$INJECTOR_TOML" ]; then
         # Extract everything before scoop section
         sed -n '1,/^scoop[[:space:]]*=[[:space:]]*\[/p' "$INJECTOR_TOML" | sed '$d' > "$TMP_TOML" 2>/dev/null
-        
+
         # Append our new scoop section
         cat "$SCOOP_TMP" >> "$TMP_TOML" 2>/dev/null
-        
+
         # Extract everything after scoop section
         sed -n '/^[[:space:]]*\]/,$p' "$INJECTOR_TOML" | sed '1d' >> "$TMP_TOML" 2>/dev/null
-        
+
         mv -f "$TMP_TOML" "$INJECTOR_TOML" 2>/dev/null
         rm -f "$SCOOP_TMP" 2>/dev/null
         log_step "SCOOPED" "Targets in injector.toml"

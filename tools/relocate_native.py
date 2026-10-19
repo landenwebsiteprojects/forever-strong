@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Reproduce the exact fixed-width path relocation from original v44 payloads."""
+"""Reproduce the exact fixed-width path relocation from original v45 payloads."""
 from pathlib import Path
 import hashlib,json
 root=Path(__file__).resolve().parents[1]
-source=root/'upstream/integrity-box-v44-archive'
+source=root/'upstream/integrity-box-v45-archive'
 old=b'/data/adb/modules/playintegrityfix';new=b'/data/adb/modules/halloweenedition'
 assert len(old)==len(new)
 for entry in json.loads((root/'docs/NATIVE-RELOCATION.json').read_text()):

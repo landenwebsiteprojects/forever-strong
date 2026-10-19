@@ -8,12 +8,12 @@ placeholder="$MODPATH/webroot/common_scripts"
 mkdir -p "$BOX/Integrity-Box-Logs"
 mkdir -p "$boot"
 
-# Grant perms 
+# Grant perms
 if [ -f "$placeholder/autopilot.sh" ]; then
     chmod 755 "$placeholder/autopilot.sh"
 fi
 
-# Skip disabling built-in spoofing when zygiskless mode is enabled 
+# Skip disabling built-in spoofing when zygiskless mode is enabled
 if [ -f "$BOX/zygisk" ]; then
     [ -f "$BOX/disablegms" ] && rm -f "$BOX/disablegms"
     [ -f "$BOX/disablevending" ] && rm -f "$BOX/disablevending"
@@ -58,8 +58,11 @@ for _f in \
     "$boot/lineage.sh" \
     "$boot/.box_cleanup.sh" \
     "$placeholder/teesim.sh" \
+    "$placeholder/scan_keybox.sh" \
+    "$placeholder/susfiles.sh" \
     "$placeholder/autopilot.sh" \
     "$placeholder/target.sh" \
+    "$placeholder/multiroot.sh" \
     "$placeholder/gms.sh" \
     "$placeholder/spectre.sh" \
     "$placeholder/resetprop.sh" \
@@ -74,7 +77,7 @@ do
     make_exec "$_f"
 done
 
-# Fix multiple root implementation warning 
+# Fix multiple root implementation warning
 count=0
 
 [ -e "$BOX/ROOT/apatch" ] && count=$((count + 1))

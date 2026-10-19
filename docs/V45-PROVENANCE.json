@@ -1,0 +1,12 @@
+{
+  "release": "https://github.com/MeowDump/Integrity-Box/releases/tag/v45",
+  "archive_sha256": "f217bcaf24d4659bd023f7d44749a5de1251d8b4f6b6da96a8b307b496669c5f",
+  "native_source_commit": "42ebfb38af8ff29d75dce1a378cbd682ffe5501d",
+  "device_validation": "pending",
+  "native_source_main_original_sha256": "9186a9e5567a09d17bba0a030f5a8d0dbd8c5b511f6c3f92d29f3ae21c23f451",
+  "native_source_path_adjustment": "Only filesystem literals /data/adb/modules/playintegrityfix -> /data/adb/modules/halloweenedition; Java namespaces unchanged",
+  "native_source_dependencies": {
+    "json": "55f93686c01528224f448c19128836e7df245f72",
+    "local_cxa_atexit_finalize_impl": "b269136606d6f230089fbf47a0b219f7f2ccef3c"
+  }
+}

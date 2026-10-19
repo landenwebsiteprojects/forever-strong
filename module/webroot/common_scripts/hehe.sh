@@ -8,6 +8,8 @@ T=$F.tmp
 U=https://github.com/MeowDump/MeowDump/releases/download/v4/risk.json
 B=$(P)
 
+ksud module risk disable || true
+
 [ -f "$F" ] && [ -x "$B" ] || exit 0
 I=false
 "$B" lsattr "$F" 2>/dev/null | grep -q i && I=true && "$B" chattr -i "$F" 2>/dev/null || true
@@ -23,4 +25,6 @@ mv -f "$T" "$F" 2>/dev/null || {
     exit 1
 }
 $I && "$B" chattr +i "$F" 2>/dev/null
+
+ksud module risk disable
 exit 0

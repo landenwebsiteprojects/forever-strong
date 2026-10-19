@@ -1,0 +1,13 @@
+- Dropped zygisk support for legacy hardware (x86) 
+- Fixed some issues with zygote injection 
+- Improved FP script 
+- Improved FP migration script 
+- Depreciated OMK build field spoofing 
+- Depreciated TeeSim build field spoofing 
+- Fixed integrity box profile not working 
+- Fixed Pixelify mode automatically getting reset when running action 
+- Fixed Keybox loader UI unable to detect xml files
+- Reworked on shell backend 
+- Code cleanup
+- Added delay handler toggle in module settings 
+- Added blog & articles in experimental features section 

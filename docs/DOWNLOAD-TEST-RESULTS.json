@@ -1,0 +1,42 @@
+[
+  {
+    "test": "Initial native transport success",
+    "result": "PASS"
+  },
+  {
+    "test": "Failed curl falls through to wget without a flag",
+    "result": "PASS"
+  },
+  {
+    "test": "Failed native transports fall through to BusyBox",
+    "result": "PASS"
+  },
+  {
+    "test": "DNS failure retries per request with TLS hostnames and redirect hosts",
+    "result": "PASS"
+  },
+  {
+    "test": "Exhausted DNS fallback reports failure and preserves existing output",
+    "result": "PASS"
+  },
+  {
+    "test": "Zero-byte successful responses never replace existing output",
+    "result": "PASS"
+  },
+  {
+    "test": "Real keybox pipeline preserves active keys on download, decoding and XML/crypto validation failure; validated success installs atomically with private permissions",
+    "result": "PASS"
+  },
+  {
+    "test": "All three native ABI libraries come from official v45, with only fixed-width module-path relocation",
+    "result": "PASS"
+  },
+  {
+    "test": "No v44 legacy native payload remains installed",
+    "result": "PASS"
+  },
+  {
+    "test": "Actual v45 action stops on failed download, fingerprint, target or patch stage and never reports false completion",
+    "result": "PASS"
+  }
+]

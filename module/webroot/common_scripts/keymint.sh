@@ -43,12 +43,12 @@ awk -v brand="$BRAND" -v device="$DEVICE" -v product="$PRODUCT" \
     -v manufacturer="$MANUFACTURER" -v sec_patch="$SECURITY_PATCH" \
     '
     BEGIN { in_device=0; in_trust=0 }
-    
+
     /^\[device\]/ { in_device=1; in_trust=0; print; next }
     /^\[/ && in_device { in_device=0 }
     /^\[trust\]/ { in_trust=1; in_device=0; print; next }
     /^\[/ && in_trust { in_trust=0 }
-    
+
     in_device && /^brand[[:space:]]*=/ {
         if (brand != "") print "brand = \"" brand "\""
         else print
@@ -69,13 +69,13 @@ awk -v brand="$BRAND" -v device="$DEVICE" -v product="$PRODUCT" \
         else print
         next
     }
-    
+
     in_trust && /^security_patch[[:space:]]*=/ {
         if (sec_patch != "") print "security_patch = \"" sec_patch "\""
         else print
         next
     }
-    
+
     { print }
 ' "$CONFIG_TOML" > "$TMP_CONFIG" 2>/dev/null
 

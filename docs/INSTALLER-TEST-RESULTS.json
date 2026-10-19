@@ -12,7 +12,7 @@
     "result": "PASS"
   },
   {
-    "test": "Install staging and correct payload selection: x86",
+    "test": "Unsupported legacy x86 rejected before changes",
     "result": "PASS"
   },
   {

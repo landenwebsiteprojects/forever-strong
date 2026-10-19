@@ -1,0 +1,12 @@
+id=playintegrityfix
+name=.𝙄𝙣𝙩𝙚𝙜𝙧𝙞𝙩𝙮 𝘽𝙤𝙭 📦
+version=v45
+versionCode=45000
+author=𝗠𝗘𝗢𝗪𝗻𝗮 💅
+support=https://t.me/MeowDump
+donate=https://MeowDump.github.io
+actionIcon=key.png
+webuiIcon=box.png
+updateJson=https://raw.githubusercontent.com/MeowDump/Integrity-Box/refs/heads/main/release.json
+banner=https://wallpapercave.com/wp/wp14501460.jpg
+description=A comprehensive suite designed to help apps remain compatible with compromised environments 

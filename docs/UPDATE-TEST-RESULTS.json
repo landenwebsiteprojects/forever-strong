@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "version": "v1.1",
+  "versionCode": 11000,
+  "tests": [
+    "Native manager schema and HTTPS update endpoint",
+    "Feed version and ZIP metadata match exactly",
+    "Existing installed module ID preserved",
+    "ZIP and changelog URLs name the same immutable release",
+    "Only complete validated releases advance latest; monotonically increasing versionCode required"
+  ]
+}

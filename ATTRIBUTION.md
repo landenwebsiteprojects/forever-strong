@@ -1,3 +1,7 @@
+# v1.1 additions
+
+Integrity Box v45 release by MeowDump is preserved in `upstream/integrity-box-v45-archive`; SHA-256 and the referenced PlayIntegrityFork source commit are in `docs/V45-PROVENANCE.json`. Native libraries use the existing fixed-width module-path relocation, recorded in `docs/NATIVE-RELOCATION.json`. Corresponding retrieved native source is in `upstream/playintegrityfork-v45`; older sources remain preserved. Tricky Store OSS v3.1.0 remains by beakthoven. New ForeverStrong integration changes remain GPL-3.0-or-later.
+
 # ForeverStrong v1.0 — upstream source and attribution
 
 ForeverStrong combines two modules into one: Integrity Box v44 by MeowDump and Tricky Store OSS v3.1.0 by beakthoven. The shared interface and integration do not imply authorship of the original engines.

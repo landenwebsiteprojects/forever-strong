@@ -16,7 +16,7 @@ log() {
 log "••••• ROM Hide Started •••••"
 getprop | sed 's/^\[//; s/\]:.*//' | grep -i -E '(lineage|evolution|crdroid|arrow|mistos|axion|infinity|pixelos|rising|lunaris|halcyon|havoc|alphadroid|avium|bliss|calyx|derpfest|graphene|lmodroid|lumine|matrixx|sakura|statix|superior|clover|witaqua|yaap|mica)' | while IFS= read -r prop; do
  [ -z "$prop" ] && continue
- 
+
  log "FOUND: $prop"
  if resetprop -d "$prop" 2>/dev/null; then
      log "DELETED: $prop"

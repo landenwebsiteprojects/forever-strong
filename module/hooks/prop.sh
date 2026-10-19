@@ -53,7 +53,7 @@ setprop_safe() {
 # START LOG
 writelog "•••••• Starting Security Patch Override ••••••"
 
-# Exit if module is disabled 
+# Exit if module is disabled
 if [ -f "/data/adb/modules/halloweenedition/disable" ]; then
     writelog "Integrity Box is disabled, exiting..."
     exit 0

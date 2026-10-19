@@ -1,0 +1,94 @@
+name: Validate and publish ForeverStrong
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'module/**'
+      - 'tools/**'
+      - '.github/workflows/release.yml'
+      - 'docs/RELEASE-NOTES.md'
+      - 'CHANGELOG.md'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: foreverstrong-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Read release identity
+        id: version
+        run: python3 tools/release_info.py --github-output >> "$GITHUB_OUTPUT"
+      - name: Validate payload, installer, downloads and update feed
+        run: |
+          set -eu
+          python3 tools/relocate_native.py
+          find module -name '*.sh' -print0 | xargs -0 -n1 bash -n
+          bash -n module/META-INF/com/google/android/update-binary
+          mkdir -p "$RUNNER_TEMP/validator-classes"
+          javac --release 11 -d "$RUNNER_TEMP/validator-classes" validator/KeyboxValidator.java
+          export HE_VALIDATOR_CLASSES="$RUNNER_TEMP/validator-classes"
+          python3 tools/build.py
+          python3 tools/test_installer.py
+          python3 tools/test_root_compat.py
+          python3 tools/test_backend.py
+          python3 tools/test_engine.py
+          python3 tools/test_downloads.py
+          python3 tools/test_updates.py
+          python3 tools/inspect_package.py
+      - name: Verify retained WebUI
+        run: |
+          set -eu
+          npm install --prefix "$RUNNER_TEMP/forever-ui" playwright@1.51.1 --no-audit --no-fund
+          node "$RUNNER_TEMP/forever-ui/node_modules/playwright/cli.js" install --with-deps chromium
+          HE_PLAYWRIGHT="$RUNNER_TEMP/forever-ui/node_modules/playwright" node tools/test_ui.cjs
+      - name: Package final source and test evidence
+        run: |
+          python3 tools/build.py
+          python3 tools/test_updates.py
+          python3 tools/inspect_package.py
+      - name: Publish complete release and its manager update feed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_CODE: ${{ steps.version.outputs.version_code }}
+        run: |
+          set -eu
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'This version already has a release. Increase version and versionCode; published assets are immutable.'
+            exit 1
+          fi
+          latest=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName 2>/dev/null || true)
+          if [ -n "$latest" ]; then
+            gh release download "$latest" --repo "$GITHUB_REPOSITORY" --pattern update.json --dir "$RUNNER_TEMP/previous-feed"
+            python3 - "$RUNNER_TEMP/previous-feed/update.json" "$RELEASE_CODE" <<'PY'
+          import json,sys
+          old=json.load(open(sys.argv[1]))
+          assert int(sys.argv[2]) > old['versionCode'], 'versionCode must increase beyond the currently published update'
+          PY
+          fi
+          gh release create "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --draft --target "$GITHUB_SHA" --title "ForeverStrong $RELEASE_TAG" --notes-file docs/RELEASE-NOTES.md ../release/*
+          gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --draft=false --latest
+          gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json url,assets,isDraft
+      - name: Retain build evidence if publication fails
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: foreverstrong-build-evidence
+          path: |
+            ../release/
+            docs/*TEST*RESULTS.json

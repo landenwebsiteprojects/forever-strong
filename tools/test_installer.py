@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import pathlib,shutil,tempfile,subprocess,json,zipfile
+from release_info import STEM, VERSION
+
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 results=[]
 def scenario(abi='arm64',conflict=False,legacy=False,unknown=False,upgrade=False,corrupt=False,missing=False,manager='magisk',no_resetprop=False,bootmode=True,stale_magisk=False):
@@ -17,7 +19,7 @@ def scenario(abi='arm64',conflict=False,legacy=False,unknown=False,upgrade=False
    rp=tools/'resetprop';rp.write_text('#!/bin/sh\nexit 0\n');rp.chmod(0o755)
   stage=data/'modules_update/halloweenedition';stage.mkdir(parents=True)
   # Reproduce the Manager's extraction filter from the final ZIP, not a source-tree copy.
-  with zipfile.ZipFile(ROOT.parent/'release/ForeverStrong-v1.0.zip') as archive:
+  with zipfile.ZipFile(ROOT.parent/'release'/(STEM+'.zip')) as archive:
    for name in archive.namelist():
     if not name.startswith('META-INF/'):archive.extract(name,stage)
   assert not (stage/'META-INF').exists()
@@ -48,7 +50,7 @@ set_perm_recursive(){ :; }
 '''+f'BOOTMODE={str(bootmode).lower()}\nAPI=34\nARCH={abi}\nMODPATH="{stage}"\nHE_ROOT="{t}"\nPATH="{tools}:$PATH"\n{flags}\n'+script
   runfile=t/'install-test.sh';runfile.write_text(wrapper)
   r=subprocess.run(['sh',str(runfile)],capture_output=True,text=True)
-  if conflict or unknown or corrupt or missing or manager=='unknown' or no_resetprop or not bootmode:
+  if abi=='x86' or conflict or unknown or corrupt or missing or manager=='unknown' or no_resetprop or not bootmode:
    assert r.returncode==71,(r.stdout,r.stderr)
    if corrupt or missing:assert 'tricky/classes.dex' in r.stdout+r.stderr,(r.stdout,r.stderr)
    assert sentinel.read_text()=='retain';assert (ts/'target.txt').read_text()=='com.user.existing?\n';return
@@ -66,7 +68,7 @@ set_perm_recursive(){ :; }
    assert not (data/'service.d/.box_cleanup.sh').exists()
    assert len(list((data/'halloweenedition/migration').glob('*/hooks/.box_cleanup.sh')))==1
 for abi in ['arm64','arm','x64','x86']:
- scenario(abi);results.append({'test':'Install staging and correct payload selection: '+abi,'result':'PASS'})
+ scenario(abi);results.append({'test':('Unsupported legacy x86 rejected before changes' if abi=='x86' else 'Install staging and correct payload selection: '+abi),'result':'PASS'})
 for label,kwargs in [('Active conflicting module aborts without deletion',{'conflict':True}),('Exact baseline service hooks quarantined; disabled module and settings retained',{'legacy':True}),('Unrecognized generic service hook aborts untouched',{'unknown':True}),('Upgrade retains module config and paused state',{'upgrade':True}),('Damaged DEX rejected with Manager-style extraction',{'corrupt':True}),('Missing DEX rejected with Manager-style extraction',{'missing':True})]:
  scenario(**kwargs);results.append({'test':label,'result':'PASS'})
 print(json.dumps(results,indent=2));(ROOT/'docs/INSTALLER-TEST-RESULTS.json').write_text(json.dumps(results,indent=2)+'\n')

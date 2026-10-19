@@ -21,9 +21,9 @@ sanitize_props() {
     local sed_expr="$3"
     shift 3
     local props="$*"
-    
+
     [ -f "$flag_file" ] || return 0
-    
+
     local PROP VAL CLEAN
     for PROP in $props; do
         VAL=$(resetprop "$PROP" 2>/dev/null)
@@ -39,24 +39,24 @@ sanitize_props() {
 # build time
 if [ -f "$FLAG_DIR/buildtime" ]; then
     KERNEL_BUILD=$(uname -v | sed 's/.*PREEMPT //; s/.*SMP //')
-    
+
     MONTH=$(echo "$KERNEL_BUILD" | awk '{print $2}')
     DAY=$(echo "$KERNEL_BUILD" | awk '{print $3}')
     TIME=$(echo "$KERNEL_BUILD" | awk '{print $4}')
     YEAR=$(echo "$KERNEL_BUILD" | awk '{print $6}')
-    
+
     case "$MONTH" in
         Jan) M=01;; Feb) M=02;; Mar) M=03;; Apr) M=04;; May) M=05;; Jun) M=06;;
         Jul) M=07;; Aug) M=08;; Sep) M=09;; Oct) M=10;; Nov) M=11;; Dec) M=12;;
     esac
-    
+
     EPOCH=$(date -d "$YEAR-$M-$DAY $TIME" +%s 2>/dev/null || echo "0")
     SEC_PATCH="$YEAR-$M-05"
-    
+
     resetprop -n ro.build.date "$KERNEL_BUILD"
     resetprop -n ro.build.date.utc "$EPOCH"
     resetprop -n ro.build.version.security_patch "$SEC_PATCH"
-    
+
     log "buildTime: $KERNEL_BUILD | epoch=$EPOCH | patch=$SEC_PATCH"
 fi
 
@@ -95,11 +95,11 @@ if [ -f "$FLAG_DIR/cmdline" ]; then
     sanitize_props "$FLAG_DIR/cmdline" "cmdlineCheck" \
         's/Blaze|blaze|BLAZE|custom|CUSTOM|kernel|KERNEL//g; s/-v[0-9]+//g' \
         ro.boot.bootloader ro.boot.baseband ro.boot.hardware ro.boot.hardware.sku ro.boot.revision
-    
+
     resetprop -n ro.boot.vbmeta.device_state "locked"
     resetprop -n ro.boot.verifiedbootstate "green"
     resetprop -n ro.boot.veritymode "enforcing"
-    
+
     log "cmdlineCheck: boot state normalized"
 fi
 
@@ -111,7 +111,7 @@ sanitize_props "$FLAG_DIR/board" "board" \
 # Deep scan all ro.boot.* props
 if [ -f "$FLAG_DIR/scanall" ]; then
     SUSPICIOUS="Lineage|lineage|LINEAGE|custom|CUSTOM|kernel|KERNEL|telegram|TELEGRAM|emoji|script|chinese|mention"
-    
+
     local PROP VAL CLEAN
     for PROP in $(resetprop -Z 2>/dev/null | grep "^ro.boot\." | cut -d' ' -f1); do
         VAL=$(resetprop "$PROP" 2>/dev/null)

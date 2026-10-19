@@ -1,3 +1,7 @@
+# v1.1 — Integrity Box v45, repair downloads and manager updates
+
+See [v1.1 release notes](docs/RELEASE-NOTES.md). Verified release payload upgrade; unconditional bounded HTTPS fallback; explicit repair failure propagation; atomic validated keybox installs; standard manager update feed and validated release workflow.
+
 # compat-r4 — root manager compatibility, v44 retained
 
 - Removed the combined installer's Magisk-only gate. Recognize explicit KernelSU/APatch environment flags before compatibility Magisk version values or leftover directories.

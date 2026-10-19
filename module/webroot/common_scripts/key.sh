@@ -14,6 +14,7 @@ else
 fi
 
 # Paths
+umask 077
 RECORD="/data/adb/Box-Brain"
 TRICKY_STORE="/data/adb/tricky_store"
 KEYBOX="$TRICKY_STORE/keybox.xml"
@@ -50,182 +51,9 @@ fi
 # Keybox download URL
 KEYBOX_URL="https://github.com/MeowDump/Integrity-Box/releases/download/archive/Megatron"
 
-# Known GitHub IPs (round-robin fallback)
-GITHUB_IPS="140.82.112.3 140.82.113.3 140.82.114.3 140.82.115.3"
-
-# Core download helper: tries one method with timeout
-_try_download() {
-    local url="$1"
-    local out="$2"
-    local dl_tool="$3"
-
-    rm -f "$out"
-
-    case "$dl_tool" in
-        bb_wget)
-            [ -n "$BB" ] && "$BB" wget -q --no-check-certificate -T 15 -t 1 -O "$out" "$url" 2>/dev/null
-            ;;
-        wget)
-            wget -q --no-check-certificate --timeout=15 --tries=1 -O "$out" "$url" 2>/dev/null
-            ;;
-        curl)
-            curl -fsSL --connect-timeout 15 --max-time 120 --insecure "$url" -o "$out" 2>/dev/null
-            ;;
-        curl_resolve)
-            # curl with forced DNS (direct IP access, redirects still work)
-            local ip="$4"
-            curl -fsSL --connect-timeout 15 --max-time 120 --insecure \
-                 --resolve "github.com:443:$ip" \
-                 "https://github.com/MeowDump/Integrity-Box/releases/download/archive/Megatron" \
-                 -o "$out" 2>/dev/null
-            ;;
-    esac
-
-    [ -s "$out" ]
-}
-
-# Normal download with retries and backoff
-_phase1_normal() {
-    local url="$1"
-    local out="$2"
-    local attempt=0
-
-    while [ "$attempt" -lt 3 ]; do
-        attempt=$((attempt + 1))
-        log " ✦ Fetching upstream ($attempt/3)..."
-
-        if [ -n "$BB" ] && _try_download "$url" "$out" "bb_wget"; then return 0; fi
-        if _try_download "$url" "$out" "wget"; then return 0; fi
-        if _try_download "$url" "$out" "curl"; then return 0; fi
-
-        sleep "$attempt"
-    done
-    return 1
-}
-
-# Temporarily override DNS and retry
-_phase2_dns_override() {
-    local url="$1"
-    local out="$2"
-    local attempt=0
-
-    log " ✦ Trying with public DNS..."
-
-    # Save current DNS (best effort)
-    local old_dns1 old_dns2
-    old_dns1=$(getprop net.dns1 2>/dev/null)
-    old_dns2=$(getprop net.dns2 2>/dev/null)
-
-    # Set public DNS temporarily
-    setprop net.dns1 8.8.8.8
-    setprop net.dns2 1.1.1.1
-    setprop net.dns3 8.8.4.4
-    sleep 2
-
-    while [ "$attempt" -lt 2 ]; do
-        attempt=$((attempt + 1))
-        log " ✦ DNS override attempt $attempt/2..."
-
-        if [ -n "$BB" ] && _try_download "$url" "$out" "bb_wget"; then
-            _restore_dns "$old_dns1" "$old_dns2"
-            return 0
-        fi
-        if _try_download "$url" "$out" "wget"; then
-            _restore_dns "$old_dns1" "$old_dns2"
-            return 0
-        fi
-        if _try_download "$url" "$out" "curl"; then
-            _restore_dns "$old_dns1" "$old_dns2"
-            return 0
-        fi
-
-        sleep 2
-    done
-
-    _restore_dns "$old_dns1" "$old_dns2"
-    return 1
-}
-
-_restore_dns() {
-    [ -n "$1" ] && setprop net.dns1 "$1"
-    [ -n "$2" ] && setprop net.dns2 "$2"
-}
-
-# Direct IP connection (bypass DNS entirely)
-_phase3_direct_ip() {
-    local out="$1"
-    local attempt=0
-
-    log " ✦ Trying direct GitHub IPs..."
-
-    for ip in $GITHUB_IPS; do
-        attempt=$((attempt + 1))
-        log " ✦ Trying IP $ip ($attempt/4)..."
-
-        if _try_download "" "$out" "curl_resolve" "$ip"; then return 0; fi
-        sleep 1
-    done
-    return 1
-}
-
-# Master fail-safe download orchestrator
-fail_safe_download() {
-    local url="$1"
-    local out="$2"
-
-    # Normal retries
-    if _phase1_normal "$url" "$out"; then
-        log " ✦ Source acquired"
-        return 0
-    fi
-
-    # DNS override
-    if _phase2_dns_override "$url" "$out"; then
-        log " ✦ Source acquired (DNS override)"
-        return 0
-    fi
-
-    # Direct IP
-    if _phase3_direct_ip "$out"; then
-        log " ✦ Source acquired (Direct IP)"
-        return 0
-    fi
-
-    log " ✦ ERROR: All download phases exhausted"
-    return 1
-}
-
-# Flag-based download switch
-if [ -f "$RECORD/keyswitch" ]; then
-    if ! fail_safe_download "$KEYBOX_URL" "$TEMP_FILE"; then
-        log " ✦ ERROR: Download failed - check internet/DNS"
-        rm -f "$TEMP_FILE"
-        exit 3
-    fi
-else
-    # download
-    log " ✦ Fetching keybox from GitHub..."
-    if [ -n "$BB" ] && "$BB" wget --help >/dev/null 2>&1; then
-        "$BB" wget -q --no-check-certificate -O "$TEMP_FILE" "$KEYBOX_URL"
-    elif command -v wget >/dev/null 2>&1; then
-        wget -q --no-check-certificate -O "$TEMP_FILE" "$KEYBOX_URL"
-    elif command -v curl >/dev/null 2>&1; then
-        curl -fsSL --insecure "$KEYBOX_URL" -o "$TEMP_FILE"
-    else
-        log " ✦ ERROR: No downloader available (wget or curl)"
-        exit 2
-    fi
-fi
-
-# Check Source acquired
-if [ ! -s "$TEMP_FILE" ]; then
-    log " ✦ ERROR: Keybox update failed"
-    log "     Try changing your network DNS"
-    log " "
-    log "     [ BAD INTERNET CONNECTION ]"
-    rm -f "$TEMP_FILE"
-    exit 3
-fi
+. "$MODPATH/bin/download.sh"
+log "Fetching the official keybox source with automatic download fallbacks..."
+he_download_file "$TEMP_FILE" "$KEYBOX_URL" || exit 3
 
 # Decode the downloaded file
 # The file is encoded as: base64 > hex > ROT13
@@ -248,31 +76,41 @@ for i in $(seq 1 10); do
 done
 
 # Hex decode
-if ! xxd -r -p "$CURRENT" > "$TMP_HEX" 2>/dev/null; then
+decode_hex() {
+    if command -v xxd >/dev/null 2>&1; then
+        xxd -r -p "$CURRENT"
+    elif [ -n "$BB" ]; then
+        "$BB" xxd -r -p "$CURRENT"
+    else
+        echo 'Hex decoder unavailable' >&2
+        return 1
+    fi
+}
+if ! decode_hex > "$TMP_HEX" 2>/dev/null; then
     log " ✦ ERROR: Hex decoding failed"
     rm -f "$CURRENT" "$TMP_HEX"
     exit 5
 fi
 rm -f "$CURRENT"
 
-# ROT13 decode
-if ! tr 'A-Za-z' 'N-ZA-Mn-za-m' < "$TMP_HEX" > "$KEYBOX"; then
-    log " ✦ ERROR: ROT13 decoding failed"
-    rm -f "$TMP_HEX"
+# Decode into a private staged file. Never truncate the active keybox on failure.
+STAGED_KEY=$(mktemp "$TRICKY_STORE/.keybox.XXXXXX") || exit 6
+trap 'rm -f "$TEMP_FILE" "${CURRENT:-}" "${TMP_HEX:-}" "$STAGED_KEY"' EXIT
+if ! tr 'A-Za-z' 'N-ZA-Mn-za-m' < "$TMP_HEX" > "$STAGED_KEY"; then
+    log "ERROR: Keybox decoding failed; active keybox retained"
     exit 6
 fi
-rm -f "$TMP_HEX"
-
-# Verify final keybox file
-if [ ! -s "$KEYBOX" ]; then
-    log " ✦ ERROR: Keybox is empty after decoding"
-    rm -f "$KEYBOX"
-    if [ -s "$KEYBOX_BACKUP" ]; then
-        cp -f "$KEYBOX_BACKUP" "$KEYBOX"
-        log " ✦ Restored backup keybox from $KEYBOX_BACKUP"
-    fi
+if [ ! -s "$STAGED_KEY" ] || [ -L "$KEYBOX" ]; then
+    log "ERROR: Invalid keybox destination or empty payload; active keybox retained"
     exit 7
 fi
+if ! CLASSPATH="$MODPATH/bin/validator.dex" /system/bin/app_process /system/bin KeyboxValidator "$STAGED_KEY" >/dev/null 2>&1; then
+    log "ERROR: Downloaded keybox did not pass offline validation; active keybox retained"
+    exit 7
+fi
+chmod 600 "$STAGED_KEY" || exit 7
+mv -f "$STAGED_KEY" "$KEYBOX" || exit 7
+rm -f "$TMP_HEX"
 
 log " ✦ Keybox upgrade complete"
 log " "
@@ -309,8 +147,3 @@ if he_external_enabled teesim && [ -d "/data/adb/teesim" ] && [ -s "$KEYBOX" ]; 
     cp -f "$KEYBOX" "$SIM_KEY"
     log " ✦ Attestation loaded to TEE-SIM"
 fi
-
-log " "
-log " ••••• Building Pixel Prop Config •••••"
-log "               ETA: 10s"
-log " "

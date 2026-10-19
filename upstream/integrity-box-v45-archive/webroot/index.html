@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <title>Integrity Box</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+  (function(){
+    try{
+      var scale=parseInt(localStorage.getItem("ibUiScale")||"",10);
+      if(Number.isFinite(scale))document.documentElement.style.setProperty("--ib-ui-scale",String(Math.min(120,Math.max(80,scale))/100));
+      if(localStorage.getItem("ibUIStyle")==="1")document.documentElement.classList.add("ui-alt");
+      if(localStorage.getItem("ibAnimatedBackground")==="1")document.documentElement.classList.add("animated-background");
+      var lang=localStorage.getItem("ibLang");
+      if(lang&&/^[a-z]{2}(?:_[A-Z]{2})?$/.test(lang))document.documentElement.dataset.ibLang=lang;
+    }catch{}
+  })();
+  </script>
+  <script>try{if(localStorage.getItem("ibSkipIntro")==="1")document.documentElement.classList.add("skip-intro")}catch{}</script>
+  <script src="marked.min.js"></script>
+</head>
+<body>
+  <div id="intro-overlay">
+    <div class="intro-mark"><img src="icon.png" alt="IB"></div>
+  </div>
+
+  <div class="app">
+    <div class="tab-panel active" id="tab-home">
+      <header class="home-topbar">
+        <div class="home-brand">
+          <span class="brand-dot"></span>
+          <span>Integrity Box</span>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button extract-button" id="extract-all-button" aria-label="Open System Overview" title="System Overview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>
+          </button>
+          <button class="icon-button reset-ui-button" id="reset-ui-button" type="button" aria-label="Reset" title="Reset">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v6h6"/></svg>
+          </button>
+          <button class="icon-button integrity-toggle" id="integrity-toggle" type="button" aria-label="Expand integrity status" aria-expanded="false" title="Expand integrity status"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></button>
+        </div>
+      </header>
+
+      <div class="home-subtabs" role="tablist">
+        <button class="home-subtab active" id="subtab-status" data-subtab="status" role="tab">Dashboard</button>
+        <button class="home-subtab" id="subtab-announcements" data-subtab="announcements" role="tab">Announcements</button>
+        <button class="home-subtab" id="subtab-interface" data-subtab="interface" role="tab">Interface</button>
+        <button class="home-subtab" id="subtab-support" data-subtab="support" role="tab">Support</button>
+        <button class="home-subtab" id="subtab-logs" data-subtab="logs" role="tab">Logs</button>
+      </div>
+
+      <div class="home-view active" id="home-view-status">
+
+
+        <div class="integrity-status-heading"><span>KEYBOX INTEGRITY STATUS</span></div>
+        <section class="integrity-card home-integrity-card collapsed" id="home-integrity-card" aria-label="Integrity status">
+          <div class="integrity-main">
+            <div class="integrity-copy">
+              <strong id="home-status-integrity">Checking</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="list-section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="list">
+          <button class="list-row" data-type="propspoofer">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Prop Spoofing</span>
+              <span class="row-sub">Global system property spoof</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-type="repair">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Repair Mode</span>
+              <span class="row-sub">Fix common issues without reboot</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-type="user">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Bootloader Spoofers</span>
+              <span class="row-sub">Control which app will use keybox</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </section>
+      <section class="list-section">
+        <h2 class="section-title">Configuration</h2>
+        <div class="list">
+          <button class="list-row" data-type="profile">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Set Profile</span>
+              <span class="row-sub">Customize pixel prop injection</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-type="flags">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Module Settings</span>
+              <span class="row-sub">Customize module behaviour</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-type="ctrl">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Developer Mode</span>
+              <span class="row-sub">Module core settings</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </section>
+      <section class="list-section">
+        <h2 class="section-title">Resources</h2>
+        <div class="list">
+          <button class="list-row" data-script="downloader" data-type="downloader">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Integrity Downloader</span>
+              <span class="row-sub">Useful tools and files</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </section>
+      </div>
+      
+      <div class="home-view" id="home-view-announcements">
+        <section class="announcements-panel">
+          <div class="announcements-header">
+            <div>
+              <span class="eyebrow">UPDATES</span>
+              <h1>Announcements</h1>
+              <p>Latest changes and news from Integrity Box.</p>
+            </div>
+            <button class="small-action" id="refresh-announcements" type="button">Refresh</button>
+          </div>
+          <article class="announcement-card">
+            <div id="announcement-output" class="ann-markdown"><div class="empty-state">Loading announcements...</div></div>
+          </article>
+        </section>
+      </div>
+
+      <div class="home-view" id="home-view-interface">
+      <section class="list-section">
+        <h2 class="section-title">Interface</h2>
+        <div class="list settings-list">
+          <div class="list-row static setting-row scale-setting"><div class="scale-header"><span class="row-title">UI Scale</span><span class="scale-value" id="ui-scale-value">110%</span></div><div class="scale-control"><input class="ui-scale-slider" id="ui-scale-slider" type="range" min="80" max="120" step="5" value="110"><button class="small-action scale-reset" id="ui-scale-reset" type="button">Reset</button></div><div class="scale-range"><span>80%</span><span>100%</span><span>120%</span></div></div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 4v5"/></svg></div>
+            <div class="row-text"><span class="row-title">UI Layout</span><span class="row-sub" id="ui-style-label">Standard</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-ui-style"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/></svg></div>
+            <div class="row-text"><span class="row-title">Edge swipe to back</span><span class="row-sub">Swipe from the configured screen edge</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-edge-swipe"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+            <div class="row-text"><span class="row-title">Full screen mode</span><span class="row-sub">Use the entire display for Integrity Box</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-fullscreen"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17 9 12 4 7"/><path d="M12 19h8"/></svg></div>
+            <div class="row-text"><span class="row-title">Gradient background</span><span class="row-sub">Use a slow moving gradient background</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-animated-background"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4"/><path d="M12 17v4"/><path d="M4.22 4.22l2.83 2.83"/><path d="M16.95 16.95l2.83 2.83"/><path d="M3 12h4"/><path d="M17 12h4"/><path d="M4.22 19.78l2.83-2.83"/><path d="M16.95 7.05l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <div class="row-text"><span class="row-title">Skip intro</span><span class="row-sub">Open Integrity Box directly without the intro screen</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-skip-intro"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h10"/><path d="M17 15l3 3-3 3"/></svg></div>
+            <div class="row-text"><span class="row-title">Cache UI assets</span><span class="row-sub">Keep local UI resources available for faster loading</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-ui-cache"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12M6 12h8M6 16h6"/><path d="M4 5h16v14H4z"/></svg></div>
+            <div class="row-text"><span class="row-title">Opening toasts</span><span class="row-sub">Show a popup when an iframe tool is opened</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-opening-toasts"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            <div class="row-text"><span class="row-title">Edge tap to back</span><span class="row-sub">A simple tap on the active edge closes an iframe</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-edge-tap"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><polyline points="12 8 8 12 12 16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div class="row-text"><span class="row-title">Floating back button</span><span class="row-sub">Show a back button inside opened tools</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-back-button"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 3 12"/><polyline points="15 6 21 12 15 18"/></svg></div>
+            <div class="row-text"><span class="row-title">Tab swipe navigation</span><span class="row-sub">Swipe left/right to change Home, Tools and More</span></div>
+            <label class="switch"><input type="checkbox" id="toggle-tab-swipe"><span></span></label>
+          </div>
+          <div class="list-row static setting-row">
+            <div class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="8" cy="5" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="19" r="2"/></svg></div>
+            <div class="row-text"><span class="row-title">Edge gesture side</span><span class="row-sub" id="gesture-side-label">Left edge</span></div>
+            <div class="side-picker"><button id="gesture-left" class="side-option">L</button><button id="gesture-right" class="side-option">R</button></div>
+          </div>
+        </div>
+        <p class="settings-note">When Floating back button is enabled, edge back gestures are disabled automatically for opened iframe tools.</p>
+      </section>
+      </div>
+
+      <div class="home-view" id="home-view-support">
+        <section class="support-panel">
+          <div class="support-frame-wrap">
+            <iframe id="support-frame" title="Support" src="about:blank" loading="eager" referrerpolicy="no-referrer"></iframe>
+          </div>
+        </section>
+      </div>
+
+      <div class="home-view" id="home-view-logs">
+        <section class="logs-panel">
+          <div class="logs-toolbar">
+            <div>
+              <span class="eyebrow">LOG FILES</span>
+              <h1>Integrity Logs</h1>
+              <p>Every .log file in the directory is listed below. Open a file to view the complete contents.</p>
+            </div>
+            <button class="small-action" id="refresh-logs" type="button">Refresh</button>
+          </div>
+          <div class="logs-file-section collapsed" id="logs-file-section">
+            <button class="logs-file-toggle" id="logs-file-toggle" type="button" aria-expanded="false" aria-controls="log-files">
+              <span class="section-title">Available files</span>
+              <span class="logs-file-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div class="log-files" id="log-files"><div class="empty-state">Scanning available logs...</div></div>
+          </div>
+          <div class="log-viewer">
+            <div class="log-viewer-title"><div class="log-viewer-heading"><span id="log-viewer-title">Select a log file</span><span class="log-meta" id="log-meta">No file selected</span></div><button class="log-copy-button" id="log-copy" type="button" disabled>Copy</button></div>
+            <div class="log-scroll" id="log-output"><div class="empty-state">Select a file above.</div></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-tools">
+      <header class="tab-header"><h1>Tools</h1></header>
+            <section class="list-section">
+        <h2 class="section-title">Keybox</h2>
+        <div class="list">
+          <button class="list-row" data-type="pilot">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Auto Pilot</span>
+              <span class="row-sub">Auto-update keybox and fingerprint</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-type="xml">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Import Keybox</span>
+              <span class="row-sub">Set keybox from internal storage</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-type="source">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Keybox Downloader</span>
+              <span class="row-sub">Download and modify Keybox source</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </section>
+      <section class="list-section">
+        <h2 class="section-title">Spoofing</h2>
+        <div class="list">
+          <button class="list-row" data-type="piffork">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Play Integrity</span>
+              <span class="row-sub">PIF fingerprint configuration</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-script="spoofing" data-type="spoofing">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">ROM Spoofing</span>
+              <span class="row-sub">Custom ROM property overrides</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-type="pixel">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Per App Spoofing</span>
+              <span class="row-sub">App-specific property injection</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </section>
+      <section class="list-section">
+        <h2 class="section-title">Maintenance</h2>
+        <div class="list">
+          <button class="list-row" data-type="hash">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Fix Boot Hash</span>
+              <span class="row-sub">Repair abnormal boot hash</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-type="hide">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Hide Sus Files</span>
+              <span class="row-sub">Obfuscate basic suspicious paths</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="tab-panel" id="tab-more">
+      <header class="tab-header"><h1>More</h1></header>
+      <section class="list-section">
+        <h2 class="section-title">Preferences</h2>
+        <div class="list">
+          <div class="list-row static">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Language</span>
+              <span class="row-sub">Change app language</span>
+            </div>
+            <select id="lang-dropdown-community" class="lang-dropdown-inline">
+              <option value="en">English</option>
+              <option value="zh_CN">简体中文</option>
+              <option value="ar">العربية</option>
+              <option value="es">Spanish</option>
+              <option value="id">Bahasa Indonesia</option>
+              <option value="ru">Русский</option>
+            </select>
+          </div>
+        </div>
+      </section>
+      <section class="list-section">
+        <h2 class="section-title">Experiment Features</h2>
+        <div class="list">
+          <button class="list-row" data-type="conflict">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Conflict Resolver</span>
+              <span class="row-sub">Fix Multiple ROOT implementation</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-type="blog">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Read Blogs and Guides</span>
+              <span class="row-sub">This comes in English only</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </section>
+      <section class="list-section">
+        <h2 class="section-title">Support</h2>
+        <div class="list">
+          <button class="list-row" data-script="report" data-type="report">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Report a Problem</span>
+              <span class="row-sub">Send feedback to the developer</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-script="assistant" data-type="assistant">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">Ask Assistant</span>
+              <span class="row-sub">Get help and guidance</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <button class="list-row" data-script="support" data-type="support">
+            <div class="row-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <div class="row-text">
+              <span class="row-title">WebUI Translation Team</span>
+              <span class="row-sub">Thanks to these people</span>
+            </div>
+            <svg class="row-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <section class="extract-page" id="extract-page" aria-label="System Overview dashboard">
+      <header class="extract-header">
+        <button class="icon-button" id="extract-back" aria-label="Back to Home" title="Back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="extract-heading">
+          <h1>System Overview</h1>
+        </div>
+        <div class="extract-actions">
+        <button class="icon-button" id="extract-refresh" aria-label="Refresh dashboard" title="Refresh dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </button>
+        </div>
+      </header>
+
+      <div class="overview-v2">
+        <section class="overview-panel overview-device-panel">
+          <div class="overview-device-primary">
+            <span class="overview-label">Device</span>
+            <strong id="overview-device">...</strong>
+          </div>
+          <div class="overview-two-col">
+            <div class="overview-field"><span>Android</span><strong id="overview-android">...</strong></div>
+            <div class="overview-field"><span>Build</span><strong id="overview-build">...</strong></div>
+            <div class="overview-field"><span>Architecture</span><strong id="overview-arch">...</strong></div>
+            <div class="overview-field"><span>CPU</span><strong id="overview-cpu">...</strong></div>
+          </div>
+        </section>
+
+        <section class="overview-panel">
+          <div class="overview-panel-head">
+            <div>
+              <span class="overview-kicker">Integrity Box Configuration</span>
+            </div>
+          </div>
+          <div class="overview-status-list">
+            <div class="overview-status-row"><span>Profile</span><strong id="status-profile">...</strong></div>
+            <div class="overview-status-row"><span>Custom ROM Props</span><strong id="status-LineageProp">...</strong></div>
+            <div class="overview-status-row"><span>SELinux Status</span><strong id="status-selinux">...</strong></div>
+            <div class="overview-status-row"><span>Pixel Canary Config</span><strong id="status-pixel">...</strong></div>
+            <div class="overview-status-row"><span>System Security Patch</span><strong id="status-patch">...</strong></div>
+            <div class="overview-status-row"><span>Pixel prop Config Expiry</span><strong id="status-expiry">...</strong></div>
+            <div class="overview-status-row"><span>No. of apps using keybox</span><strong id="status-target">...</strong></div>
+            <div class="overview-status-row"><span>Zygote Injection</span><strong id="status-zygote">...</strong></div>
+            <div class="overview-status-row"><span>Zygiskless Mode</span><strong id="status-zygiskless">...</strong></div>
+            <div class="overview-status-row"><span>Apps prevented from accessing keybox</span><strong id="status-blacklist">...</strong></div>
+            <div class="overview-status-row"><span>Advanced Spoofing</span><strong id="status-advanced">...</strong></div>
+            <div class="overview-status-row"><span>ROM Spoofing</span><strong id="status-rom-spoofing">...</strong></div>
+            <div class="overview-status-row"><span>Boot Hash Config</span><strong id="status-boot-hash">...</strong></div>
+          </div>
+        </section>
+
+        <section class="overview-panel overview-runtime-panel">
+          <div class="overview-runtime-item"><span class="overview-kicker">RUNTIME</span><strong id="overview-uptime">...</strong></div>
+        </section>
+      </div>
+    </section>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg><span>Home</span></button>
+      <button class="nav-item" data-tab="tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><span>Tools</span></button>
+      <button class="nav-item" data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg><span>More</span></button>
+    </nav>
+  </div>
+
+  <div id="reset-ui-confirm" class="reset-confirm hidden" role="dialog" aria-modal="true" aria-labelledby="reset-ui-title">
+    <div class="reset-confirm-card">
+      <div class="reset-confirm-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.5 2.9 16.3A2 2 0 0 0 4.6 19h14.8a2 2 0 0 0 1.7-2.7L13.7 3.5a2 2 0 0 0-3.4 0Z"/></svg>
+      </div>
+      <div class="reset-confirm-content">
+        <h2 id="reset-ui-title">Reset UI settings?</h2>
+        <p id="reset-ui-message">All interface settings will be restored to their default values.</p>
+      </div>
+      <div class="reset-confirm-actions">
+        <button class="small-action reset-cancel" id="reset-ui-cancel" type="button">Cancel</button>
+        <button class="small-action reset-confirm-button" id="reset-ui-confirm-button" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-backdrop" class="hidden">
+    <div id="modal-sheet">
+      <div id="modal-handle"></div>
+      <div id="modal-header"><h2 id="modal-title"></h2><button id="modal-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+      <div id="modal-output"></div>
+    </div>
+  </div>
+
+  <script src="TRANSLATIONS/meow.js"></script>
+  <script src="script.js"></script>
+  <script>
+  function broadcastLangChange(lang) { var iframe=document.getElementById('active-iframe'); if(iframe&&iframe.contentWindow) iframe.contentWindow.postMessage({type:'ibLangChange',lang:lang},'*'); }
+  </script>
+</body>
+</html>

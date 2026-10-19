@@ -1,4 +1,5 @@
 #!/system/bin/sh
+# Pixel Canary pif.prop generator script by osm0sis @ xda-developers
 
 # This file is primarily adapted from PlayIntegrityFork
 # Original repository: https://github.com/osm0sis/PlayIntegrityFork
@@ -10,6 +11,7 @@
 # Licensed under GNU GPL‑3.0 ~ see LICENSE file for details.
 
 . "${HE_ROOT:-}/data/adb/modules/halloweenedition/bin/integration.sh"
+. "${HE_ROOT:-}/data/adb/modules/halloweenedition/bin/download.sh"
 
 until [ -z "$1" ]; do
   case "$1" in
@@ -21,19 +23,41 @@ until [ -z "$1" ]; do
   esac;
 done;
 
-echo "Pixel Canary pif.prop generator script \
-  \n  by osm0sis @ xda-developers";
-
 case "$0" in
   *.sh) DIR="$0";;
   *) DIR="$(lsof -p $$ 2>/dev/null | grep -o '/.*autopif4.sh$')";;
 esac;
 DIR=$(dirname "$(readlink -f "$DIR")");
 
-item() { echo "\n- $@"; }
-die() { echo "\nError: $@!"; exit 1; }
+item() { printf ' ✦ %s\n' "$*"; }
+die() { printf ' ✖ %s\n' "$*" >&2; exit 1; }
 die_bb() { die "$@, install busybox"; }
-warn() { echo "\nWarning: $@!"; }
+warn() { printf ' 😭 %s\n' "$*" >&2; }
+
+
+# All downloads use the same bounded, unconditional fallback chain.
+fetch_file() { he_download_file "$1" "$2" "${3:-}"; }
+
+# Profiles
+BOX_BRAIN="/data/adb/Box-Brain"
+PIF_DIR="$BOX_BRAIN/PIF"
+MODE=""
+if [ -f "$BOX_BRAIN/wipe" ]; then
+  MODE="wipe"
+elif [ -f "$BOX_BRAIN/pixelify" ]; then
+  MODE="pixelify"
+elif [ -f "$BOX_BRAIN/advanced" ]; then
+  MODE="advanced"
+elif [ -f "$BOX_BRAIN/legacy" ]; then
+  MODE="legacy"
+fi
+case "$MODE" in
+  pixelify) item "Current Profile : Pixelify" ;;
+  advanced) item "Current Profile : Supreme" ;;
+  legacy) item "Current Profile : Legacy" ;;
+  wipe) item "Current Profile : Meta" ;;
+  *) item "Current Profile : Existing Configuration" ;;
+esac
 
 find_busybox() {
   [ -n "$BUSYBOX" ] && return 0;
@@ -47,15 +71,10 @@ find_busybox() {
   return 1;
 }
 
-if ! which wget >/dev/null || grep -q "wget-curl" $(which wget); then
-  if ! find_busybox; then
-    die_bb "wget not found";
-  elif $BUSYBOX ping -c1 -s2 android.com 2>&1 | grep -q "bad address"; then
-    die_bb "wget broken";
-  else
-    wget() { $BUSYBOX wget "$@"; }
-  fi;
-fi;
+# Ancillary HTTP header probing may use wget; data downloads use fetch_file.
+if ! command -v wget >/dev/null 2>&1 && find_busybox; then
+  wget() { "$BUSYBOX" wget "$@"; }
+fi
 
 if date -D '%s' -d "$(date '+%s')" 2>&1 | grep -qE "bad date|invalid option"; then
   if ! find_busybox; then
@@ -79,19 +98,27 @@ if [ "$DIR" = /data/adb/modules/halloweenedition ]; then
 fi;
 cd "$DIR";
 
-item "Crawling Android Developers for latest Pixel Beta device list ...";
-wget -q -T 10 -O PIXEL_VERSIONS_HTML --no-check-certificate "https://developer.android.com/about/versions" 2>&1 || exit 1;
+SPOOF_APPS=""
+for CONFIG_FILE in "$DIR/../custom.pif.prop" "$DIR/custom.pif.prop" /data/adb/modules/halloweenedition/custom.pif.prop; do
+  if [ -f "$CONFIG_FILE" ]; then
+    SPOOF_APPS=$(sed -n 's/^[[:space:]]*spoofApps[[:space:]]*=[[:space:]]*\([01]\)[[:space:]]*$/\1/p' "$CONFIG_FILE" | head -n 1)
+    [ -n "$SPOOF_APPS" ] && break
+  fi
+done
+
+item "Fetching Pixel device list...";
+fetch_file PIXEL_VERSIONS_HTML "https://developer.android.com/about/versions" "" || die "Failed to download Pixel device list";
 LATEST_BETA=$(grep -B4 -A2 'data-icon="preview' PIXEL_VERSIONS_HTML | grep -o 'href="/about/versions/.*[0-9]"' | cut -d\" -f2);
 [ "$LATEST_BETA" ] || LATEST_BETA=$(grep -oE 'href="/about/versions/[0-9]{2}"' PIXEL_VERSIONS_HTML | cut -d\" -f2 | sort -ru | head -n1);
-wget -q -T 10 -O PIXEL_LATEST_HTML --no-check-certificate "https://developer.android.com$LATEST_BETA" 2>&1 || exit 1;
-wget -q -T 10 -O PIXEL_FI_HTML --no-check-certificate "https://developer.android.com$(grep -o 'href=".*download.*"' PIXEL_LATEST_HTML | grep -v 'ota' | cut -d\" -f2 | sort -ru | head -n1)" 2>&1 || exit 1;
-wget -q -T 10 -O PIXEL_OTA_HTML --no-check-certificate "https://developer.android.com$(grep -o 'href=".*download-ota.*"' PIXEL_LATEST_HTML | cut -d\" -f2 | sort -ru | head -n1)" 2>&1 || exit 1;
+fetch_file PIXEL_LATEST_HTML "https://developer.android.com$LATEST_BETA" "" || die "Failed to download latest Pixel version page";
+fetch_file PIXEL_FI_HTML "https://developer.android.com$(grep -o 'href=".*download.*"' PIXEL_LATEST_HTML | grep -v 'ota' | cut -d\" -f2 | sort -ru | head -n1)" "" || die "Failed to download factory image page";
+fetch_file PIXEL_OTA_HTML "https://developer.android.com$(grep -o 'href=".*download-ota.*"' PIXEL_LATEST_HTML | cut -d\" -f2 | sort -ru | head -n1)" "" || die "Failed to download OTA page";
 SRC=FI; [ "$(grep 'tr id=' PIXEL_FI_HTML | sed 's;.*<tr id="\(.*\)">.*;\1;' | wc -w)" -lt "$(grep 'tr id=' PIXEL_OTA_HTML | sed 's;.*<tr id="\(.*\)">.*;\1;' | wc -w)" ] && SRC=OTA;
 MODEL_LIST="$(grep -A1 'tr id=' PIXEL_${SRC}_HTML | grep 'td' | sed 's;.*<td>\(.*\)</td>.*;\1;')";
 PRODUCT_LIST="$(grep 'tr id=' PIXEL_${SRC}_HTML | sed 's;.*<tr id="\(.*\)">.*;\1_beta;')";
-echo "$PRODUCT_LIST" | wc -w;
+[ -n "$PRODUCT_LIST" ] || die "Pixel device list is empty";
 
-item "Selecting Pixel Beta device ...";
+item "Selecting Pixel build...";
 if [ "$FORCE_MATCH" ]; then
   DEVICE="$(getprop ro.product.device)";
   case "$(echo ' '$PRODUCT_LIST' ')" in
@@ -114,12 +141,13 @@ set_random_beta() {
 if [ -z "$PRODUCT" ]; then
   set_random_beta;
 fi;
-echo "$MODEL ($PRODUCT)";
+item "Selected $MODEL";
+printf '\n';
 
 get_canary_info() {
-  item "Crawling Android Flash Tool for latest Pixel Canary build info ...";
-  wget -q -T 10 -O PIXEL_FLASH_HTML --no-check-certificate "https://flash.android.com/" 2>&1 || exit 1;
-  wget -q -T 10 -O PIXEL_STATION_JSON --header "Referer: https://flash.android.com" --no-check-certificate "https://content-flashstation-pa.googleapis.com/v1/builds?product=$PRODUCT&key=$(grep -o '<body data-client-config=.*' PIXEL_FLASH_HTML | cut -d\; -f2 | cut -d\& -f1)" 2>&1 || exit 1;
+  item "Fetching build metadata...";
+  fetch_file PIXEL_FLASH_HTML "https://flash.android.com/" "" || die "Failed to download Flash Android page";
+  fetch_file PIXEL_STATION_JSON "https://content-flashstation-pa.googleapis.com/v1/builds?product=$PRODUCT&key=$(grep -o '<body data-client-config=.*' PIXEL_FLASH_HTML | cut -d\; -f2 | cut -d\& -f1)" "https://flash.android.com" || die "Failed to download Pixel build metadata";
   tac PIXEL_STATION_JSON | grep -m1 -A13 '"canary": true' > PIXEL_CANARY_JSON;
   ID="$(grep 'releaseCandidateName' PIXEL_CANARY_JSON | cut -d\" -f4)";
   INCREMENTAL="$(grep 'buildId' PIXEL_CANARY_JSON | cut -d\" -f4)";
@@ -127,13 +155,13 @@ get_canary_info() {
 get_canary_info;
 if [ -z "$ID" -o -z "$INCREMENTAL" ] && [ "$FORCE_MATCH" ]; then
   warn "Failed to extract matching build info from JSON";
-  item "Retrying with random Pixel Beta device ...";
+  item "Retrying with another Pixel build...";
   set_random_beta;
-  echo "$MODEL ($PRODUCT)";
+  item "Selected $MODEL";
   get_canary_info;
 fi;
 [ -z "$ID" -o -z "$INCREMENTAL" ] && die "Failed to extract build info from JSON";
-echo "Android $(grep 'releaseTrackVersionName' PIXEL_CANARY_JSON | cut -d\" -f4)";
+
 
 FI="$(grep 'factoryImageDownloadUrl' PIXEL_CANARY_JSON | cut -d\" -f4)";
 FI_HOST="$(echo "$FI" | sed 's;^.*://\(.*\)$;\1;' | cut -d/ -f1)";
@@ -154,27 +182,19 @@ fi;
 if [ -f PIXEL_ZIP_HEADERS ] && grep -q 'Last-Modified' PIXEL_ZIP_HEADERS; then
   CANARY_REL_DATE="$(date -D '%a, %d %b %Y %H:%M:%S %Z' -d "$(grep -o 'Last-Modified.*' PIXEL_ZIP_HEADERS | cut -d\  -f2-)" '+%Y-%m-%d')";
   CANARY_EXP_DATE="$(date -D '%s' -d "$(($(date -D '%Y-%m-%d' -d "$CANARY_REL_DATE" '+%s') + 60 * 60 * 24 * 7 * 6))" '+%Y-%m-%d')";
-  echo "Canary Released: $CANARY_REL_DATE \
-    \nEstimated Expiry: $CANARY_EXP_DATE";
+  item "Build metadata: $CANARY_REL_DATE ·";
+  item "Build expiry $CANARY_EXP_DATE";
 else
   warn "Failed to determine Release Date from HTTP headers";
   CANARY_REL_DATE="Unknown";
   CANARY_EXP_DATE="Unknown";
 fi;
 
-item "Crawling Pixel Update Bulletins for corresponding security patch level ...";
-CANARY_ID="$(grep '"id"' PIXEL_CANARY_JSON | sed -e 's;.*canary-\(.*\)".*;\1;' -e 's;^\(.\{4\}\);\1-;')";
-[ -z "$CANARY_ID" ] && die "Failed to extract build info from JSON";
-wget -q -T 10 -O PIXEL_SECBULL_HTML --no-check-certificate "https://source.android.com/docs/security/bulletin/pixel" 2>&1 || exit 1;
-SECURITY_PATCH="$(grep "<td>$CANARY_ID" PIXEL_SECBULL_HTML | sed 's;.*<td>\(.*\)</td>;\1;')";
-if [ -z "$SECURITY_PATCH" ]; then
-  warn "Failed to determine exact security patch level from Pixel Update Bulletins";
-  item "Assuming probable security patch level from Canary build info ...";
-  SECURITY_PATCH="${CANARY_ID}-05";
-fi;
-echo "$SECURITY_PATCH";
+printf '\n';
+item "Applying security patch";
+SECURITY_PATCH="2026-10-05";
 
-item "Adding corresponding first API level ...";
+item "Resolving API level...";
 case $DEVICE in
   bluejay) DEVICE_INITIAL_SDK_INT=32;; # Pixel 6a
   panther|cheetah) DEVICE_INITIAL_SDK_INT=33;; # Pixel 7 Series
@@ -190,11 +210,11 @@ case $DEVICE in
   cubs|grizzly|kodiak|yogi) DEVICE_INITIAL_SDK_INT=37;; # Pixel 11 Series
   *) DEVICE_INITIAL_SDK_INT=37;;
 esac;
-echo "$DEVICE_INITIAL_SDK_INT";
-[ "$DEVICE_INITIAL_SDK_INT" -gt 35 ] && warn "First API level 36 and greater may require an RKP keybox to pass";
+#printf '\n';
 
-item "Dumping values to minimal pif.prop ...";
-cat <<EOF | tee pif.prop;
+printf '\n';
+item "Building Pixel config...";
+cat <<EOF > pif.prop;
 MANUFACTURER=Google
 MODEL=$MODEL
 FINGERPRINT=google/$PRODUCT/$DEVICE:CANARY/$ID/$INCREMENTAL:user/release-keys
@@ -204,98 +224,104 @@ SECURITY_PATCH=$SECURITY_PATCH
 DEVICE_INITIAL_SDK_INT=$DEVICE_INITIAL_SDK_INT
 EOF
 
-for MIGRATE in migrate.sh /data/adb/modules/halloweenedition/migrate.sh; do
-  [ -f "$MIGRATE" ] && break; 
-done;
+# Apply the mode detected at startup. Wipe takes precedence.
+for MIGRATE in "$DIR/migrate.sh" /data/adb/modules/halloweenedition/migrate.sh; do
+  [ -f "$MIGRATE" ] && break
+done
+
 if [ -f "$MIGRATE" ]; then
-  for OLDPIF in /data/adb/modules/halloweenedition/custom.pif.prop /data/adb/modules/halloweenedition/custom.pif.json; do
-    [ -f "$OLDPIF" ] && break;
-  done;
-  if [ -f "$OLDPIF" ]; then
-    grep -qE '//"*.security_patch"|#*.security_patch' $OLDPIF && PATCH_COMMENT=1;
-    grep -qE "verboseLogs|VERBOSE_LOGS" $OLDPIF && ARGS="-a";
+  item "Generating custom config..."
+  # Preserve the existing main config; migrate.sh backs it up if present.
+  rm -f pif.json custom.pif.json
+  sh "$MIGRATE" -i -f pif.prop custom.pif.prop || die "Migration to custom.pif.prop failed"
+
+  if [ -f custom.pif.prop ]; then
+    # Keep only canonical build fields from migration output, then append the selected profile.
+    TMP_CONFIG="custom.pif.prop.tmp"
+    awk '
+      /^# Build Fields[[:space:]]*$/ { in_build=1; next }
+      in_build && /^[A-Z_]+=/ { print; next }
+      in_build && !/^[A-Z_]+=/ { exit }
+    ' custom.pif.prop > "$TMP_CONFIG"
+    [ -s "$TMP_CONFIG" ] || die "Could not extract build fields from migrated config"
+    mv -f "$TMP_CONFIG" custom.pif.prop
+
+    case "$MODE" in
+      pixelify)
+        [ -n "$SPOOF_APPS" ] || SPOOF_APPS=1
+        printf '\n# Configuration\nspoofBuild=1\nspoofProps=1\nspoofPixel=1\nspoofApps=%s\nspoofVendingFinger=1\nspoofProvider=0\nspoofSignature=0\nspoofVendingSdk=0\nverboseLogs=0\n' "$SPOOF_APPS" >> custom.pif.prop
+        ;;
+      advanced)
+        [ -n "$SPOOF_APPS" ] || SPOOF_APPS=0
+        printf '\n# Configuration\nspoofBuild=1\nspoofProps=1\nspoofPixel=0\nspoofApps=%s\nspoofVendingFinger=1\nspoofProvider=0\nspoofSignature=0\nspoofVendingSdk=0\nverboseLogs=0\n' "$SPOOF_APPS" >> custom.pif.prop
+        ;;
+      legacy)
+        [ -n "$SPOOF_APPS" ] || SPOOF_APPS=0
+        printf '\n# Configuration\nspoofBuild=1\nspoofProps=1\nspoofPixel=0\nspoofApps=%s\nspoofVendingFinger=0\nspoofProvider=0\nspoofSignature=0\nspoofVendingSdk=0\nverboseLogs=0\n' "$SPOOF_APPS" >> custom.pif.prop
+        ;;
+      wipe) ;;
+    esac
+
+    RUN_DATE=$(date '+%Y-%m-%d')
+    {
+      printf '\n# Canary Released: %s\n\n' "${CANARY_REL_DATE:-Unknown}"
+      printf '# Estimated Expiry: %s\n\n' "${CANARY_EXP_DATE:-Unknown}"
+      printf '# Generated by Integrity Box on %s\n' "$RUN_DATE"
+    } >> custom.pif.prop
+
+    if [ ! -f "$PIF_DIR/skip_json" ]; then
+      # Export only canonical build fields, in their existing order.
+      # The generated-by comment is JSONC; no config or system properties are exported.
+      {
+        printf '{\n'
+        printf '  // Generated by Integrity Box on %s\n' "$RUN_DATE"
+        awk -F= '
+          BEGIN {
+            count=0
+            fields[1]="MANUFACTURER"; fields[2]="MODEL"; fields[3]="FINGERPRINT"
+            fields[4]="BRAND"; fields[5]="PRODUCT"; fields[6]="DEVICE"
+            fields[7]="RELEASE"; fields[8]="ID"; fields[9]="INCREMENTAL"
+            fields[10]="TYPE"; fields[11]="TAGS"; fields[12]="SECURITY_PATCH"
+            fields[13]="DEVICE_INITIAL_SDK_INT"
+          }
+          /^[A-Z_]+=/ {
+            key=$1
+            for (i=1; i<=13; i++) if (key == fields[i]) {
+              value=substr($0, index($0, "=")+1)
+              gsub(/\\/, "\\\\", value); gsub(/"/, "\\\"", value)
+              printf "  \"%s\": \"%s\"%s\n", key, value, (count < 12 ? "," : "")
+              count++
+              break
+            }
+          }
+        ' custom.pif.prop
+        printf '}\n'
+      } > /sdcard/halloween.json
+      printf '\n';
+      item "Exported /sdcard/halloween.json"
+    fi
   else
-    FORCE_STRONG=1;
-  fi;
-  if [ "$FORCE_STRONG" ]; then
-    item "Forcing configuration for <A13 PI Strong ...";
-    ARGS="-a"; PATCH_COMMENT=1; spoofProvider=0;
-  else
-    item "Retaining existing configuration ...";
-  fi;
-  [ -d /data/adb/tricky_store -o -d /data/adb/teesim -o -d /data/adb/omk ] && unset PATCH_COMMENT;
-  item "Converting pif.prop to custom.pif.prop with migrate.sh:";
-  rm -f pif.json custom.pif.json custom.pif.prop;
-  sh $MIGRATE -i $ARGS pif.prop;
-  if [ -n "$ARGS" ]; then
-    grep_config() {
-      if [ -f "$2" ]; then
-        case $2 in
-          *.json) grep -m1 "$1" $2 | cut -d\" -f4;;
-          *.prop) grep -m1 "$1=" "$2" | cut -d= -f2 | cut -d\# -f1 | sed 's/[[:space:]]*$//';;
-        esac;
-      fi;
-    }
-    verboseLogs=$(grep_config "VERBOSE_LOGS" $OLDPIF);
-    ADVSETTINGS="spoofBuild spoofProps spoofProvider spoofSignature spoofVendingFinger spoofVendingSdk verboseLogs";
-    for SETTING in $ADVSETTINGS; do
-      eval [ -z \"\$$SETTING\" ] \&\& $SETTING=$(grep_config "$SETTING" $OLDPIF);
-      eval TMPVAL=\$$SETTING;
-      [ -n "$TMPVAL" ] && sed -i "s;\($SETTING=\).;\1$TMPVAL;" custom.pif.prop;
-    done;
-  fi;
-  [ "$PATCH_COMMENT" ] && sed -i 's;ro.build.version.security_patch;#ro.build.version.security_patch;' custom.pif.prop;
-  echo "\n# Canary Released: $CANARY_REL_DATE\n# Estimated Expiry: $CANARY_EXP_DATE" >> custom.pif.prop;
-  cat custom.pif.prop;
-fi;
+    die "Migration did not create custom.pif.prop"
+  fi
+fi
 
 if [ "$DIR" = /data/adb/modules/halloweenedition/autopif4 ]; then
   if [ -f /data/adb/modules/halloweenedition/migrate.sh ]; then
-    NEWNAME="custom.pif.prop";
+    NEWNAME="custom.pif.prop"
   else
-    NEWNAME="pif.prop";
-  fi;
-  for OLDPIF in $NEWNAME custom.pif.json; do
-    if [ -f "../$OLDPIF" ]; then
-      item "Renaming old file to $OLDPIF.bak ...";
-      mv -fv ../$OLDPIF ../$OLDPIF.bak;
-    fi;
-  done;
-  item "Installing new prop ...";
-  cp -fv $NEWNAME ..;
-  TS_DIR=/data/adb/tricky_store;
-  if ! he_engine_installed && { he_external_enabled teesim || he_external_enabled oh_my_keymint; }; then
-    warn "TEESimulator v4.x/Oh My KeyMint must be configured manually, ensure patch levels match *.security_patch";
-  elif [ -d "$TS_DIR" ] && [ -f /data/adb/Box-Brain/halloween-auto-patch ]; then
-    TS_SECPAT=$TS_DIR/security_patch.txt;
-    touch $TS_SECPAT;
-    if he_engine_installed; then
-      item "Updating TEESimulator/Tricky Store OSS security_patch.txt ...";
-      if [ ! -s "$TS_SECPAT" ]; then
-        cat <<EOF > $TS_SECPAT;
-all=
-
-[com.google.android.gms]
-system=no
-EOF
-      fi;
-    else
-      item "Updating Tricky Store security_patch.txt ...";
-      [ -s "$TS_SECPAT" ] || echo "all=" > $TS_SECPAT;
-      grep -qE '^[0-9]{8}$' $TS_SECPAT && sed -i "s/^.*$/${SECURITY_PATCH//-}/" $TS_SECPAT;
-      grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' $TS_SECPAT && sed -i "s/^.*$/$SECURITY_PATCH/" $TS_SECPAT;
-    fi;
-    if ! grep -q 'all=device_default' $TS_SECPAT; then
-      grep -q 'all=' $TS_SECPAT && sed -i "s/all=.*/all=$SECURITY_PATCH/" $TS_SECPAT;
-    fi;
-    if ! grep -q 'system=no' $TS_SECPAT; then
-      grep -q 'system=' $TS_SECPAT && sed -i "s/system=.*/system=$(echo ${SECURITY_PATCH//-} | cut -c-6)/" $TS_SECPAT;
-    fi;
-    sed -i '$a\' $TS_SECPAT;
-    cat $TS_SECPAT;
-  fi;
+    NEWNAME="pif.prop"
+  fi
+  if [ -f "../$NEWNAME" ]; then
+    item "Backing up previous config..."
+    cp -p "../$NEWNAME" "../$NEWNAME.bak" || die "Cannot back up active config"
+  fi
+  item "Installing config..."
+  cp -f "$NEWNAME" "../$NEWNAME.new.$$" && mv -f "../$NEWNAME.new.$$" "../$NEWNAME" || die "Cannot install config"
   if [ -f /data/adb/modules/halloweenedition/killpi.sh ]; then
-    item "Killing any running GMS DroidGuard/Play Store processes ...";
-    sh /data/adb/modules/halloweenedition/killpi.sh 2>&1 || true;
-  fi;
-fi;
+    item "Restarting Play Integrity processes..."
+    sh /data/adb/modules/halloweenedition/killpi.sh 2>&1 || true
+  fi
+fi
+
+[ "$DEVICE_INITIAL_SDK_INT" -gt 35 ] && warn "This Fingerprint may require RKP keybox to pass integrity";
+printf '\n';

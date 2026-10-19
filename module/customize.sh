@@ -1,11 +1,11 @@
 #!/system/bin/sh
 SKIPUNZIP=0
-ui_print 'Initializing ForeverStrong v1.0'
+ui_print 'Initializing ForeverStrong v1.1'
 [ "$BOOTMODE" = true ] || abort 'Install through Magisk/Kitsune, KernelSU or APatch Manager while Android is running.'
 ui_print 'Checking device environment'
 [ "$API" -ge 29 ] || abort 'Android 10 (API 29) or later is required.'
 case "$ARCH" in
-    arm64) HE_ABI=arm64-v8a;; arm) HE_ABI=armeabi-v7a;; x64) HE_ABI=x86_64;; x86) HE_ABI=x86;;
+    arm64) HE_ABI=arm64-v8a;; arm) HE_ABI=armeabi-v7a;; x64) HE_ABI=x86_64;; x86) abort "Integrity Box v45 no longer provides a 32-bit x86 Zygisk engine.";;
     *) abort "Unsupported architecture: $ARCH";;
 esac
 STATE=/data/adb/halloweenedition
@@ -80,12 +80,6 @@ fi
 ui_print 'Integrating module services'
 cp "$MODPATH/tricky/lib/$HE_ABI/libinject.so" "$MODPATH/tricky/inject" || abort 'Missing OSS injector.'
 cp "$MODPATH/tricky/lib/$HE_ABI/libTrickyStoreOSS.so" "$MODPATH/tricky/libTrickyStoreOSS.so" || abort 'Missing OSS library.'
-# Integrity Box's ShadowHook payload supports ARM; x86 uses its supplied Dobby fallback.
-case "$HE_ABI" in
-    x86|x86_64)
-        cp "$MODPATH/legacy/zygisk/$HE_ABI.so" "$MODPATH/zygisk/$HE_ABI.so" || abort 'Missing legacy native payload.'
-        cp "$MODPATH/legacy/legacy.dex" "$MODPATH/classes.dex" || abort 'Missing legacy DEX.';;
-esac
 if [ -e /sdcard/zygisk ] || [ -f "$BOX/zygisk" ]; then
     # Preserve user-requested scripts-only behavior while OSS remains active.
     rm -rf "$MODPATH/zygisk"
